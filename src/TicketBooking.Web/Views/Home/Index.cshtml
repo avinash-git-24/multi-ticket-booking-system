@@ -510,12 +510,14 @@
         const wrapper = document.querySelector('.bms-hero-wrapper');
 
         function getTargetX(index) {
-            if (!stage || !slides[index]) return 0;
+            if (!stage || slides.length === 0) return 0;
+            const firstSlide = slides[0];
+            const slideStyle = window.getComputedStyle(firstSlide);
+            const marginLeft = parseFloat(slideStyle.marginLeft) || 12;
+            const marginRight = parseFloat(slideStyle.marginRight) || 12;
+            const totalSlideWidth = firstSlide.offsetWidth + marginLeft + marginRight;
             const stageWidth = stage.offsetWidth;
-            const slide = slides[index];
-            const slideWidth = slide.offsetWidth;
-            const slideLeft = slide.offsetLeft;
-            return (stageWidth / 2) - (slideLeft + slideWidth / 2);
+            return (stageWidth / 2) - ((index + 0.5) * totalSlideWidth);
         }
 
         function updateCarousel(animate = true) {
@@ -565,6 +567,7 @@
             currentTrackIndex += direction;
             updateCarousel(true);
             restartAutoPlay();
+            setTimeout(() => { isTransitioning = false; }, 500);
         };
 
         window.bmsGoToHero = function (dotIndex) {
@@ -573,6 +576,7 @@
             currentTrackIndex = REAL_START_INDEX + dotIndex;
             updateCarousel(true);
             restartAutoPlay();
+            setTimeout(() => { isTransitioning = false; }, 500);
         };
 
         function startAutoPlay() {
