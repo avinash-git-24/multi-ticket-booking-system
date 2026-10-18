@@ -170,3 +170,49 @@ BEGIN
     );
 END
 GO
+
+-- 10. Showtimes Table
+IF OBJECT_ID('dbo.Showtimes', 'U') IS NULL
+BEGIN
+    CREATE TABLE dbo.Showtimes (
+        ShowtimeId INT IDENTITY(1,1) NOT NULL,
+        MovieId INT NOT NULL,
+        ScreenId INT NOT NULL,
+        StartTime DATETIME2(7) NOT NULL,
+        EndTime DATETIME2(7) NOT NULL,
+        SilverPrice DECIMAL(10,2) NOT NULL CONSTRAINT DF_Showtimes_SilverPrice DEFAULT (150.00),
+        GoldPrice DECIMAL(10,2) NOT NULL CONSTRAINT DF_Showtimes_GoldPrice DEFAULT (220.00),
+        PlatinumPrice DECIMAL(10,2) NOT NULL CONSTRAINT DF_Showtimes_PlatinumPrice DEFAULT (300.00),
+        IsActive BIT NOT NULL CONSTRAINT DF_Showtimes_IsActive DEFAULT (1),
+        CreatedAtUtc DATETIME2(7) NOT NULL CONSTRAINT DF_Showtimes_CreatedAtUtc DEFAULT (SYSUTCDATETIME()),
+        CONSTRAINT PK_Showtimes PRIMARY KEY CLUSTERED (ShowtimeId),
+        CONSTRAINT FK_Showtimes_Movies FOREIGN KEY (MovieId) REFERENCES dbo.Movies(MovieId) ON DELETE CASCADE,
+        CONSTRAINT FK_Showtimes_Screens FOREIGN KEY (ScreenId) REFERENCES dbo.Screens(ScreenId) ON DELETE CASCADE,
+        CONSTRAINT CK_Showtimes_Times CHECK (EndTime > StartTime),
+        CONSTRAINT CK_Showtimes_SilverPrice CHECK (SilverPrice >= 0),
+        CONSTRAINT CK_Showtimes_GoldPrice CHECK (GoldPrice >= 0),
+        CONSTRAINT CK_Showtimes_PlatinumPrice CHECK (PlatinumPrice >= 0)
+    );
+END
+GO
+
+-- 11. ShowtimeSeats Table (Seat Inventory per Showtime)
+IF OBJECT_ID('dbo.ShowtimeSeats', 'U') IS NULL
+BEGIN
+    CREATE TABLE dbo.ShowtimeSeats (
+        ShowtimeSeatId BIGINT IDENTITY(1,1) NOT NULL,
+        ShowtimeId INT NOT NULL,
+        SeatId INT NOT NULL,
+        Status NVARCHAR(50) NOT NULL CONSTRAINT DF_ShowtimeSeats_Status DEFAULT ('Available'),
+        HoldExpiresAtUtc DATETIME2(7) NULL,
+        BookingId INT NULL,
+        RowVersion ROWVERSION NOT NULL,
+        UpdatedAtUtc DATETIME2(7) NULL,
+        CONSTRAINT PK_ShowtimeSeats PRIMARY KEY CLUSTERED (ShowtimeSeatId),
+        CONSTRAINT UQ_ShowtimeSeats_Showtime_Seat UNIQUE (ShowtimeId, SeatId),
+        CONSTRAINT CK_ShowtimeSeats_Status CHECK (Status IN ('Available', 'Held', 'Booked')),
+        CONSTRAINT FK_ShowtimeSeats_Showtimes FOREIGN KEY (ShowtimeId) REFERENCES dbo.Showtimes(ShowtimeId) ON DELETE CASCADE,
+        CONSTRAINT FK_ShowtimeSeats_Seats FOREIGN KEY (SeatId) REFERENCES dbo.Seats(SeatId)
+    );
+END
+GO
