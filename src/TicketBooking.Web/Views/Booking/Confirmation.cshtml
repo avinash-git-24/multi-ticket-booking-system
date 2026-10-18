@@ -1,0 +1,98 @@
+@model TicketBooking.Web.ViewModels.Booking.ConfirmationViewModel
+@{
+    ViewData["Title"] = $"Booking Confirmed: {Model.BookingReference} - ShowSphere";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-7">
+            <!-- Success Notification Card -->
+            <div class="text-center mb-4">
+                <div class="display-4 text-success mb-2">🎉</div>
+                <h2 class="fw-bold text-dark mb-1">Booking Confirmed!</h2>
+                <p class="text-muted small">Your tickets have been successfully reserved and confirmed.</p>
+            </div>
+
+            <!-- Printable Ticket Card -->
+            <div id="printableTicket" class="card border-0 shadow rounded-4 overflow-hidden mb-4">
+                <div class="bg-danger text-white p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="brand-icon bg-white text-danger">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2z"/>
+                                </svg>
+                            </span>
+                            <span class="h5 fw-bold mb-0">ShowSphere M-Ticket</span>
+                        </div>
+                        <span class="badge bg-white text-danger fw-bold px-3 py-2">@Model.Status</span>
+                    </div>
+
+                    <h3 class="fw-bold mb-1">@Model.ItemTitle</h3>
+                    <p class="mb-0 text-white-50 small">
+                        @Model.VenueName @(!string.IsNullOrEmpty(Model.SubVenue) ? $"• {Model.SubVenue}" : "")
+                    </p>
+                </div>
+
+                <div class="card-body p-4 bg-white">
+                    <div class="row g-3 mb-4">
+                        <div class="col-sm-6">
+                            <div class="text-muted small">Date & Time</div>
+                            <div class="fw-bold text-dark fs-6">@Model.EventDateTime.ToString("dddd, dd MMM yyyy • hh:mm tt")</div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="text-muted small">Seats / Category (@Model.Quantity)</div>
+                            <div class="fw-bold text-danger fs-5">@string.Join(", ", Model.SeatOrTicketLabels)</div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="text-muted small">Booking Reference</div>
+                            <div class="font-monospace fw-bold text-dark fs-6">@Model.BookingReference</div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="text-muted small">Simulated Transaction ID</div>
+                            <div class="font-monospace text-muted small">@Model.TransactionReference</div>
+                        </div>
+                    </div>
+
+                    <div class="border-top pt-3 d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="text-muted small">Total Amount Paid:</div>
+                            <div class="h4 fw-bold text-dark mb-0">₹@Model.TotalAmount.ToString("N2")</div>
+                            <span class="text-muted small">Via @Model.PaymentMode</span>
+                        </div>
+
+                        <!-- SVG QR Code Placeholder -->
+                        <div class="text-center p-2 bg-light border rounded-3">
+                            <svg width="64" height="64" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M3 3h8v8H3V3zm2 2v4h4V5H5zm8-2h8v8h-8V3zm2 2v4h4V5h-4zM3 13h8v8H3v-8zm2 2v4h4v-4H5zm13-2h3v2h-3v-2zm-3 2h2v3h-2v-3zm3 3h3v3h-3v-3zm-3 2h2v1h-2v-1zm5-7h1v1h-1v-1zm-2 0h1v1h-1v-1zm1 4h2v1h-2v-1z"/>
+                            </svg>
+                            <div style="font-size: 0.65rem;" class="text-muted">Scan at Hall</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-footer bg-light p-3 text-center border-top">
+                    <span class="text-muted small">
+                        College Project Demonstration: ShowSphere • Rajkot, Gujarat
+                    </span>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="d-flex justify-content-center gap-3">
+                <button type="button" class="btn btn-outline-secondary px-4" onclick="window.print();">
+                    🖨️ Print Ticket
+                </button>
+                <a asp-controller="Account" asp-action="MyBookings" class="btn btn-outline-showsphere px-4">
+                    View My Bookings
+                </a>
+                <a asp-controller="Movies" asp-action="Index" class="btn btn-primary-showsphere px-4">
+                    Book Another
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -12,11 +12,13 @@ using TicketBooking.Web.ViewModels.Account;
 public class AccountController : Controller
 {
     private readonly IUserService _userService;
+    private readonly IBookingService _bookingService;
     private readonly ILogger<AccountController> _logger;
 
-    public AccountController(IUserService userService, ILogger<AccountController> logger)
+    public AccountController(IUserService userService, IBookingService bookingService, ILogger<AccountController> logger)
     {
         _userService = userService;
+        _bookingService = bookingService;
         _logger = logger;
     }
 
@@ -175,6 +177,37 @@ public class AccountController : Controller
 
         ModelState.AddModelError(string.Empty, "Unable to save profile changes. Please try again.");
         return View(model);
+    }
+
+    [Authorize]
+    [HttpGet]
+    public async Task<IActionResult> MyBookings()
+    {
+        var userIdStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (!int.TryParse(userIdStr, out var userId))
+        {
+            return RedirectToAction("Login");
+        }
+
+        var allBookings = await _bookingService.GetUserBookingsAsync(userId);
+
+        var viewModel = new TicketBooking.Web.ViewModels.Booking.MyBookingsViewModel
+        {
+            UpcomingBookings = allBookings
+                .Where(b => b.Status == "Confirmed" && b.EventDateTime >= DateTime.UtcNow)
+                .OrderBy(b => b.EventDateTime)
+                .ToList(),
+            PastBookings = allBookings
+                .Where(b => b.Status == "Confirmed" && b.EventDateTime < DateTime.UtcNow)
+                .OrderByDescending(b => b.EventDateTime)
+                .ToList(),
+            CancelledBookings = allBookings
+                .Where(b => b.Status != "Confirmed")
+                .OrderByDescending(b => b.CreatedAtUtc)
+                .ToList()
+        };
+
+        return View(viewModel);
     }
 
     [HttpGet]

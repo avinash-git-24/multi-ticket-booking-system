@@ -1,0 +1,199 @@
+@model TicketBooking.Web.ViewModels.Booking.SeatMapViewModel
+@{
+    ViewData["Title"] = $"Select Seats: {Model.MovieTitle} - ShowSphere";
+}
+
+<div class="bg-dark text-white py-3 border-bottom">
+    <div class="container d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
+        <div>
+            <h1 class="h4 fw-bold mb-1">@Model.MovieTitle</h1>
+            <div class="small text-white-50">
+                <span class="badge bg-danger me-1">@Model.Certificate</span>
+                <span class="me-2">@Model.Language</span>
+                <span class="me-2">•</span>
+                <span>@Model.TheatreName - @Model.ScreenName (@Model.ScreenType)</span>
+            </div>
+        </div>
+        <div class="text-md-end">
+            <span class="badge bg-light text-dark fs-6">@Model.ShowDateTime.ToString("ddd, dd MMM • hh:mm tt")</span>
+        </div>
+    </div>
+</div>
+
+<div class="container py-4">
+    <!-- Alert message container -->
+    <div id="seatErrorAlert" class="alert alert-danger d-none shadow-sm mb-4" role="alert"></div>
+
+    <div class="seat-map-container shadow-sm">
+        <!-- Screen Projection Curve -->
+        <div class="screen-arch">
+            <div class="screen-curve"></div>
+            <div class="screen-text">Screen this way</div>
+        </div>
+
+        <!-- Seat Matrix -->
+        @foreach (var rowEntry in Model.RowsGrouped)
+        {
+            var rowLabel = rowEntry.Key;
+            var seatsInRow = rowEntry.Value;
+            var tier = seatsInRow.FirstOrDefault()?.SeatTier ?? "Gold";
+            var price = seatsInRow.FirstOrDefault()?.Price ?? Model.GoldPrice;
+
+            <div class="seat-row">
+                <span class="row-label">@rowLabel</span>
+
+                @foreach (var seat in seatsInRow)
+                {
+                    var isBooked = seat.Status == "Booked";
+                    var isHeld = seat.Status == "Held";
+                    var cssClass = isBooked ? "seat-booked" : (isHeld ? "seat-held" : "seat-available");
+                    var tooltip = isBooked ? "Booked" : (isHeld ? "In Progress" : $"{seat.RowLabel}{seat.SeatNumber} (₹{seat.Price})");
+
+                    <button type="button" 
+                            class="seat-btn @cssClass"
+                            data-seat-id="@seat.SeatId"
+                            data-label="@seat.RowLabel@seat.SeatNumber"
+                            data-price="@seat.Price"
+                            data-tier="@seat.SeatTier"
+                            title="@tooltip"
+                            @(isBooked || isHeld ? "disabled" : "")>
+                        @seat.SeatNumber
+                    </button>
+                }
+            </div>
+        }
+
+        <!-- Seat Map Legend -->
+        <div class="seat-legend">
+            <div class="legend-item">
+                <div class="legend-sample bg-white"></div>
+                <span>Available</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-sample bg-danger"></div>
+                <span>Selected</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-sample" style="background-color: #FEF3C7; border-color: #F59E0B;"></div>
+                <span>Held (In Progress)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-sample bg-secondary opacity-50"></div>
+                <span>Sold</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bottom Sticky Selection Bar -->
+<div class="fixed-bottom bg-white border-top shadow-lg py-3">
+    <div class="container d-flex flex-column flex-sm-row justify-content-between align-items-center gap-3">
+        <div>
+            <div class="small text-muted mb-1">
+                Selected Seats (<span id="seatCount">0</span>/10):
+                <strong id="seatLabels" class="text-dark">None</strong>
+            </div>
+            <div class="h5 fw-bold text-danger mb-0">
+                Total: ₹<span id="seatTotalPrice">0.00</span>
+                <span class="text-muted fw-normal small">(+ taxes at checkout)</span>
+            </div>
+        </div>
+
+        <div>
+            <button id="btnProceedToPay" type="button" class="btn btn-primary-showsphere px-4 py-2" disabled>
+                Proceed to Checkout
+            </button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const MAX_SEATS = 10;
+        const showtimeId = @Model.ShowtimeId;
+        const selectedSeats = new Map();
+
+        document.querySelectorAll('.seat-btn.seat-available').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const seatId = parseInt(this.getAttribute('data-seat-id'));
+                const label = this.getAttribute('data-label');
+                const price = parseFloat(this.getAttribute('data-price'));
+
+                if (selectedSeats.has(seatId)) {
+                    selectedSeats.delete(seatId);
+                    this.classList.remove('seat-selected');
+                } else {
+                    if (selectedSeats.size >= MAX_SEATS) {
+                        alert("You can select a maximum of " + MAX_SEATS + " seats per transaction.");
+                        return;
+                    }
+                    selectedSeats.set(seatId, { label: label, price: price });
+                    this.classList.add('seat-selected');
+                }
+
+                updateSummaryBar();
+            });
+        });
+
+        function updateSummaryBar() {
+            const count = selectedSeats.size;
+            document.getElementById('seatCount').innerText = count;
+
+            if (count > 0) {
+                const labels = Array.from(selectedSeats.values()).map(s => s.label).join(', ');
+                let total = 0;
+                selectedSeats.forEach(s => total += s.price);
+
+                document.getElementById('seatLabels').innerText = labels;
+                document.getElementById('seatTotalPrice').innerText = total.toFixed(2);
+                document.getElementById('btnProceedToPay').removeAttribute('disabled');
+            } else {
+                document.getElementById('seatLabels').innerText = 'None';
+                document.getElementById('seatTotalPrice').innerText = '0.00';
+                document.getElementById('btnProceedToPay').setAttribute('disabled', 'true');
+            }
+        }
+
+        document.getElementById('btnProceedToPay').addEventListener('click', async function() {
+            if (selectedSeats.size === 0) return;
+
+            const btn = this;
+            btn.setAttribute('disabled', 'true');
+            btn.innerText = 'Reserving Seats...';
+
+            const alertBox = document.getElementById('seatErrorAlert');
+            alertBox.classList.add('d-none');
+            alertBox.innerText = '';
+
+            const seatIds = Array.from(selectedSeats.keys());
+
+            try {
+                const response = await fetch('/booking/hold-seats', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        showtimeId: showtimeId,
+                        seatIds: seatIds
+                    })
+                });
+
+                const result = await response.json();
+                if (result.success && result.redirectUrl) {
+                    window.location.href = result.redirectUrl;
+                } else {
+                    alertBox.innerText = result.errorMessage || 'Failed to hold seats. They may have been booked by someone else.';
+                    alertBox.classList.remove('d-none');
+                    btn.removeAttribute('disabled');
+                    btn.innerText = 'Proceed to Checkout';
+                }
+            } catch (err) {
+                alertBox.innerText = 'Connection error. Please try again.';
+                alertBox.classList.remove('d-none');
+                btn.removeAttribute('disabled');
+                btn.innerText = 'Proceed to Checkout';
+            }
+        });
+    </script>
+}
