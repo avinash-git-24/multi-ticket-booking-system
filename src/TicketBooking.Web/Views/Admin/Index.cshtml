@@ -1,0 +1,243 @@
+@model TicketBooking.Web.ViewModels.Admin.AdminDashboardViewModel
+@{
+    ViewData["Title"] = "Admin Portal - ShowSphere";
+}
+
+<div class="bg-light border-bottom py-3">
+    <div class="container d-flex flex-wrap justify-content-between align-items-center gap-3">
+        <div>
+            <div class="d-flex align-items-center gap-2">
+                <span class="badge bg-danger">ADMIN PORTAL</span>
+                <span class="text-muted small">System Operations &amp; Real-time Metrics</span>
+            </div>
+            <h3 class="fw-bold text-dark mb-0 mt-1">Management Dashboard</h3>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <form method="post" asp-action="CleanupHolds" class="m-0">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-2">
+                    <i class="bi bi-arrow-repeat"></i>
+                    <span>Cleanup Expired Holds</span>
+                </button>
+            </form>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-sm btn-outline-danger d-flex align-items-center gap-2">
+                <i class="bi bi-globe"></i>
+                <span>View Public Site</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="container py-4">
+    @if (TempData["AdminMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show d-flex align-items-center gap-2" role="alert">
+            <i class="bi bi-check-circle-fill"></i>
+            <div>@TempData["AdminMessage"]</div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <!-- 1. KPI Metrics Cards -->
+    <div class="row g-3 mb-4">
+        <!-- Total Movies -->
+        <div class="col-6 col-md-4 col-xl-2">
+            <div class="card border-0 shadow-sm rounded-3 h-100 p-3">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <span class="text-muted small fw-semibold">Movies</span>
+                    <div class="rounded-circle bg-danger bg-opacity-10 text-danger p-2 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                        <i class="bi bi-film"></i>
+                    </div>
+                </div>
+                <h3 class="fw-bold mb-0 text-dark">@Model.TotalMovies</h3>
+                <span class="text-muted small mt-1">Active in Rajkot</span>
+            </div>
+        </div>
+
+        <!-- Total Events -->
+        <div class="col-6 col-md-4 col-xl-2">
+            <div class="card border-0 shadow-sm rounded-3 h-100 p-3">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <span class="text-muted small fw-semibold">Live Events</span>
+                    <div class="rounded-circle bg-primary bg-opacity-10 text-primary p-2 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                        <i class="bi bi-calendar-event"></i>
+                    </div>
+                </div>
+                <h3 class="fw-bold mb-0 text-dark">@Model.TotalEvents</h3>
+                <span class="text-muted small mt-1">Shows &amp; Sports</span>
+            </div>
+        </div>
+
+        <!-- Total Bookings -->
+        <div class="col-6 col-md-4 col-xl-2">
+            <div class="card border-0 shadow-sm rounded-3 h-100 p-3">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <span class="text-muted small fw-semibold">Bookings</span>
+                    <div class="rounded-circle bg-info bg-opacity-10 text-info p-2 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                        <i class="bi bi-ticket-perforated"></i>
+                    </div>
+                </div>
+                <h3 class="fw-bold mb-0 text-dark">@Model.TotalBookings</h3>
+                <span class="text-success small mt-1 fw-semibold">@Model.ConfirmedBookingsCount Confirmed</span>
+            </div>
+        </div>
+
+        <!-- Confirmed Revenue -->
+        <div class="col-6 col-md-4 col-xl-3">
+            <div class="card border-0 shadow-sm rounded-3 h-100 p-3">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <span class="text-muted small fw-semibold">Confirmed Revenue</span>
+                    <div class="rounded-circle bg-success bg-opacity-10 text-success p-2 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                        <i class="bi bi-currency-rupee"></i>
+                    </div>
+                </div>
+                <h3 class="fw-bold mb-0 text-dark">₹@Model.TotalRevenue.ToString("N2")</h3>
+                <span class="text-muted small mt-1">Total Simulated Volume</span>
+            </div>
+        </div>
+
+        <!-- Total Users -->
+        <div class="col-12 col-md-4 col-xl-3">
+            <div class="card border-0 shadow-sm rounded-3 h-100 p-3">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <span class="text-muted small fw-semibold">Users</span>
+                    <div class="rounded-circle bg-warning bg-opacity-10 text-warning p-2 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                        <i class="bi bi-people"></i>
+                    </div>
+                </div>
+                <h3 class="fw-bold mb-0 text-dark">@Model.TotalUsers</h3>
+                <span class="text-muted small mt-1">Admin &amp; Customer Accounts</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Tables Section -->
+    <div class="row g-4">
+        <!-- Recent Bookings Table -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
+                <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                    <h5 class="fw-bold mb-0 text-dark d-flex align-items-center gap-2">
+                        <i class="bi bi-clock-history text-danger"></i>
+                        <span>Recent Transactions</span>
+                    </h5>
+                    <span class="badge bg-light text-muted border">Latest 10</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0" style="font-size: 13.5px;">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Reference</th>
+                                <th>Customer</th>
+                                <th>Type</th>
+                                <th>Qty</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.RecentBookings.Count == 0)
+                            {
+                                <tr>
+                                    <td colspan="7" class="text-center py-4 text-muted">No bookings found in database.</td>
+                                </tr>
+                            }
+                            else
+                            {
+                                @foreach (var b in Model.RecentBookings)
+                                {
+                                    <tr>
+                                        <td>
+                                            <span class="fw-bold font-monospace text-dark">@b.BookingReference</span>
+                                        </td>
+                                        <td>
+                                            <div class="fw-semibold text-dark">@b.CustomerName</div>
+                                            <div class="text-muted small" style="font-size: 11px;">@b.CustomerEmail</div>
+                                        </td>
+                                        <td>
+                                            <span class="badge @(b.BookingType == "Movie" ? "bg-info text-dark" : "bg-primary")">
+                                                @b.BookingType
+                                            </span>
+                                        </td>
+                                        <td>@b.TotalQuantity</td>
+                                        <td class="fw-semibold">₹@b.TotalAmount.ToString("N2")</td>
+                                        <td>
+                                            @if (b.Status == "Confirmed")
+                                            {
+                                                <span class="badge bg-success">Confirmed</span>
+                                            }
+                                            else if (b.Status == "Cancelled")
+                                            {
+                                                <span class="badge bg-secondary">Cancelled</span>
+                                            }
+                                            else if (b.Status == "Hold")
+                                            {
+                                                <span class="badge bg-warning text-dark">Hold</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-danger">@b.Status</span>
+                                            }
+                                        </td>
+                                        <td class="text-muted small">
+                                            @b.CreatedAtUtc.ToString("dd MMM, HH:mm")
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Registered Accounts Table -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
+                <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                    <h5 class="fw-bold mb-0 text-dark d-flex align-items-center gap-2">
+                        <i class="bi bi-shield-person text-danger"></i>
+                        <span>System Users</span>
+                    </h5>
+                    <span class="badge bg-light text-muted border">Active</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0" style="font-size: 13px;">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Name / Email</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var u in Model.RecentUsers)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="fw-semibold text-dark">@u.FullName</div>
+                                        <div class="text-muted small text-truncate" style="max-width: 140px; font-size: 11px;">@u.Email</div>
+                                    </td>
+                                    <td>
+                                        @if (u.Roles.Contains("Admin"))
+                                        {
+                                            <span class="badge bg-danger">Admin</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">User</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <i class="bi bi-check-circle-fill text-success" title="Active"></i>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
