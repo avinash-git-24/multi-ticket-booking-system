@@ -215,7 +215,7 @@ public class DatabaseInitializer : IDatabaseInitializer
     private async Task EnsureAbhayUserAsync(SqlConnection connection, CancellationToken cancellationToken)
     {
         var targetEmails = new[] { "abhay@gmail.com", "abhay@gmai.com" };
-        const string abhayPassword = "abhay@123";
+        const string abhayPassword = "Abhay@2026";
         const string abhayFullName = "Abhay";
 
         var hasher = new PasswordHasher<User>();
