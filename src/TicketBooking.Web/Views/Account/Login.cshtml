@@ -25,13 +25,13 @@
 
                         <div class="mb-3">
                             <label asp-for="Email" class="form-label small fw-semibold">Email Address</label>
-                            <input asp-for="Email" id="inputEmail" class="form-control py-2" value="@(string.IsNullOrEmpty(Model.Email) ? "abhay@gmail.com" : Model.Email)" placeholder="abhay@gmail.com" autofocus />
+                            <input asp-for="Email" id="inputEmail" class="form-control py-2" placeholder="Enter your email" autofocus />
                             <span asp-validation-for="Email" class="text-danger small"></span>
                         </div>
 
                         <div class="mb-3">
                             <label asp-for="Password" class="form-label small fw-semibold">Password</label>
-                            <input asp-for="Password" id="inputPassword" type="password" class="form-control py-2" value="@(string.IsNullOrEmpty(Model.Password) ? "abhay@123" : Model.Password)" placeholder="abhay@123" />
+                            <input asp-for="Password" id="inputPassword" type="password" class="form-control py-2" placeholder="Enter your password" />
                             <span asp-validation-for="Password" class="text-danger small"></span>
                         </div>
 
