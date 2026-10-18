@@ -1,0 +1,174 @@
+@model TicketBooking.Web.ViewModels.Booking.MyBookingsViewModel
+@{
+    ViewData["Title"] = "My Bookings - ShowSphere";
+}
+
+<div class="container py-5">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+        <div>
+            <h1 class="h3 fw-bold mb-1">My Bookings</h1>
+            <p class="text-muted small mb-0">Track your confirmed tickets, past visits, and manage cancellations</p>
+        </div>
+        <div>
+            <a asp-controller="Movies" asp-action="Index" class="btn btn-sm btn-primary-showsphere">Book New Movie</a>
+            <a asp-controller="Events" asp-action="Index" class="btn btn-sm btn-outline-showsphere ms-2">Book Events</a>
+        </div>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <!-- Tabs: Upcoming vs Past vs Cancelled -->
+    <ul class="nav nav-pills mb-4 gap-2" id="bookingsTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active px-4 py-2" id="upcoming-tab" data-bs-toggle="pill" data-bs-target="#upcoming" type="button" role="tab">
+                Upcoming (@Model.UpcomingBookings.Count)
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link px-4 py-2" id="past-tab" data-bs-toggle="pill" data-bs-target="#past" type="button" role="tab">
+                Past Visits (@Model.PastBookings.Count)
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link px-4 py-2" id="cancelled-tab" data-bs-toggle="pill" data-bs-target="#cancelled" type="button" role="tab">
+                Cancelled / Failed (@Model.CancelledBookings.Count)
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="bookingsTabContent">
+        <!-- Upcoming Bookings Tab -->
+        <div class="tab-pane fade show active" id="upcoming" role="tabpanel">
+            @if (Model.UpcomingBookings.Count == 0)
+            {
+                <div class="p-5 text-center bg-white rounded-4 border shadow-sm">
+                    <div class="display-4 text-muted mb-3">🎟️</div>
+                    <h5 class="fw-bold">No upcoming bookings</h5>
+                    <p class="text-muted small">You don't have any confirmed upcoming bookings yet.</p>
+                    <a asp-controller="Movies" asp-action="Index" class="btn btn-sm btn-primary-showsphere">Explore Movies Now</a>
+                </div>
+            }
+            else
+            {
+                <div class="d-flex flex-column gap-3">
+                    @foreach (var b in Model.UpcomingBookings)
+                    {
+                        <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                            <div class="card-body p-4">
+                                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                                    <div>
+                                        <div class="d-flex align-items-center gap-2 mb-2">
+                                            <span class="badge bg-success">@b.Status</span>
+                                            <span class="badge bg-light text-dark border">@b.BookingType</span>
+                                            <span class="font-monospace text-muted small">#@b.BookingReference</span>
+                                        </div>
+                                        <h4 class="fw-bold text-dark mb-1">@b.ItemTitle</h4>
+                                        <p class="text-muted small mb-1">📍 @b.VenueName</p>
+                                        <p class="text-dark small fw-semibold mb-0">
+                                            📅 @b.EventDateTime.ToString("dddd, dd MMM yyyy • hh:mm tt")
+                                        </p>
+                                    </div>
+
+                                    <div class="text-md-end border-top border-md-top-0 pt-3 pt-md-0">
+                                        <div class="text-muted small">Seats / Tickets:</div>
+                                        <div class="h5 fw-bold text-danger mb-1">@string.Join(", ", b.SeatLabels)</div>
+                                        <div class="fw-bold text-dark mb-3">Paid: ₹@b.TotalAmount.ToString("N2")</div>
+
+                                        <div class="d-flex gap-2 justify-content-md-end">
+                                            <a asp-controller="Booking" asp-action="Confirmation" asp-route-reference="@b.BookingReference" class="btn btn-sm btn-outline-secondary">
+                                                View Ticket
+                                            </a>
+                                            @if (b.CanCancel)
+                                            {
+                                                <form method="post" asp-controller="Booking" asp-action="Cancel" asp-route-reference="@b.BookingReference" onsubmit="return confirm('Are you sure you want to cancel this booking? Held seats will be restored to inventory.');">
+                                                    @Html.AntiForgeryToken()
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger">Cancel Booking</button>
+                                                </form>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+
+        <!-- Past Bookings Tab -->
+        <div class="tab-pane fade" id="past" role="tabpanel">
+            @if (Model.PastBookings.Count == 0)
+            {
+                <div class="p-5 text-center bg-white rounded-4 border shadow-sm">
+                    <p class="text-muted mb-0">No past bookings recorded.</p>
+                </div>
+            }
+            else
+            {
+                <div class="d-flex flex-column gap-3">
+                    @foreach (var b in Model.PastBookings)
+                    {
+                        <div class="card border-0 shadow-sm rounded-4 p-4 opacity-75">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <div class="badge bg-secondary mb-2">Completed</div>
+                                    <h5 class="fw-bold mb-1">@b.ItemTitle</h5>
+                                    <p class="text-muted small mb-0">@b.VenueName • @b.EventDateTime.ToString("dd MMM yyyy")</p>
+                                </div>
+                                <div class="text-end">
+                                    <div class="fw-bold">₹@b.TotalAmount.ToString("N2")</div>
+                                    <div class="small text-muted">@string.Join(", ", b.SeatLabels)</div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+
+        <!-- Cancelled Bookings Tab -->
+        <div class="tab-pane fade" id="cancelled" role="tabpanel">
+            @if (Model.CancelledBookings.Count == 0)
+            {
+                <div class="p-5 text-center bg-white rounded-4 border shadow-sm">
+                    <p class="text-muted mb-0">No cancelled bookings.</p>
+                </div>
+            }
+            else
+            {
+                <div class="d-flex flex-column gap-3">
+                    @foreach (var b in Model.CancelledBookings)
+                    {
+                        <div class="card border-0 shadow-sm rounded-4 p-4 border-start border-danger border-4">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="badge bg-danger mb-2">@b.Status</span>
+                                    <h5 class="fw-bold text-muted mb-1">@b.ItemTitle</h5>
+                                    <p class="text-muted small mb-0">Reference: @b.BookingReference • Created: @b.CreatedAtUtc.ToString("dd MMM yyyy hh:mm tt")</p>
+                                </div>
+                                <div class="text-end text-muted">
+                                    <div>₹@b.TotalAmount.ToString("N2")</div>
+                                    <span class="badge bg-light text-muted border">Seats Restored</span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
