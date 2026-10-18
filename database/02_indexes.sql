@@ -6,6 +6,11 @@
 USE ShowSphereDb;
 GO
 
+SET ANSI_NULLS ON;
+GO
+SET QUOTED_IDENTIFIER ON;
+GO
+
 -- 1. Movie Search and Catalog Indexes
 IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'IX_Movies_Status_ReleaseDate' AND object_id = OBJECT_ID('dbo.Movies'))
 BEGIN
