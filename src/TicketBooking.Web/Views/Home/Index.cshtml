@@ -76,24 +76,27 @@
             </div>
 
             <div class="bms-rail-container">
-                <button class="bms-rail-scroll-btn d-none d-lg-flex" type="button" aria-label="Next movies" onclick="bmsScrollRail('recommendedRow', 1)">
+                <button class="bms-rail-scroll-btn bms-rail-prev d-none d-lg-flex" id="recommendedRowPrev" type="button" aria-label="Previous movies" onclick="bmsScrollRail('recommendedRow', -1)" style="display: none;">
+                    <i class="bi bi-chevron-left"></i>
+                </button>
+                <button class="bms-rail-scroll-btn bms-rail-next d-none d-lg-flex" id="recommendedRowNext" type="button" aria-label="Next movies" onclick="bmsScrollRail('recommendedRow', 1)">
                     <i class="bi bi-chevron-right"></i>
                 </button>
 
-                <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-4" id="recommendedRow">
+                <div class="bms-rail-track" id="recommendedRow" onscroll="bmsUpdateRailButtons('recommendedRow')">
                     @{
                         int movieIdx = 0;
-                        string[] sampleRatings = new[] { "7.3/10", "9.2/10", "8.8/10", "8.5/10", "7.9/10" };
-                        string[] sampleVotes = new[] { "3.2K+ Votes", "4.1K+ Votes", "188K+ Likes", "132K+ Votes", "1.9K+ Votes" };
+                        string[] sampleRatings = new[] { "7.3/10", "9.2/10", "8.8/10", "8.5/10", "7.9/10", "9.0/10", "8.6/10", "8.1/10" };
+                        string[] sampleVotes = new[] { "3.2K+ Votes", "4.1K+ Votes", "188K+ Likes", "132K+ Votes", "1.9K+ Votes", "45K+ Votes", "12K+ Votes", "8.5K+ Votes" };
                     }
-                    @foreach (var movie in Model.RecommendedMovies.Take(5))
+                    @foreach (var movie in Model.RecommendedMovies)
                     {
                         var rating = movieIdx < sampleRatings.Length ? sampleRatings[movieIdx] : "8.5/10";
                         var votes = movieIdx < sampleVotes.Length ? sampleVotes[movieIdx] : "10K+ Votes";
                         var isPromoted = movieIdx < 2;
                         movieIdx++;
 
-                        <div class="col">
+                        <div class="bms-rail-col">
                             <a asp-controller="Movies" asp-action="Details" asp-route-id="@movie.MovieId" class="bms-card">
                                 <div class="bms-poster-wrap mb-2">
                                     @if (isPromoted)
@@ -603,8 +606,31 @@
 
         window.bmsScrollRail = function (rowId, direction) {
             const row = document.getElementById(rowId);
-            if (row) {
-                row.scrollBy({ left: direction * 400, behavior: 'smooth' });
+            if (!row) return;
+            const scrollStep = row.clientWidth * 0.85;
+            const maxScroll = row.scrollWidth - row.clientWidth;
+
+            if (direction > 0 && row.scrollLeft >= maxScroll - 15) {
+                row.scrollTo({ left: 0, behavior: 'smooth' });
+            } else if (direction < 0 && row.scrollLeft <= 15) {
+                row.scrollTo({ left: maxScroll, behavior: 'smooth' });
+            } else {
+                row.scrollBy({ left: direction * scrollStep, behavior: 'smooth' });
+            }
+            setTimeout(() => window.bmsUpdateRailButtons(rowId), 350);
+        };
+
+        window.bmsUpdateRailButtons = function (rowId) {
+            const row = document.getElementById(rowId);
+            if (!row) return;
+            const prevBtn = document.getElementById(rowId + 'Prev');
+            if (prevBtn) {
+                if (row.scrollLeft > 15) {
+                    prevBtn.classList.remove('d-none');
+                    prevBtn.style.display = 'flex';
+                } else {
+                    prevBtn.style.display = 'none';
+                }
             }
         };
 

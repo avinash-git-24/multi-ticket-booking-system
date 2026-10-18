@@ -30,13 +30,14 @@ public class HomeController : Controller
         // Fetch dynamic movies from database via MovieService
         var showingResult = await _movieService.GetMovieListAsync(city: null, status: "CurrentlyShowing", genre: null, language: null, search: null);
         var upcomingResult = await _movieService.GetMovieListAsync(city: null, status: "Upcoming", genre: null, language: null, search: null);
+        var allMovies = showingResult.Movies.Concat(upcomingResult.Movies).DistinctBy(m => m.MovieId).ToList();
 
         // Fetch dynamic events from database via EventService
         var allEvents = await _eventService.GetEventsAsync();
 
         var viewModel = new HomeIndexViewModel
         {
-            RecommendedMovies = showingResult.Movies,
+            RecommendedMovies = allMovies.Count > 0 ? allMovies : showingResult.Movies,
             PremiereMovies = upcomingResult.Movies.Count > 0 ? upcomingResult.Movies : showingResult.Movies.Take(4).ToList(),
             MusicEvents = allEvents.Where(e => e.Category.Equals("Concert", StringComparison.OrdinalIgnoreCase)).ToList(),
             ComedyEvents = allEvents.Where(e => e.Category.Equals("Comedy", StringComparison.OrdinalIgnoreCase)).ToList(),

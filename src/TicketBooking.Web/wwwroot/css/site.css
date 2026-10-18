@@ -778,29 +778,57 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 
 .bms-rail-scroll-btn {
   position: absolute;
-  right: -18px;
   top: 42%;
   transform: translateY(-50%);
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  background-color: rgba(34, 34, 34, 0.75);
+  background-color: rgba(34, 34, 34, 0.82);
   color: #FFFFFF;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
+  font-size: 20px;
   cursor: pointer;
-  z-index: 5;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
   transition: all 0.2s ease;
-  border: none;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .bms-rail-scroll-btn:hover {
-  background-color: #222222;
-  transform: translateY(-50%) scale(1.1);
+  background-color: #111111;
+  transform: translateY(-50%) scale(1.08);
   color: #FFFFFF;
+}
+
+.bms-rail-prev {
+  left: -20px;
+}
+
+.bms-rail-next {
+  right: -20px;
+}
+
+.bms-rail-track {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  gap: 20px;
+  padding: 8px 4px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.bms-rail-track::-webkit-scrollbar {
+  display: none;
+}
+
+.bms-rail-col {
+  flex: 0 0 calc((100% - 4 * 20px) / 5);
+  min-width: 216px;
+  max-width: 240px;
 }
 
 .bms-card {
