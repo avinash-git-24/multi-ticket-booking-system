@@ -27,7 +27,7 @@ public class BookingRestorationTests
     {
         var showtimeId = await GetFutureShowtimeIdAsync();
         var testUserId = await EnsureTestUserAsync("failtest@showsphere.test", "Payment Failure Tester");
-        var seats = new List<int> { 20, 21 };
+        var seats = await GetTestSeatsForShowtimeAsync(showtimeId, 2);
 
         // 1. Reset target seats
         await ResetTestSeatsAsync(showtimeId, seats);
@@ -63,7 +63,7 @@ public class BookingRestorationTests
     {
         var showtimeId = await GetFutureShowtimeIdAsync();
         var testUserId = await EnsureTestUserAsync("canceltest@showsphere.test", "Cancellation Tester");
-        var seats = new List<int> { 25 };
+        var seats = await GetTestSeatsForShowtimeAsync(showtimeId, 1);
 
         // 1. Reset target seat
         await ResetTestSeatsAsync(showtimeId, seats);
@@ -158,5 +158,26 @@ public class BookingRestorationTests
             list.Add(reader.GetString(0));
         }
         return list;
+    }
+
+    private async Task<List<int>> GetTestSeatsForShowtimeAsync(int showtimeId, int count)
+    {
+        using var conn = await _connectionFactory.CreateConnectionAsync();
+        var sql = $@"
+            SELECT TOP ({count}) s.SeatId 
+            FROM dbo.Seats s
+            INNER JOIN dbo.Showtimes sh ON s.ScreenId = sh.ScreenId
+            WHERE sh.ShowtimeId = @ShowtimeId
+            ORDER BY s.SeatId ASC;";
+
+        using var cmd = new Microsoft.Data.SqlClient.SqlCommand(sql, conn);
+        cmd.Parameters.AddWithValue("@ShowtimeId", showtimeId);
+        var seats = new List<int>();
+        using var reader = await cmd.ExecuteReaderAsync();
+        while (await reader.ReadAsync())
+        {
+            seats.Add(reader.GetInt32(0));
+        }
+        return seats;
     }
 }

@@ -67,6 +67,17 @@ public class DatabaseInitializer : IDatabaseInitializer
             await EnsureDemoCustomerUserAsync(connection, cancellationToken);
             await EnsureAbhayUserAsync(connection, cancellationToken);
 
+            // 3. Ensure all Rajkot theatres, screens, and multi-theatre showtimes exist
+            if (Directory.Exists(databaseDir))
+            {
+                var seedTheatresPath = Path.Combine(databaseDir, "10_seed_all_rajkot_theatres_and_showtimes.sql");
+                if (File.Exists(seedTheatresPath))
+                {
+                    _logger.LogInformation("Ensuring all Rajkot theatres and showtimes from {File}...", seedTheatresPath);
+                    await ExecuteSqlFileAsync(connection, seedTheatresPath, cancellationToken);
+                }
+            }
+
             _logger.LogInformation("Database initialization check completed successfully.");
         }
         catch (Exception ex)
