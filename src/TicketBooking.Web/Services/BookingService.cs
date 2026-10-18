@@ -104,7 +104,7 @@ public class BookingService : IBookingService
         var taxAmount = Math.Round(convenienceFee * (gstPercent / 100m), 2);
 
         return await _bookingRepository.CreateMovieSeatHoldAsync(
-            userId, showtimeId, seatIds, basePrice, convenienceFee, taxAmount, 
+            userId, showtimeId, seatIds, basePrice, convenienceFee, taxAmount,
             TimeSpan.FromMinutes(holdDurationMinutes), cancellationToken);
     }
 

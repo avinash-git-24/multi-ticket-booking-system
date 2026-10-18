@@ -270,7 +270,7 @@ public class DatabaseInitializer : IDatabaseInitializer
             }
             else
             {
-                // Update password hash to guarantee abhay@123 works
+                // Update password hash to guarantee configured credentials work
                 const string updateSql = "UPDATE dbo.Users SET PasswordHash = @PasswordHash, IsActive = 1 WHERE UserId = @UserId;";
                 using var updateCmd = new SqlCommand(updateSql, connection);
                 updateCmd.Parameters.AddWithValue("@PasswordHash", hashedPassword);

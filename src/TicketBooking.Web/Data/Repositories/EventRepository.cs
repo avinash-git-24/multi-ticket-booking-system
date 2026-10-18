@@ -50,13 +50,13 @@ public class EventRepository : IEventRepository
     }
 
     public async Task<IReadOnlyList<EventItem>> GetEventsAsync(
-        string? category, 
-        string? city, 
-        string? search, 
+        string? category,
+        string? city,
+        string? search,
         CancellationToken cancellationToken = default)
     {
         using var connection = await _connectionFactory.CreateConnectionAsync(cancellationToken);
-        
+
         var sql = @"
             SELECT 
                 e.EventId, e.Title, e.Description, e.Category, e.CityId, e.VenueId, e.BannerUrl, 

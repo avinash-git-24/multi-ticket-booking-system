@@ -29,7 +29,7 @@ public class EventBookingTests
         _connectionFactory = new DbConnectionFactory(config);
         _eventRepository = new EventRepository(_connectionFactory, NullLogger<EventRepository>.Instance);
         _bookingRepository = new BookingRepository(_connectionFactory, NullLogger<BookingRepository>.Instance);
-        
+
         var showtimeRepo = new ShowtimeRepository(_connectionFactory);
         var paymentService = new SimulatedPaymentService(NullLogger<SimulatedPaymentService>.Instance);
         _bookingService = new BookingService(_bookingRepository, showtimeRepo, _eventRepository, paymentService, config, NullLogger<BookingService>.Instance);

@@ -26,7 +26,7 @@ public class EventItem
     public string Status { get; set; } = "Upcoming";
     public DateTime CreatedAtUtc { get; set; }
     public DateTime? UpdatedAtUtc { get; set; }
-    
+
     // Flattened relational fields
     public string CityName { get; set; } = string.Empty;
     public string VenueName { get; set; } = string.Empty;

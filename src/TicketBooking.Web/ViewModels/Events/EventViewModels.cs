@@ -16,7 +16,7 @@ public class EventListViewModel
 public class EventDetailsViewModel
 {
     public EventDetailsDto Event { get; set; } = new();
-    
+
     [Required(ErrorMessage = "Please select a ticket tier.")]
     public int SelectedCategoryId { get; set; }
 

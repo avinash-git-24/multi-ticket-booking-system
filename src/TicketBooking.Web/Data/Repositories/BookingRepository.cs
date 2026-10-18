@@ -517,7 +517,7 @@ public class BookingRepository : IBookingRepository
                 bookingId = reader.GetInt32(0);
                 bookingType = reader.GetString(1);
                 status = reader.GetString(2);
-                eventStart = bookingType == "Movie" 
+                eventStart = bookingType == "Movie"
                     ? (reader.IsDBNull(3) ? null : reader.GetDateTime(3))
                     : (reader.IsDBNull(4) ? null : reader.GetDateTime(4));
             }

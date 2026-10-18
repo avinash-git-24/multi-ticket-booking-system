@@ -15,9 +15,9 @@ public class EventService : IEventService
     }
 
     public async Task<IReadOnlyList<EventCardDto>> GetEventsAsync(
-        string? category = null, 
-        string? city = null, 
-        string? search = null, 
+        string? category = null,
+        string? city = null,
+        string? search = null,
         CancellationToken cancellationToken = default)
     {
         var items = await _eventRepository.GetEventsAsync(category, city, search, cancellationToken);
