@@ -62,8 +62,9 @@ public class DatabaseInitializer : IDatabaseInitializer
                 await ExecuteSqlFileAsync(connection, Path.Combine(databaseDir, "05_seed_events.sql"), cancellationToken);
             }
 
-            // 2. Ensure Admin User exists from configuration
+            // 2. Ensure Admin and Customer demo users exist
             await EnsureAdminUserAsync(connection, cancellationToken);
+            await EnsureDemoCustomerUserAsync(connection, cancellationToken);
 
             _logger.LogInformation("Database initialization check completed successfully.");
         }
@@ -138,6 +139,74 @@ public class DatabaseInitializer : IDatabaseInitializer
                 assignCmd.Parameters.AddWithValue("@UserId", adminUserId.Value);
                 await assignCmd.ExecuteNonQueryAsync(cancellationToken);
                 _logger.LogInformation("Assigned Admin role to user ID {UserId}.", adminUserId.Value);
+            }
+        }
+    }
+
+    private async Task EnsureDemoCustomerUserAsync(SqlConnection connection, CancellationToken cancellationToken)
+    {
+        const string customerEmail = "customer@showsphere.local";
+        const string customerPassword = "Customer@ShowSphere2026!";
+        const string customerFullName = "Demo Customer";
+
+        const string checkSql = "SELECT UserId FROM dbo.Users WHERE Email = @Email;";
+        int? customerUserId = null;
+
+        using (var cmd = new SqlCommand(checkSql, connection))
+        {
+            cmd.Parameters.AddWithValue("@Email", customerEmail);
+            var result = await cmd.ExecuteScalarAsync(cancellationToken);
+            if (result != null && result != DBNull.Value)
+            {
+                customerUserId = Convert.ToInt32(result);
+            }
+        }
+
+        if (!customerUserId.HasValue)
+        {
+            _logger.LogInformation("Seeding Demo Customer account for {Email} using PasswordHasher...", customerEmail);
+
+            var hasher = new PasswordHasher<User>();
+            var dummyUser = new User { Email = customerEmail, FullName = customerFullName };
+            var hashedPassword = hasher.HashPassword(dummyUser, customerPassword);
+
+            const string insertUserSql = @"
+                INSERT INTO dbo.Users (FullName, Email, PasswordHash, PhoneNumber, PreferredCityId, IsActive, CreatedAtUtc)
+                VALUES (@FullName, @Email, @PasswordHash, @Phone, 1, 1, SYSUTCDATETIME());
+                SELECT SCOPE_IDENTITY();";
+
+            using (var cmd = new SqlCommand(insertUserSql, connection))
+            {
+                cmd.Parameters.AddWithValue("@FullName", customerFullName);
+                cmd.Parameters.AddWithValue("@Email", customerEmail);
+                cmd.Parameters.AddWithValue("@PasswordHash", hashedPassword);
+                cmd.Parameters.AddWithValue("@Phone", "+919876500001");
+
+                customerUserId = Convert.ToInt32(await cmd.ExecuteScalarAsync(cancellationToken));
+            }
+        }
+
+        // Ensure Customer role is mapped
+        const string checkRoleSql = @"
+            SELECT COUNT(*) FROM dbo.UserRoles ur
+            JOIN dbo.Roles r ON ur.RoleId = r.RoleId
+            WHERE ur.UserId = @UserId AND r.RoleName = 'Customer';";
+
+        using (var cmd = new SqlCommand(checkRoleSql, connection))
+        {
+            cmd.Parameters.AddWithValue("@UserId", customerUserId.Value);
+            var roleCount = Convert.ToInt32(await cmd.ExecuteScalarAsync(cancellationToken));
+
+            if (roleCount == 0)
+            {
+                const string assignRoleSql = @"
+                    INSERT INTO dbo.UserRoles (UserId, RoleId)
+                    SELECT @UserId, RoleId FROM dbo.Roles WHERE RoleName = 'Customer';";
+
+                using var assignCmd = new SqlCommand(assignRoleSql, connection);
+                assignCmd.Parameters.AddWithValue("@UserId", customerUserId.Value);
+                await assignCmd.ExecuteNonQueryAsync(cancellationToken);
+                _logger.LogInformation("Assigned Customer role to user ID {UserId}.", customerUserId.Value);
             }
         }
     }
