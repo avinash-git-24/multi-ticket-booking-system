@@ -18,6 +18,20 @@
                 </div>
 
                 <div class="card-body p-4 pt-2">
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <div class="alert alert-info py-2 small mb-3 d-flex align-items-center justify-content-between">
+                            <div>
+                                <i class="bi bi-info-circle me-1"></i>
+                                Logged in as <strong>@(User.Identity.Name)</strong>
+                            </div>
+                            <form method="post" asp-controller="Account" asp-action="Logout" class="m-0">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-sm btn-outline-danger py-0 px-2 fw-semibold">Sign Out</button>
+                            </form>
+                        </div>
+                    }
+
                     <form method="post" asp-controller="Account" asp-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]">
                         @Html.AntiForgeryToken()
 
