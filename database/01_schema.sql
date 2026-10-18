@@ -216,3 +216,89 @@ BEGIN
     );
 END
 GO
+
+-- 12. Venues Table
+IF OBJECT_ID('dbo.Venues', 'U') IS NULL
+BEGIN
+    CREATE TABLE dbo.Venues (
+        VenueId INT IDENTITY(1,1) NOT NULL,
+        VenueName NVARCHAR(250) NOT NULL,
+        CityId INT NOT NULL,
+        Address NVARCHAR(500) NOT NULL,
+        Capacity INT NOT NULL CONSTRAINT CK_Venues_Capacity CHECK (Capacity > 0),
+        IsActive BIT NOT NULL CONSTRAINT DF_Venues_IsActive DEFAULT (1),
+        CreatedAtUtc DATETIME2(7) NOT NULL CONSTRAINT DF_Venues_CreatedAtUtc DEFAULT (SYSUTCDATETIME()),
+        CONSTRAINT PK_Venues PRIMARY KEY CLUSTERED (VenueId),
+        CONSTRAINT FK_Venues_Cities FOREIGN KEY (CityId) REFERENCES dbo.Cities(CityId)
+    );
+END
+GO
+
+-- 13. Events Table
+IF OBJECT_ID('dbo.Events', 'U') IS NULL
+BEGIN
+    CREATE TABLE dbo.Events (
+        EventId INT IDENTITY(1,1) NOT NULL,
+        Title NVARCHAR(250) NOT NULL,
+        Description NVARCHAR(MAX) NOT NULL,
+        Category NVARCHAR(50) NOT NULL,
+        CityId INT NOT NULL,
+        VenueId INT NULL,
+        BannerUrl NVARCHAR(1000) NULL,
+        StartDate DATETIME2(7) NOT NULL,
+        EndDate DATETIME2(7) NOT NULL,
+        Status NVARCHAR(50) NOT NULL CONSTRAINT DF_Events_Status DEFAULT ('Upcoming'),
+        CreatedAtUtc DATETIME2(7) NOT NULL CONSTRAINT DF_Events_CreatedAtUtc DEFAULT (SYSUTCDATETIME()),
+        UpdatedAtUtc DATETIME2(7) NULL,
+        RowVersion ROWVERSION NOT NULL,
+        CONSTRAINT PK_Events PRIMARY KEY CLUSTERED (EventId),
+        CONSTRAINT FK_Events_Cities FOREIGN KEY (CityId) REFERENCES dbo.Cities(CityId),
+        CONSTRAINT FK_Events_Venues FOREIGN KEY (VenueId) REFERENCES dbo.Venues(VenueId),
+        CONSTRAINT CK_Events_Dates CHECK (EndDate >= StartDate),
+        CONSTRAINT CK_Events_Status CHECK (Status IN ('Upcoming', 'Past', 'Cancelled')),
+        CONSTRAINT CK_Events_Category CHECK (Category IN ('Concert', 'Comedy', 'Workshop', 'Sports', 'Theatre'))
+    );
+END
+GO
+
+-- 14. EventSessions Table
+IF OBJECT_ID('dbo.EventSessions', 'U') IS NULL
+BEGIN
+    CREATE TABLE dbo.EventSessions (
+        SessionId INT IDENTITY(1,1) NOT NULL,
+        EventId INT NOT NULL,
+        SessionTitle NVARCHAR(150) NOT NULL,
+        StartTime DATETIME2(7) NOT NULL,
+        EndTime DATETIME2(7) NOT NULL,
+        IsActive BIT NOT NULL CONSTRAINT DF_EventSessions_IsActive DEFAULT (1),
+        CONSTRAINT PK_EventSessions PRIMARY KEY CLUSTERED (SessionId),
+        CONSTRAINT FK_EventSessions_Events FOREIGN KEY (EventId) REFERENCES dbo.Events(EventId) ON DELETE CASCADE,
+        CONSTRAINT CK_EventSessions_Times CHECK (EndTime > StartTime)
+    );
+END
+GO
+
+-- 15. TicketCategories Table (Tiered Inventory with Capacity Guard)
+IF OBJECT_ID('dbo.TicketCategories', 'U') IS NULL
+BEGIN
+    CREATE TABLE dbo.TicketCategories (
+        CategoryId INT IDENTITY(1,1) NOT NULL,
+        EventId INT NOT NULL,
+        SessionId INT NULL,
+        CategoryName NVARCHAR(100) NOT NULL,
+        Price DECIMAL(10,2) NOT NULL,
+        TotalCapacity INT NOT NULL,
+        RemainingCapacity INT NOT NULL,
+        MaxPerBooking INT NOT NULL CONSTRAINT DF_TicketCategories_MaxPerBooking DEFAULT (10),
+        Perks NVARCHAR(500) NULL,
+        RowVersion ROWVERSION NOT NULL,
+        CONSTRAINT PK_TicketCategories PRIMARY KEY CLUSTERED (CategoryId),
+        CONSTRAINT FK_TicketCategories_Events FOREIGN KEY (EventId) REFERENCES dbo.Events(EventId) ON DELETE CASCADE,
+        CONSTRAINT FK_TicketCategories_EventSessions FOREIGN KEY (SessionId) REFERENCES dbo.EventSessions(SessionId),
+        CONSTRAINT CK_TicketCategories_Price CHECK (Price >= 0),
+        CONSTRAINT CK_TicketCategories_TotalCapacity CHECK (TotalCapacity > 0),
+        CONSTRAINT CK_TicketCategories_RemainingCapacity CHECK (RemainingCapacity >= 0 AND RemainingCapacity <= TotalCapacity),
+        CONSTRAINT CK_TicketCategories_MaxPerBooking CHECK (MaxPerBooking > 0)
+    );
+END
+GO
