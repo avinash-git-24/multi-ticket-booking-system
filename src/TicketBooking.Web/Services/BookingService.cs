@@ -8,6 +8,9 @@ public interface IBookingService
     Task<(bool Success, string? Error, string? BookingReference, DateTime? ExpiresAtUtc)> HoldMovieSeatsAsync(
         int userId, int showtimeId, IReadOnlyList<int> seatIds, CancellationToken cancellationToken = default);
 
+    Task<(bool Success, string? Error, string? BookingReference, DateTime? ExpiresAtUtc)> HoldEventTicketsAsync(
+        int userId, int eventId, int ticketCategoryId, int quantity, CancellationToken cancellationToken = default);
+
     Task<CheckoutViewModel?> GetCheckoutSummaryAsync(
         string bookingReference, int userId, CancellationToken cancellationToken = default);
 
@@ -30,6 +33,7 @@ public class BookingService : IBookingService
 {
     private readonly IBookingRepository _bookingRepository;
     private readonly IShowtimeRepository _showtimeRepository;
+    private readonly IEventRepository _eventRepository;
     private readonly IPaymentService _paymentService;
     private readonly IConfiguration _configuration;
     private readonly ILogger<BookingService> _logger;
@@ -37,12 +41,14 @@ public class BookingService : IBookingService
     public BookingService(
         IBookingRepository bookingRepository,
         IShowtimeRepository showtimeRepository,
+        IEventRepository eventRepository,
         IPaymentService paymentService,
         IConfiguration configuration,
         ILogger<BookingService> logger)
     {
         _bookingRepository = bookingRepository;
         _showtimeRepository = showtimeRepository;
+        _eventRepository = eventRepository;
         _paymentService = paymentService;
         _configuration = configuration;
         _logger = logger;
@@ -99,6 +105,55 @@ public class BookingService : IBookingService
 
         return await _bookingRepository.CreateMovieSeatHoldAsync(
             userId, showtimeId, seatIds, basePrice, convenienceFee, taxAmount, 
+            TimeSpan.FromMinutes(holdDurationMinutes), cancellationToken);
+    }
+
+    public async Task<(bool Success, string? Error, string? BookingReference, DateTime? ExpiresAtUtc)> HoldEventTicketsAsync(
+        int userId, int eventId, int ticketCategoryId, int quantity, CancellationToken cancellationToken = default)
+    {
+        if (quantity <= 0)
+        {
+            return (false, "Please select at least 1 ticket to proceed.", null, null);
+        }
+
+        if (quantity > 10)
+        {
+            return (false, "A maximum of 10 tickets can be reserved per transaction.", null, null);
+        }
+
+        var eventItem = await _eventRepository.GetByIdAsync(eventId, cancellationToken);
+        if (eventItem == null || eventItem.Status != "Upcoming")
+        {
+            return (false, "The selected event is no longer available for booking.", null, null);
+        }
+
+        var category = await _eventRepository.GetCategoryByIdAsync(ticketCategoryId, cancellationToken);
+        if (category == null || category.EventId != eventId)
+        {
+            return (false, "The selected ticket tier is invalid for this event.", null, null);
+        }
+
+        if (quantity > category.MaxPerBooking)
+        {
+            return (false, $"The maximum allowed quantity for {category.CategoryName} is {category.MaxPerBooking}.", null, null);
+        }
+
+        if (category.RemainingCapacity < quantity)
+        {
+            return (false, $"Only {category.RemainingCapacity} tickets remain for {category.CategoryName}.", null, null);
+        }
+
+        // SERVER AUTHORITY: Calculate base price strictly from database tier price
+        var basePrice = category.Price * quantity;
+        var feePercent = _configuration.GetValue<decimal>("BookingRules:ConvenienceFeePercent", 10.0m);
+        var gstPercent = _configuration.GetValue<decimal>("BookingRules:GstPercent", 18.0m);
+        var holdDurationMinutes = _configuration.GetValue<int>("BookingRules:HoldDurationMinutes", 8);
+
+        var convenienceFee = Math.Round(basePrice * (feePercent / 100m), 2);
+        var taxAmount = Math.Round(convenienceFee * (gstPercent / 100m), 2);
+
+        return await _bookingRepository.CreateEventTicketHoldAsync(
+            userId, eventId, ticketCategoryId, quantity, basePrice, convenienceFee, taxAmount,
             TimeSpan.FromMinutes(holdDurationMinutes), cancellationToken);
     }
 
