@@ -1,0 +1,171 @@
+@model TicketBooking.Web.ViewModels.Movies.MovieListViewModel
+@{
+    ViewData["Title"] = $"Movies in {Model.SelectedCity} - ShowSphere";
+}
+
+<div class="bg-light py-3 border-bottom mb-4">
+    <div class="container">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+            <div>
+                <h1 class="h3 fw-bold mb-1">Movies in @Model.SelectedCity</h1>
+                <p class="text-muted small mb-0">Discover and book cinema tickets across top theatres in @Model.SelectedCity</p>
+            </div>
+
+            <!-- Status Tabs: Now Showing vs Coming Soon -->
+            <div class="btn-group shadow-sm" role="group">
+                <a asp-action="Index" 
+                   asp-route-status="CurrentlyShowing"
+                   asp-route-city="@Model.SelectedCity"
+                   asp-route-genre="@Model.SelectedGenre"
+                   asp-route-language="@Model.SelectedLanguage"
+                   class="btn btn-sm @(Model.SelectedStatus == "CurrentlyShowing" ? "btn-primary-showsphere" : "btn-outline-secondary")">
+                    Now Showing
+                </a>
+                <a asp-action="Index" 
+                   asp-route-status="Upcoming"
+                   asp-route-city="@Model.SelectedCity"
+                   asp-route-genre="@Model.SelectedGenre"
+                   asp-route-language="@Model.SelectedLanguage"
+                   class="btn btn-sm @(Model.SelectedStatus == "Upcoming" ? "btn-primary-showsphere" : "btn-outline-secondary")">
+                    Coming Soon
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container pb-5">
+    <div class="row g-4">
+        <!-- Sidebar Filters -->
+        <aside class="col-lg-3">
+            <div class="card border-0 shadow-sm rounded-3 p-3 mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold mb-0">Filters</h5>
+                    <a asp-action="Index" asp-route-status="@Model.SelectedStatus" class="small text-danger text-decoration-none">Clear All</a>
+                </div>
+
+                <!-- Search Input -->
+                <form method="get" asp-action="Index" class="mb-3">
+                    <input type="hidden" name="status" value="@Model.SelectedStatus" />
+                    <input type="hidden" name="city" value="@Model.SelectedCity" />
+                    @if (!string.IsNullOrEmpty(Model.SelectedGenre))
+                    {
+                        <input type="hidden" name="genre" value="@Model.SelectedGenre" />
+                    }
+                    @if (!string.IsNullOrEmpty(Model.SelectedLanguage))
+                    {
+                        <input type="hidden" name="language" value="@Model.SelectedLanguage" />
+                    }
+                    <div class="input-group">
+                        <input type="text" name="search" value="@Model.SearchQuery" class="form-control form-control-sm" placeholder="Search title..." />
+                        <button class="btn btn-sm btn-outline-secondary" type="submit">Go</button>
+                    </div>
+                </form>
+
+                <!-- Languages Filter -->
+                <div class="mb-3">
+                    <div class="fw-semibold small text-muted text-uppercase mb-2">Languages</div>
+                    <div class="d-flex flex-wrap gap-1">
+                        <a asp-action="Index" 
+                           asp-route-status="@Model.SelectedStatus"
+                           asp-route-genre="@Model.SelectedGenre"
+                           asp-route-search="@Model.SearchQuery"
+                           class="badge @(string.IsNullOrEmpty(Model.SelectedLanguage) ? "bg-danger" : "bg-light text-dark border") text-decoration-none p-2">
+                            All
+                        </a>
+                        @foreach (var lang in Model.AvailableLanguages)
+                        {
+                            <a asp-action="Index" 
+                               asp-route-language="@lang"
+                               asp-route-status="@Model.SelectedStatus"
+                               asp-route-genre="@Model.SelectedGenre"
+                               asp-route-search="@Model.SearchQuery"
+                               class="badge @(Model.SelectedLanguage == lang ? "bg-danger" : "bg-light text-dark border") text-decoration-none p-2">
+                                @lang
+                            </a>
+                        }
+                    </div>
+                </div>
+
+                <!-- Genres Filter -->
+                <div class="mb-2">
+                    <div class="fw-semibold small text-muted text-uppercase mb-2">Genres</div>
+                    <div class="d-flex flex-wrap gap-1">
+                        <a asp-action="Index" 
+                           asp-route-status="@Model.SelectedStatus"
+                           asp-route-language="@Model.SelectedLanguage"
+                           asp-route-search="@Model.SearchQuery"
+                           class="badge @(string.IsNullOrEmpty(Model.SelectedGenre) ? "bg-danger" : "bg-light text-dark border") text-decoration-none p-2">
+                            All
+                        </a>
+                        @foreach (var g in Model.AvailableGenres)
+                        {
+                            <a asp-action="Index" 
+                               asp-route-genre="@g"
+                               asp-route-status="@Model.SelectedStatus"
+                               asp-route-language="@Model.SelectedLanguage"
+                               asp-route-search="@Model.SearchQuery"
+                               class="badge @(Model.SelectedGenre == g ? "bg-danger" : "bg-light text-dark border") text-decoration-none p-2">
+                                @g
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Movie Grid -->
+        <main class="col-lg-9">
+            @if (Model.Movies.Count == 0)
+            {
+                <div class="text-center py-5 bg-white rounded-3 border">
+                    <div class="display-4 text-muted mb-2">🎬</div>
+                    <h5 class="fw-bold">No movies found</h5>
+                    <p class="text-muted small">No titles match your current filter selection in @Model.SelectedCity.</p>
+                    <a asp-action="Index" class="btn btn-sm btn-outline-showsphere">Reset Filters</a>
+                </div>
+            }
+            else
+            {
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+                    @foreach (var movie in Model.Movies)
+                    {
+                        <div class="col">
+                            <div class="movie-card shadow-sm">
+                                <div class="movie-poster-wrap">
+                                    @if (!string.IsNullOrEmpty(movie.PosterUrl))
+                                    {
+                                        <img src="@movie.PosterUrl" alt="@movie.Title poster" class="movie-poster-img" loading="lazy" />
+                                    }
+                                    else
+                                    {
+                                        <div class="d-flex align-items-center justify-content-center h-100 bg-dark text-white p-3 text-center">
+                                            <div>
+                                                <span class="display-6 d-block mb-1">🎬</span>
+                                                <span class="fw-bold">@movie.Title</span>
+                                            </div>
+                                        </div>
+                                    }
+                                    <div class="movie-rating-badge">
+                                        <span class="badge bg-warning text-dark me-1">@movie.Certificate</span>
+                                        <span>@movie.Language</span>
+                                    </div>
+                                </div>
+                                <div class="movie-content">
+                                    <div class="movie-title" title="@movie.Title">@movie.Title</div>
+                                    <div class="movie-meta-text">@movie.Genre • @movie.DurationMinutes min</div>
+                                    <div class="d-flex justify-content-between align-items-center mt-auto pt-2">
+                                        <span class="badge bg-light text-dark border">2D, 3D, IMAX</span>
+                                        <a asp-action="Details" asp-route-id="@movie.MovieId" class="btn btn-sm btn-primary-showsphere px-3">
+                                            @(movie.Status == "Upcoming" ? "View Details" : "Book")
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </main>
+    </div>
+</div>
