@@ -115,6 +115,14 @@ public class AccountController : Controller
         return RedirectToAction("Index", "Home");
     }
 
+    [HttpGet]
+    public async Task<IActionResult> LogoutDirect()
+    {
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        _logger.LogInformation("User logged out via GET.");
+        return RedirectToAction("Index", "Home");
+    }
+
     [Authorize]
     [HttpGet]
     public async Task<IActionResult> Profile()
