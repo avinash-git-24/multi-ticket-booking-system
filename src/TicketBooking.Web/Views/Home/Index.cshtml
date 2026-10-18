@@ -3,111 +3,90 @@
     ViewData["Title"] = "Movie Tickets, Plays, Sports, Events in " + Model.SelectedCity;
 }
 
-<div class="bg-light pb-5">
-    <!-- 1. Top Wide Hero Carousel (Authentic BookMyShow Promotional Banner) -->
+<div class="bms-bg-page pb-5">
+    <!-- 1. Top Wide Hero Carousel (Official BookMyShow 1240px Banners) -->
     <section class="py-3">
-        <div class="container">
-            <div id="bmsHeroCarousel" class="carousel slide rounded-4 overflow-hidden shadow-sm" data-bs-ride="carousel">
+        <div class="bms-container">
+            <div id="bmsHeroCarousel" class="carousel slide rounded-3 overflow-hidden shadow-sm" data-bs-ride="carousel">
                 <div class="carousel-indicators mb-2">
                     <button type="button" data-bs-target="#bmsHeroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
                     <button type="button" data-bs-target="#bmsHeroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
                     <button type="button" data-bs-target="#bmsHeroCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
                 </div>
-                <div class="carousel-inner" style="max-height: 320px;">
-                    <!-- Slide 1: Navratri / Cultural Mega Festival -->
+                <div class="carousel-inner" style="max-height: 300px;">
+                    <!-- Slide 1: Navratri Central Campaign (Rajkot) -->
                     <div class="carousel-item active">
-                        <div class="position-relative hero-slide d-flex align-items-center" style="height: 300px; background: linear-gradient(90deg, #1A0B2E 0%, #4B1248 40%, rgba(26,11,46,0.6) 100%), url('/images/banners/navratri_hero.jpg') center/cover no-repeat;">
-                            <div class="container p-4 p-md-5 text-white">
-                                <div class="col-lg-7">
-                                    <span class="badge bg-warning text-dark px-3 py-1 text-uppercase fw-bold mb-2">Grand Festive Specials</span>
-                                    <h1 class="display-6 fw-bold mb-2 text-white">Dussehra &amp; Navratri Utsav 2026</h1>
-                                    <p class="lead mb-4 text-white-50 small">Experience high-energy Garba nights, Bhavai folk natak, and arena stadium passes in Rajkot.</p>
-                                    <a asp-controller="Events" asp-action="Index" class="btn btn-danger px-4 py-2 rounded-pill fw-bold" style="background-color: #F84464; border-color: #F84464;">Explore Navratri Events</a>
-                                </div>
-                            </div>
-                        </div>
+                        <a asp-controller="Events" asp-action="Index">
+                            <img src="/images/bms/hero_navratri.jpg" class="d-block w-100 object-fit-cover" style="height: 300px;" alt="Navratri Festival Rajkot" />
+                        </a>
                     </div>
 
-                    <!-- Slide 2: Blockbuster Theatrical Releases -->
+                    <!-- Slide 2: Diljit Dosanjh RuPay Aura India Tour -->
                     <div class="carousel-item">
-                        <div class="position-relative hero-slide d-flex align-items-center" style="height: 300px; background: linear-gradient(90deg, #111827 0%, #1F2937 40%, rgba(17,24,39,0.5) 100%), url('/images/banners/blockbuster_hero.jpg') center/cover no-repeat;">
-                            <div class="container p-4 p-md-5 text-white">
-                                <div class="col-lg-7">
-                                    <span class="badge bg-danger px-3 py-1 text-uppercase fw-bold mb-2">Now In Theatres</span>
-                                    <h1 class="display-6 fw-bold mb-2 text-white">Mega Blockbusters In Dolby Atmos</h1>
-                                    <p class="lead mb-4 text-white-50 small">Singham Again, Stree 2, Kalki 2898 AD &amp; Kasoombo with real-time seat reservation.</p>
-                                    <a asp-controller="Movies" asp-action="Index" class="btn btn-danger px-4 py-2 rounded-pill fw-bold" style="background-color: #F84464; border-color: #F84464;">Book Movie Tickets</a>
-                                </div>
-                            </div>
-                        </div>
+                        <a asp-controller="Events" asp-action="Index" asp-route-category="Concert">
+                            <img src="/images/bms/hero_diljit.jpg" class="d-block w-100 object-fit-cover" style="height: 300px;" alt="Diljit Dosanjh Tour" />
+                        </a>
                     </div>
 
-                    <!-- Slide 3: Stadium Concerts & Arena Live -->
+                    <!-- Slide 3: Aadhya Shakti Garba 2026 -->
                     <div class="carousel-item">
-                        <div class="position-relative hero-slide d-flex align-items-center" style="height: 300px; background: linear-gradient(90deg, #0A192F 0%, #172A45 40%, rgba(10,25,47,0.5) 100%), url('/images/banners/coldplay_hero.jpg') center/cover no-repeat;">
-                            <div class="container p-4 p-md-5 text-white">
-                                <div class="col-lg-7">
-                                    <span class="badge bg-info text-dark px-3 py-1 text-uppercase fw-bold mb-2">Stadium Tours</span>
-                                    <h1 class="display-6 fw-bold mb-2 text-white">Coldplay &amp; Arijit Singh Live</h1>
-                                    <p class="lead mb-4 text-white-50 small">Massive stadium concerts, Ranji Trophy cricket finals, and VIP fan pit passes.</p>
-                                    <a asp-controller="Events" asp-action="Index" asp-route-category="Concert" class="btn btn-light px-4 py-2 rounded-pill fw-bold text-dark">Reserve Concert Passes</a>
-                                </div>
-                            </div>
-                        </div>
+                        <a asp-controller="Events" asp-action="Index">
+                            <img src="/images/bms/hero_garba.jpg" class="d-block w-100 object-fit-cover" style="height: 300px;" alt="Aadhya Shakti Garba" />
+                        </a>
                     </div>
                 </div>
 
                 <button class="carousel-control-prev" type="button" data-bs-target="#bmsHeroCarousel" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon rounded-circle bg-dark bg-opacity-50 p-3" aria-hidden="true"></span>
+                    <span class="carousel-control-prev-icon rounded-circle bg-dark bg-opacity-75 p-3" aria-hidden="true"></span>
                     <span class="visually-hidden">Previous</span>
                 </button>
                 <button class="carousel-control-next" type="button" data-bs-target="#bmsHeroCarousel" data-bs-slide="next">
-                    <span class="carousel-control-next-icon rounded-circle bg-dark bg-opacity-50 p-3" aria-hidden="true"></span>
+                    <span class="carousel-control-next-icon rounded-circle bg-dark bg-opacity-75 p-3" aria-hidden="true"></span>
                     <span class="visually-hidden">Next</span>
                 </button>
             </div>
         </div>
     </section>
 
-    <!-- 2. Recommended Movies Rail (BookMyShow 5-Column Grid with Real Posters) -->
+    <!-- 2. Recommended Movies Section (Exact 5-Column 1240px Grid) -->
     <section class="py-4">
-        <div class="container">
+        <div class="bms-container">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h3 class="fw-bold text-dark mb-0 fs-4">Recommended Movies</h3>
-                <a asp-controller="Movies" asp-action="Index" class="text-danger fw-semibold text-decoration-none small">
+                <h3 class="bms-section-title mb-0">Recommended Movies</h3>
+                <a asp-controller="Movies" asp-action="Index" class="bms-see-all">
                     See All <i class="bi bi-chevron-right small"></i>
                 </a>
             </div>
 
-            <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-3 g-md-4">
+            <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-4">
                 @foreach (var movie in Model.RecommendedMovies.Take(5))
                 {
                     <div class="col">
-                        <a asp-controller="Movies" asp-action="Details" asp-route-id="@movie.MovieId" class="text-decoration-none text-dark d-block movie-poster-card">
-                            <div class="position-relative rounded-3 overflow-hidden shadow-sm mb-2" style="aspect-ratio: 2/3; background-color: #1F2533;">
+                        <a asp-controller="Movies" asp-action="Details" asp-route-id="@movie.MovieId" class="bms-card">
+                            <div class="bms-poster-wrap mb-2">
                                 @if (!string.IsNullOrEmpty(movie.PosterUrl))
                                 {
-                                    <img src="@movie.PosterUrl" class="w-100 h-100 object-fit-cover transition-transform" alt="@movie.Title" loading="lazy" />
+                                    <img src="@movie.PosterUrl" alt="@movie.Title" loading="lazy" />
                                 }
                                 else
                                 {
-                                    <div class="d-flex align-items-center justify-content-center h-100 text-white-50">
+                                    <div class="d-flex align-items-center justify-content-center h-100 text-secondary">
                                         <i class="bi bi-film fs-1"></i>
                                     </div>
                                 }
 
-                                <!-- BookMyShow Rating Strip at Bottom of Poster -->
-                                <div class="position-absolute bottom-0 start-0 w-100 bg-dark bg-opacity-85 text-white px-2 py-1 small d-flex justify-content-between align-items-center" style="font-size: 0.78rem;">
-                                    <span><span class="text-danger fw-bold">★</span> 8.8/10</span>
-                                    <span class="text-white-50">14.2K Votes</span>
+                                <!-- BookMyShow Bottom Rating Strip -->
+                                <div class="bms-rating-strip">
+                                    <span><span class="text-danger fw-bold me-1">★</span>8.8/10</span>
+                                    <span class="opacity-75" style="font-size: 11px;">14.2K Votes</span>
                                 </div>
                             </div>
                             
-                            <h6 class="fw-bold text-dark mb-1 text-truncate" title="@movie.Title">@movie.Title</h6>
-                            <div class="text-muted small text-truncate" style="font-size: 0.82rem;">
+                            <h6 class="bms-card-title" title="@movie.Title">@movie.Title</h6>
+                            <div class="bms-card-subtitle">
                                 @movie.Certificate &bull; @movie.Genre
                             </div>
-                            <div class="text-muted small" style="font-size: 0.75rem;">
+                            <div class="bms-card-subtext">
                                 @movie.Language
                             </div>
                         </a>
@@ -117,150 +96,98 @@
         </div>
     </section>
 
-    <!-- 3. Endless Entertainment Stream Banner (Signature BookMyShow Stream Strip) -->
-    <section class="py-2">
-        <div class="container">
-            <div class="rounded-4 p-3 px-md-4 shadow-sm text-white d-flex align-items-center justify-content-between" style="background: linear-gradient(90deg, #182136 0%, #2A3656 100%);">
-                <div class="d-flex align-items-center gap-3">
-                    <span class="bg-danger text-white rounded-circle p-2 d-inline-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                        <i class="bi bi-play-fill fs-4"></i>
-                    </span>
-                    <div>
-                        <h6 class="fw-bold mb-0 text-white">Endless Entertainment Anytime. Anywhere.</h6>
-                        <span class="text-white-50 small">New releases, theatre specials, and live recordings stream in Ultra HD.</span>
-                    </div>
-                </div>
-                <a asp-controller="Movies" asp-action="Index" class="btn btn-sm btn-outline-light rounded-pill px-3 d-none d-md-inline-block">Explore Titles</a>
-            </div>
+    <!-- 3. BookMyShow STREAM Lead-In Banner (1240px x 103px) -->
+    <section class="py-3">
+        <div class="bms-container">
+            <a asp-controller="Movies" asp-action="Index" class="d-block rounded-3 overflow-hidden shadow-sm">
+                <img src="/images/bms/stream_lead_banner.png" class="w-100 object-fit-contain" alt="BookMyShow Stream Endless Entertainment" />
+            </a>
         </div>
     </section>
 
-    <!-- 4. The Best Of Live Events (5 Vibrant Category Discovery Tiles) -->
+    <!-- 4. The Best Of Live Events (5 Curated Square Category Cards) -->
     <section class="py-4">
-        <div class="container">
+        <div class="bms-container">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h3 class="fw-bold text-dark mb-0 fs-4">The Best Of Live Events</h3>
-                <a asp-controller="Events" asp-action="Index" class="text-danger fw-semibold text-decoration-none small">
+                <h3 class="bms-section-title mb-0">The Best Of Live Events</h3>
+                <a asp-controller="Events" asp-action="Index" class="bms-see-all">
                     See All <i class="bi bi-chevron-right small"></i>
                 </a>
             </div>
 
-            <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-3">
+            <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-4">
                 <!-- Tile 1: Comedy Shows -->
                 <div class="col">
-                    <a asp-controller="Events" asp-action="Index" asp-route-category="Comedy" class="text-decoration-none">
-                        <div class="live-event-pill-card p-3 rounded-4 shadow-sm text-white h-100 d-flex flex-column justify-content-between" style="background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%); min-height: 150px;">
-                            <div>
-                                <span class="badge bg-black bg-opacity-25 px-2 py-1 mb-2">Comedy</span>
-                                <h6 class="fw-bold mb-0">Comedy Shows</h6>
-                                <span class="small opacity-75" style="font-size: 0.75rem;">45+ Events</span>
-                            </div>
-                            <div class="text-end">
-                                <span class="fs-1">🎤</span>
-                            </div>
-                        </div>
+                    <a asp-controller="Events" asp-action="Index" asp-route-category="Comedy" class="bms-square-tile d-block shadow-sm">
+                        <img src="/images/bms/comedy_tile.png" alt="Comedy Shows" />
                     </a>
                 </div>
 
-                <!-- Tile 2: Amusement & Attractions -->
+                <!-- Tile 2: Amusement Parks -->
                 <div class="col">
-                    <a asp-controller="Events" asp-action="Index" class="text-decoration-none">
-                        <div class="live-event-pill-card p-3 rounded-4 shadow-sm text-white h-100 d-flex flex-column justify-content-between" style="background: linear-gradient(135deg, #0EA5E9 0%, #0284C7 100%); min-height: 150px;">
-                            <div>
-                                <span class="badge bg-black bg-opacity-25 px-2 py-1 mb-2">Attractions</span>
-                                <h6 class="fw-bold mb-0">Amusement Parks</h6>
-                                <span class="small opacity-75" style="font-size: 0.75rem;">15+ Events</span>
-                            </div>
-                            <div class="text-end">
-                                <span class="fs-1">🎡</span>
-                            </div>
-                        </div>
+                    <a asp-controller="Events" asp-action="Index" class="bms-square-tile d-block shadow-sm">
+                        <img src="/images/bms/amusement_tile.png" alt="Amusement Parks" />
                     </a>
                 </div>
 
-                <!-- Tile 3: Music Shows -->
+                <!-- Tile 3: Theatre Shows -->
                 <div class="col">
-                    <a asp-controller="Events" asp-action="Index" asp-route-category="Concert" class="text-decoration-none">
-                        <div class="live-event-pill-card p-3 rounded-4 shadow-sm text-white h-100 d-flex flex-column justify-content-between" style="background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%); min-height: 150px;">
-                            <div>
-                                <span class="badge bg-black bg-opacity-25 px-2 py-1 mb-2">Music</span>
-                                <h6 class="fw-bold mb-0">Music Shows</h6>
-                                <span class="small opacity-75" style="font-size: 0.75rem;">60+ Events</span>
-                            </div>
-                            <div class="text-end">
-                                <span class="fs-1">🎵</span>
-                            </div>
-                        </div>
+                    <a asp-controller="Events" asp-action="Index" asp-route-category="Theatre" class="bms-square-tile d-block shadow-sm">
+                        <img src="/images/bms/theatre_tile.png" alt="Theatre Shows" />
                     </a>
                 </div>
 
-                <!-- Tile 4: Plays & Theatre -->
+                <!-- Tile 4: Music Shows -->
                 <div class="col">
-                    <a asp-controller="Events" asp-action="Index" asp-route-category="Theatre" class="text-decoration-none">
-                        <div class="live-event-pill-card p-3 rounded-4 shadow-sm text-white h-100 d-flex flex-column justify-content-between" style="background: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%); min-height: 150px;">
-                            <div>
-                                <span class="badge bg-black bg-opacity-25 px-2 py-1 mb-2">Drama</span>
-                                <h6 class="fw-bold mb-0">Plays &amp; Natak</h6>
-                                <span class="small opacity-75" style="font-size: 0.75rem;">20+ Events</span>
-                            </div>
-                            <div class="text-end">
-                                <span class="fs-1">🎭</span>
-                            </div>
-                        </div>
+                    <a asp-controller="Events" asp-action="Index" asp-route-category="Concert" class="bms-square-tile d-block shadow-sm">
+                        <img src="/images/bms/music_tile.png" alt="Music Shows" />
                     </a>
                 </div>
 
-                <!-- Tile 5: Workshops & Tech -->
+                <!-- Tile 5: Workshops & More -->
                 <div class="col">
-                    <a asp-controller="Events" asp-action="Index" asp-route-category="Workshop" class="text-decoration-none">
-                        <div class="live-event-pill-card p-3 rounded-4 shadow-sm text-white h-100 d-flex flex-column justify-content-between" style="background: linear-gradient(135deg, #F43F5E 0%, #BE123C 100%); min-height: 150px;">
-                            <div>
-                                <span class="badge bg-black bg-opacity-25 px-2 py-1 mb-2">Learning</span>
-                                <h6 class="fw-bold mb-0">Workshops</h6>
-                                <span class="small opacity-75" style="font-size: 0.75rem;">35+ Events</span>
-                            </div>
-                            <div class="text-end">
-                                <span class="fs-1">💻</span>
-                            </div>
-                        </div>
+                    <a asp-controller="Events" asp-action="Index" asp-route-category="Workshop" class="bms-square-tile d-block shadow-sm">
+                        <img src="/images/bms/workshops_tile.png" alt="Workshops and More" />
                     </a>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- 5. PREMIERE Section (Signature BookMyShow Dark Slate Navy Wrapper) -->
-    <section class="py-4 my-2" style="background-color: #2B3148;">
-        <div class="container py-2">
+    <!-- 5. Premieres Section (Signature Dark Theme #2B3148) -->
+    <section class="py-4 my-3" style="background-color: #2B3148;">
+        <div class="bms-container py-2">
+            <!-- Premiere Brand Promo Banner -->
+            <div class="mb-4">
+                <img src="/images/bms/premiere_banner.png" class="w-100 object-fit-contain rounded-2" alt="Premieres Watch New Movies at Home Every Friday" />
+            </div>
+
             <div class="d-flex align-items-center justify-content-between mb-3 text-white">
-                <div class="d-flex align-items-center gap-2">
-                    <span class="badge bg-danger rounded-circle p-2"><i class="bi bi-crown-fill text-white fs-6"></i></span>
-                    <div>
-                        <h4 class="fw-bold mb-0 text-white">PREMIERE</h4>
-                        <span class="text-white-50 small">Watch brand new releases every Friday on big screen and stream</span>
-                    </div>
+                <div>
+                    <h3 class="fw-bold mb-0 text-white" style="font-family: 'Roboto', sans-serif;">Premieres</h3>
+                    <span class="text-white-50 small">Brand new releases every Friday</span>
                 </div>
-                <a asp-controller="Movies" asp-action="Index" asp-route-status="Upcoming" class="text-danger fw-semibold text-decoration-none small">
+                <a asp-controller="Movies" asp-action="Index" asp-route-status="Upcoming" class="bms-see-all">
                     See All <i class="bi bi-chevron-right small"></i>
                 </a>
             </div>
 
-            <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-3 g-md-4">
+            <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-4">
                 @foreach (var movie in Model.PremiereMovies.Take(5))
                 {
                     <div class="col">
-                        <a asp-controller="Movies" asp-action="Details" asp-route-id="@movie.MovieId" class="text-decoration-none text-white d-block movie-poster-card">
-                            <div class="position-relative rounded-3 overflow-hidden shadow mb-2" style="aspect-ratio: 2/3; background-color: #1F2533;">
+                        <a asp-controller="Movies" asp-action="Details" asp-route-id="@movie.MovieId" class="bms-card text-white">
+                            <div class="bms-poster-wrap mb-2">
                                 @if (!string.IsNullOrEmpty(movie.PosterUrl))
                                 {
-                                    <img src="@movie.PosterUrl" class="w-100 h-100 object-fit-cover transition-transform" alt="@movie.Title" loading="lazy" />
+                                    <img src="@movie.PosterUrl" alt="@movie.Title" loading="lazy" />
                                 }
-                                <div class="position-absolute bottom-0 start-0 w-100 bg-danger text-white text-center py-1 fw-bold small text-uppercase" style="font-size: 0.72rem; letter-spacing: 0.5px;">
+                                <div class="position-absolute bottom-0 start-0 w-100 bg-danger text-white text-center py-1 fw-bold small text-uppercase" style="font-size: 11px; letter-spacing: 0.5px;">
                                     PREMIERE
                                 </div>
                             </div>
-                            <h6 class="fw-bold text-white mb-1 text-truncate" title="@movie.Title">@movie.Title</h6>
-                            <div class="text-white-50 small text-truncate" style="font-size: 0.78rem;">@movie.Language &bull; @movie.Genre</div>
+                            <h6 class="bms-card-title text-white" title="@movie.Title">@movie.Title</h6>
+                            <div class="bms-card-subtitle text-white-50">@movie.Language</div>
                         </a>
                     </div>
                 }
@@ -268,46 +195,40 @@
         </div>
     </section>
 
-    <!-- 6. Top Music Events Rail (Vertical Poster Cards BookMyShow Layout) -->
+    <!-- 6. Your Music Studio (Concerts & Live Tours Rail) -->
     @if (Model.MusicEvents.Count > 0)
     {
         <section class="py-4">
-            <div class="container">
+            <div class="bms-container">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <div>
-                        <h3 class="fw-bold text-dark mb-0 fs-4">Top Music Events</h3>
+                        <h3 class="bms-section-title mb-0">Your Music Studio</h3>
                         <p class="text-muted small mb-0">Live concerts, stadium tours &amp; acoustic symphony sessions</p>
                     </div>
-                    <a asp-controller="Events" asp-action="Index" asp-route-category="Concert" class="text-danger fw-semibold text-decoration-none small">
+                    <a asp-controller="Events" asp-action="Index" asp-route-category="Concert" class="bms-see-all">
                         See All <i class="bi bi-chevron-right small"></i>
                     </a>
                 </div>
 
-                <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-3 g-md-4">
+                <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-4">
                     @foreach (var ev in Model.MusicEvents.Take(5))
                     {
                         <div class="col">
-                            <a asp-controller="Events" asp-action="Details" asp-route-id="@ev.EventId" class="text-decoration-none text-dark d-block hover-lift h-100">
-                                <div class="card border-0 rounded-3 shadow-sm overflow-hidden h-100">
-                                    <div class="position-relative" style="aspect-ratio: 2/3; background-color: #1F2533;">
-                                        @if (!string.IsNullOrEmpty(ev.BannerUrl))
-                                        {
-                                            <img src="@ev.BannerUrl" class="w-100 h-100 object-fit-cover transition-transform" alt="@ev.Title" loading="lazy" />
-                                        }
-                                        <div class="position-absolute bottom-0 start-0 w-100 p-2 bg-dark bg-opacity-80 text-white small fw-semibold" style="font-size: 0.75rem;">
-                                            <i class="bi bi-calendar-event me-1 text-warning"></i> @ev.StartDate.ToString("ddd, dd MMM")
-                                        </div>
-                                        <span class="badge bg-danger position-absolute top-0 end-0 m-2 px-2 py-1" style="font-size: 0.7rem;">@ev.CityName</span>
+                            <a asp-controller="Events" asp-action="Details" asp-route-id="@ev.EventId" class="bms-card">
+                                <div class="bms-poster-wrap mb-2">
+                                    @if (!string.IsNullOrEmpty(ev.BannerUrl))
+                                    {
+                                        <img src="@ev.BannerUrl" alt="@ev.Title" loading="lazy" />
+                                    }
+                                    <div class="bms-rating-strip" style="background: rgba(0, 0, 0, 0.85); justify-content: flex-start;">
+                                        <i class="bi bi-calendar-event me-2 text-warning"></i>
+                                        <span>@ev.StartDate.ToString("ddd, dd MMM")</span>
                                     </div>
-                                    <div class="card-body p-2 d-flex flex-column">
-                                        <h6 class="fw-bold mb-1 text-truncate" title="@ev.Title" style="font-size: 0.9rem;">@ev.Title</h6>
-                                        <p class="text-muted small mb-1 text-truncate" style="font-size: 0.75rem;"><i class="bi bi-geo-alt-fill text-danger me-1"></i>@ev.VenueName</p>
-                                        <div class="mt-auto pt-1 d-flex justify-content-between align-items-center">
-                                            <span class="fw-bold text-dark" style="font-size: 0.85rem;">₹@ev.StartingPrice.ToString("N0") onwards</span>
-                                            <span class="badge bg-secondary-subtle text-dark" style="font-size: 0.68rem;">@ev.TotalRemainingTickets left</span>
-                                        </div>
-                                    </div>
+                                    <span class="badge bg-danger position-absolute top-0 end-0 m-2 px-2 py-1" style="font-size: 10px;">@ev.CityName</span>
                                 </div>
+                                <h6 class="bms-card-title" title="@ev.Title">@ev.Title</h6>
+                                <div class="bms-card-subtitle">@ev.VenueName</div>
+                                <div class="bms-card-subtext fw-semibold text-dark mt-1">₹@ev.StartingPrice.ToString("N0") onwards</div>
                             </a>
                         </div>
                     }
@@ -316,46 +237,40 @@
         </section>
     }
 
-    <!-- 7. Laughter Therapy Rail (Standup Comedy Vertical Cards) -->
+    <!-- 7. Laughter Therapy (Standup Comedy Rail) -->
     @if (Model.ComedyEvents.Count > 0)
     {
         <section class="py-4">
-            <div class="container">
+            <div class="bms-container">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <div>
-                        <h3 class="fw-bold text-dark mb-0 fs-4">Laughter Therapy</h3>
+                        <h3 class="bms-section-title mb-0">Laughter Therapy</h3>
                         <p class="text-muted small mb-0">Unwind with standup comedy and hilarious live specials</p>
                     </div>
-                    <a asp-controller="Events" asp-action="Index" asp-route-category="Comedy" class="text-danger fw-semibold text-decoration-none small">
+                    <a asp-controller="Events" asp-action="Index" asp-route-category="Comedy" class="bms-see-all">
                         See All <i class="bi bi-chevron-right small"></i>
                     </a>
                 </div>
 
-                <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-3 g-md-4">
+                <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-4">
                     @foreach (var ev in Model.ComedyEvents.Take(5))
                     {
                         <div class="col">
-                            <a asp-controller="Events" asp-action="Details" asp-route-id="@ev.EventId" class="text-decoration-none text-dark d-block hover-lift h-100">
-                                <div class="card border-0 rounded-3 shadow-sm overflow-hidden h-100">
-                                    <div class="position-relative" style="aspect-ratio: 2/3; background-color: #1F2533;">
-                                        @if (!string.IsNullOrEmpty(ev.BannerUrl))
-                                        {
-                                            <img src="@ev.BannerUrl" class="w-100 h-100 object-fit-cover transition-transform" alt="@ev.Title" loading="lazy" />
-                                        }
-                                        <div class="position-absolute bottom-0 start-0 w-100 p-2 bg-dark bg-opacity-80 text-white small fw-semibold" style="font-size: 0.75rem;">
-                                            <i class="bi bi-calendar3 me-1 text-warning"></i> @ev.StartDate.ToString("ddd, dd MMM")
-                                        </div>
-                                        <span class="badge bg-dark bg-opacity-75 position-absolute top-0 start-0 m-2" style="font-size: 0.7rem;">Comedy</span>
+                            <a asp-controller="Events" asp-action="Details" asp-route-id="@ev.EventId" class="bms-card">
+                                <div class="bms-poster-wrap mb-2">
+                                    @if (!string.IsNullOrEmpty(ev.BannerUrl))
+                                    {
+                                        <img src="@ev.BannerUrl" alt="@ev.Title" loading="lazy" />
+                                    }
+                                    <div class="bms-rating-strip" style="background: rgba(0, 0, 0, 0.85); justify-content: flex-start;">
+                                        <i class="bi bi-calendar3 me-2 text-warning"></i>
+                                        <span>@ev.StartDate.ToString("ddd, dd MMM")</span>
                                     </div>
-                                    <div class="card-body p-2 d-flex flex-column">
-                                        <h6 class="fw-bold mb-1 text-truncate" title="@ev.Title" style="font-size: 0.9rem;">@ev.Title</h6>
-                                        <p class="text-muted small mb-1 text-truncate" style="font-size: 0.75rem;"><i class="bi bi-geo-alt-fill text-danger me-1"></i>@ev.VenueName</p>
-                                        <div class="mt-auto pt-1 d-flex justify-content-between align-items-center">
-                                            <span class="fw-bold text-dark" style="font-size: 0.85rem;">₹@ev.StartingPrice.ToString("N0") onwards</span>
-                                            <span class="badge bg-secondary-subtle text-dark" style="font-size: 0.68rem;">@ev.TotalRemainingTickets left</span>
-                                        </div>
-                                    </div>
+                                    <span class="badge bg-dark bg-opacity-75 position-absolute top-0 start-0 m-2" style="font-size: 10px;">Comedy</span>
                                 </div>
+                                <h6 class="bms-card-title" title="@ev.Title">@ev.Title</h6>
+                                <div class="bms-card-subtitle">@ev.VenueName</div>
+                                <div class="bms-card-subtext fw-semibold text-dark mt-1">₹@ev.StartingPrice.ToString("N0") onwards</div>
                             </a>
                         </div>
                     }
@@ -364,46 +279,40 @@
         </section>
     }
 
-    <!-- 8. The Latest Plays & Stage Natak (Vertical Cards) -->
+    <!-- 8. The Latest Plays (Traditional Bhavai & Drama Theatre) -->
     @if (Model.TheatreEvents.Count > 0)
     {
         <section class="py-4">
-            <div class="container">
+            <div class="bms-container">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <div>
-                        <h3 class="fw-bold text-dark mb-0 fs-4">The Latest Plays</h3>
+                        <h3 class="bms-section-title mb-0">The Latest Plays</h3>
                         <p class="text-muted small mb-0">Traditional Bhavai, cultural folk drama &amp; celebrated monologues</p>
                     </div>
-                    <a asp-controller="Events" asp-action="Index" asp-route-category="Theatre" class="text-danger fw-semibold text-decoration-none small">
+                    <a asp-controller="Events" asp-action="Index" asp-route-category="Theatre" class="bms-see-all">
                         See All <i class="bi bi-chevron-right small"></i>
                     </a>
                 </div>
 
-                <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-3 g-md-4">
+                <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-4">
                     @foreach (var ev in Model.TheatreEvents.Take(5))
                     {
                         <div class="col">
-                            <a asp-controller="Events" asp-action="Details" asp-route-id="@ev.EventId" class="text-decoration-none text-dark d-block hover-lift h-100">
-                                <div class="card border-0 rounded-3 shadow-sm overflow-hidden h-100">
-                                    <div class="position-relative" style="aspect-ratio: 2/3; background-color: #1F2533;">
-                                        @if (!string.IsNullOrEmpty(ev.BannerUrl))
-                                        {
-                                            <img src="@ev.BannerUrl" class="w-100 h-100 object-fit-cover transition-transform" alt="@ev.Title" loading="lazy" />
-                                        }
-                                        <div class="position-absolute bottom-0 start-0 w-100 p-2 bg-dark bg-opacity-80 text-white small fw-semibold" style="font-size: 0.75rem;">
-                                            <i class="bi bi-calendar3 me-1 text-warning"></i> @ev.StartDate.ToString("ddd, dd MMM")
-                                        </div>
-                                        <span class="badge bg-dark bg-opacity-75 position-absolute top-0 start-0 m-2" style="font-size: 0.7rem;">Theatre</span>
+                            <a asp-controller="Events" asp-action="Details" asp-route-id="@ev.EventId" class="bms-card">
+                                <div class="bms-poster-wrap mb-2">
+                                    @if (!string.IsNullOrEmpty(ev.BannerUrl))
+                                    {
+                                        <img src="@ev.BannerUrl" alt="@ev.Title" loading="lazy" />
+                                    }
+                                    <div class="bms-rating-strip" style="background: rgba(0, 0, 0, 0.85); justify-content: flex-start;">
+                                        <i class="bi bi-calendar3 me-2 text-warning"></i>
+                                        <span>@ev.StartDate.ToString("ddd, dd MMM")</span>
                                     </div>
-                                    <div class="card-body p-2 d-flex flex-column">
-                                        <h6 class="fw-bold mb-1 text-truncate" title="@ev.Title" style="font-size: 0.9rem;">@ev.Title</h6>
-                                        <p class="text-muted small mb-1 text-truncate" style="font-size: 0.75rem;"><i class="bi bi-geo-alt-fill text-danger me-1"></i>@ev.VenueName</p>
-                                        <div class="mt-auto pt-1 d-flex justify-content-between align-items-center">
-                                            <span class="fw-bold text-dark" style="font-size: 0.85rem;">₹@ev.StartingPrice.ToString("N0") onwards</span>
-                                            <span class="badge bg-secondary-subtle text-dark" style="font-size: 0.68rem;">@ev.TotalRemainingTickets left</span>
-                                        </div>
-                                    </div>
+                                    <span class="badge bg-dark bg-opacity-75 position-absolute top-0 start-0 m-2" style="font-size: 10px;">Theatre</span>
                                 </div>
+                                <h6 class="bms-card-title" title="@ev.Title">@ev.Title</h6>
+                                <div class="bms-card-subtitle">@ev.VenueName</div>
+                                <div class="bms-card-subtext fw-semibold text-dark mt-1">₹@ev.StartingPrice.ToString("N0") onwards</div>
                             </a>
                         </div>
                     }
@@ -412,46 +321,40 @@
         </section>
     }
 
-    <!-- 9. Sports & Fun Activities Rail -->
+    <!-- 9. Top Games & Sports Events -->
     @if (Model.SportsEvents.Count > 0 || Model.WorkshopEvents.Count > 0)
     {
         <section class="py-4">
-            <div class="container">
+            <div class="bms-container">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <div>
-                        <h3 class="fw-bold text-dark mb-0 fs-4">Explore Fun &amp; Sports</h3>
+                        <h3 class="bms-section-title mb-0">Top Games &amp; Sport Events</h3>
                         <p class="text-muted small mb-0">Cricket championships, stadium sports &amp; developer masterclasses</p>
                     </div>
-                    <a asp-controller="Events" asp-action="Index" class="text-danger fw-semibold text-decoration-none small">
+                    <a asp-controller="Events" asp-action="Index" class="bms-see-all">
                         See All <i class="bi bi-chevron-right small"></i>
                     </a>
                 </div>
 
-                <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-3 g-md-4">
+                <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-4">
                     @foreach (var ev in Model.SportsEvents.Concat(Model.WorkshopEvents).Take(5))
                     {
                         <div class="col">
-                            <a asp-controller="Events" asp-action="Details" asp-route-id="@ev.EventId" class="text-decoration-none text-dark d-block hover-lift h-100">
-                                <div class="card border-0 rounded-3 shadow-sm overflow-hidden h-100">
-                                    <div class="position-relative" style="aspect-ratio: 2/3; background-color: #1F2533;">
-                                        @if (!string.IsNullOrEmpty(ev.BannerUrl))
-                                        {
-                                            <img src="@ev.BannerUrl" class="w-100 h-100 object-fit-cover transition-transform" alt="@ev.Title" loading="lazy" />
-                                        }
-                                        <div class="position-absolute bottom-0 start-0 w-100 p-2 bg-dark bg-opacity-80 text-white small fw-semibold" style="font-size: 0.75rem;">
-                                            <i class="bi bi-calendar3 me-1 text-warning"></i> @ev.StartDate.ToString("ddd, dd MMM")
-                                        </div>
-                                        <span class="badge bg-dark bg-opacity-75 position-absolute top-0 start-0 m-2" style="font-size: 0.7rem;">@ev.Category</span>
+                            <a asp-controller="Events" asp-action="Details" asp-route-id="@ev.EventId" class="bms-card">
+                                <div class="bms-poster-wrap mb-2">
+                                    @if (!string.IsNullOrEmpty(ev.BannerUrl))
+                                    {
+                                        <img src="@ev.BannerUrl" alt="@ev.Title" loading="lazy" />
+                                    }
+                                    <div class="bms-rating-strip" style="background: rgba(0, 0, 0, 0.85); justify-content: flex-start;">
+                                        <i class="bi bi-calendar3 me-2 text-warning"></i>
+                                        <span>@ev.StartDate.ToString("ddd, dd MMM")</span>
                                     </div>
-                                    <div class="card-body p-2 d-flex flex-column">
-                                        <h6 class="fw-bold mb-1 text-truncate" title="@ev.Title" style="font-size: 0.9rem;">@ev.Title</h6>
-                                        <p class="text-muted small mb-1 text-truncate" style="font-size: 0.75rem;"><i class="bi bi-geo-alt-fill text-danger me-1"></i>@ev.VenueName</p>
-                                        <div class="mt-auto pt-1 d-flex justify-content-between align-items-center">
-                                            <span class="fw-bold text-dark" style="font-size: 0.85rem;">₹@ev.StartingPrice.ToString("N0") onwards</span>
-                                            <span class="badge bg-secondary-subtle text-dark" style="font-size: 0.68rem;">@ev.TotalRemainingTickets left</span>
-                                        </div>
-                                    </div>
+                                    <span class="badge bg-dark bg-opacity-75 position-absolute top-0 start-0 m-2" style="font-size: 10px;">@ev.Category</span>
                                 </div>
+                                <h6 class="bms-card-title" title="@ev.Title">@ev.Title</h6>
+                                <div class="bms-card-subtitle">@ev.VenueName</div>
+                                <div class="bms-card-subtext fw-semibold text-dark mt-1">₹@ev.StartingPrice.ToString("N0") onwards</div>
                             </a>
                         </div>
                     }
@@ -459,72 +362,4 @@
             </div>
         </section>
     }
-
-    <!-- 10. List Your Show Partner Banner (BookMyShow Signature Banner) -->
-    <section class="py-4">
-        <div class="container">
-            <div class="p-4 p-md-5 rounded-4 shadow-sm text-white d-flex flex-column flex-md-row align-items-center justify-content-between gap-3" style="background: linear-gradient(135deg, #1F2533 0%, #31374A 100%); border-left: 6px solid #F84464;">
-                <div class="d-flex align-items-center gap-3">
-                    <span class="fs-1">🎪</span>
-                    <div>
-                        <h4 class="fw-bold mb-1 text-white">List your Show</h4>
-                        <p class="text-white-50 mb-0 small">Got a show, event, activity or a great experience? Partner with ShowSphere &amp; get listed.</p>
-                    </div>
-                </div>
-                <a asp-controller="Account" asp-action="Register" class="btn btn-danger px-4 py-2 rounded-pill fw-bold text-nowrap" style="background-color: #F84464; border-color: #F84464;">Contact today</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- 11. BookMyShow Features Bar (24/7 Care, Resend Booking, Newsletter) -->
-    <section class="py-3 border-top border-bottom bg-white">
-        <div class="container">
-            <div class="row text-center py-2 g-3">
-                <div class="col-md-4 d-flex align-items-center justify-content-center gap-3">
-                    <i class="bi bi-headset text-danger fs-2"></i>
-                    <div class="text-start">
-                        <span class="fw-bold d-block text-dark small text-uppercase">24/7 Customer Care</span>
-                        <span class="text-muted" style="font-size: 0.78rem;">Always here to help you</span>
-                    </div>
-                </div>
-                <div class="col-md-4 d-flex align-items-center justify-content-center gap-3">
-                    <i class="bi bi-ticket-perforated text-danger fs-2"></i>
-                    <div class="text-start">
-                        <span class="fw-bold d-block text-dark small text-uppercase">Resend Booking Confirmation</span>
-                        <span class="text-muted" style="font-size: 0.78rem;">Get tickets via SMS &amp; Email</span>
-                    </div>
-                </div>
-                <div class="col-md-4 d-flex align-items-center justify-content-center gap-3">
-                    <i class="bi bi-envelope-check text-danger fs-2"></i>
-                    <div class="text-start">
-                        <span class="fw-bold d-block text-dark small text-uppercase">Subscribe to Newsletter</span>
-                        <span class="text-muted" style="font-size: 0.78rem;">Get latest movie offers</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
 </div>
-
-<style>
-    .movie-poster-card:hover img {
-        transform: scale(1.03);
-    }
-    .transition-transform {
-        transition: transform 0.25s ease-in-out;
-    }
-    .hover-lift {
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    .hover-lift:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
-    }
-    .live-event-pill-card {
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    .live-event-pill-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 18px rgba(0,0,0,0.15) !important;
-    }
-</style>
