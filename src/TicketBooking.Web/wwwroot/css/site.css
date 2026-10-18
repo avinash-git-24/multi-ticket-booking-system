@@ -1072,7 +1072,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 }
 
 /* ==========================================================================
-   BookMyShow Events Discovery Page Styles (1240px Split & 4-Col Grid)
+   BookMyShow Events Discovery Page Styles (Full-Width Responsive 4-Col Grid)
    ========================================================================== */
 .bms-events-wrapper {
   background-color: #F5F5F7;
@@ -1082,21 +1082,21 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 
 .bms-events-container {
   width: 100%;
-  max-width: 1240px;
+  max-width: 1420px;
   margin: 0 auto;
-  padding: 32px 15px 60px 15px;
+  padding: 28px 24px 60px 24px;
 }
 
 .bms-events-layout {
   display: flex;
-  gap: 30px;
+  gap: 32px;
   align-items: flex-start;
 }
 
-/* Left Sidebar (Width 300px) */
+/* Left Sidebar (Width 290px) */
 .bms-filter-col {
-  width: 300px;
-  min-width: 300px;
+  width: 290px;
+  min-width: 290px;
   flex-shrink: 0;
 }
 
@@ -1106,17 +1106,17 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   font-weight: 700;
   line-height: 30px;
   color: #333333;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
 .bms-filter-card {
-  width: 300px;
+  width: 100%;
   background-color: #FFFFFF;
-  border-radius: 4px;
+  border-radius: 6px;
   padding: 16px;
   margin-bottom: 12px;
-  border: 1px solid #ECECEC;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+  border: 1px solid #EBEBEB;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
 }
 
 .bms-filter-header {
@@ -1131,7 +1131,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .bms-filter-title {
   font-family: 'Roboto', sans-serif;
   font-size: 14px;
-  font-weight: 400;
+  font-weight: 500;
   color: #333333;
   display: flex;
   align-items: center;
@@ -1140,13 +1140,13 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 
 .bms-filter-title.expanded {
   color: #DC354B;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .bms-filter-clear {
   font-family: 'Roboto', sans-serif;
   font-size: 12px;
-  color: #666666;
+  color: #777777;
   text-decoration: none;
   cursor: pointer;
 }
@@ -1157,6 +1157,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 
 .bms-filter-clear.active {
   color: #DC354B;
+  font-weight: 500;
 }
 
 .bms-filter-body {
@@ -1171,15 +1172,15 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   height: 32px;
   padding: 0 12px;
   font-family: 'Roboto', sans-serif;
-  font-size: 14px;
+  font-size: 13.5px;
   line-height: 20px;
   font-weight: 400;
   color: #DC354B;
   background-color: #FFFFFF;
   border: 1px solid #E5E5E5;
-  border-radius: 2px;
+  border-radius: 3px;
   text-decoration: none;
-  margin: 0 8px 8px 0;
+  margin: 0 6px 8px 0;
   cursor: pointer;
   transition: all 0.15s ease;
 }
@@ -1201,17 +1202,18 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 300px;
-  height: 32px;
+  width: 100%;
+  height: 36px;
   background-color: transparent;
   border: 1px solid #DC3558;
   border-radius: 4px;
   color: #DC3558;
   font-family: 'Roboto', sans-serif;
   font-size: 14px;
-  font-weight: 400;
+  font-weight: 500;
   text-decoration: none;
   transition: all 0.2s ease;
+  margin-top: 14px;
   margin-bottom: 12px;
 }
 
@@ -1220,10 +1222,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   color: #FFFFFF;
 }
 
-/* Right Main Column (Width 910px) */
+/* Right Main Column (Full Fluid Width) */
 .bms-events-content {
-  width: 910px;
-  max-width: 910px;
   flex-grow: 1;
   min-width: 0;
 }
@@ -1233,8 +1233,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   font-size: 24px;
   font-weight: 700;
   line-height: 30px;
-  color: #333333;
-  margin: 0 0 20px 0;
+  color: #222222;
+  margin: 0 0 18px 0;
 }
 
 /* Quick Filter Pills Row */
@@ -1242,22 +1242,22 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   display: flex;
   flex-wrap: wrap;
   gap: 0;
-  margin-bottom: 24px;
+  margin-bottom: 22px;
 }
 
 .bms-pill-btn {
   display: inline-flex;
   align-items: center;
-  height: 32px;
-  padding: 0 14px;
+  height: 34px;
+  padding: 0 16px;
   font-family: 'Roboto', sans-serif;
-  font-size: 12px;
+  font-size: 13px;
   line-height: 16px;
   font-weight: 400;
   color: #DC354B;
   background-color: #FFFFFF;
   border: 1px solid #CCCCCC;
-  border-radius: 16px;
+  border-radius: 17px;
   text-decoration: none;
   margin: 0 8px 8px 0;
   cursor: pointer;
@@ -1278,34 +1278,38 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   font-weight: 500;
 }
 
-/* 4-Column Grid */
+/* 4-Column Responsive Grid */
 .bms-event-grid {
   display: grid;
-  grid-template-columns: repeat(4, 203.5px);
-  gap: 48px 32px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 36px 22px;
+  width: 100%;
 }
 
-@media (max-width: 1240px) {
+@media (max-width: 1100px) {
+  .bms-event-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 28px 18px;
+  }
+}
+
+@media (max-width: 860px) {
   .bms-events-layout {
     flex-direction: column;
   }
   .bms-filter-col {
     width: 100%;
-    min-width: auto;
-  }
-  .bms-filter-card {
-    width: 100%;
-  }
-  .bms-browse-venues-btn {
-    width: 100%;
-  }
-  .bms-events-content {
-    width: 100%;
-    max-width: 100%;
+    min-width: 100%;
   }
   .bms-event-grid {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 32px 20px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px 16px;
+  }
+}
+
+@media (max-width: 520px) {
+  .bms-event-grid {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -1327,11 +1331,11 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .bms-event-card-poster {
   position: relative;
   width: 100%;
-  height: 346px;
+  aspect-ratio: 1 / 1.52;
   border-radius: 8px;
   overflow: hidden;
   background-color: #E0E0E0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .bms-event-card-poster img {
@@ -1367,15 +1371,15 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   bottom: 0;
   left: 0;
   right: 0;
-  height: 36px;
+  height: 34px;
   background-color: #000000;
   color: #FFFFFF;
   font-family: 'Roboto', sans-serif;
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 500;
   display: flex;
   align-items: center;
-  padding: 0 12px;
+  padding: 0 10px;
   z-index: 2;
   white-space: nowrap;
   overflow: hidden;
@@ -1390,26 +1394,26 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 
 .bms-event-title {
   font-family: 'Roboto', sans-serif;
-  font-size: 18px;
-  font-weight: 500;
-  line-height: 24px;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 22px;
   color: #000000;
-  margin: 0 0 4px 0;
+  margin: 0 0 3px 0;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
-  min-height: 48px;
+  min-height: 44px;
 }
 
 .bms-event-venue {
   font-family: 'Roboto', sans-serif;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 400;
-  line-height: 24px;
-  color: #333333;
-  margin: 0 0 4px 0;
+  line-height: 20px;
+  color: #444444;
+  margin: 0 0 3px 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1417,11 +1421,11 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 
 .bms-event-category {
   font-family: 'Roboto', sans-serif;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 400;
-  line-height: 20px;
-  color: #666666;
-  margin: 0 0 4px 0;
+  line-height: 18px;
+  color: #777777;
+  margin: 0 0 3px 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1430,9 +1434,9 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .bms-event-price {
   font-family: 'Roboto', sans-serif;
   font-size: 14px;
-  font-weight: 400;
+  font-weight: 600;
   line-height: 20px;
-  color: #666666;
+  color: #222222;
   margin: 0;
 }
 
