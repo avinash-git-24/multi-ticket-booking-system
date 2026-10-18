@@ -152,108 +152,202 @@
     <!-- ======================================================================
          BookMyShow 4-Tier Authentic Footer
          ====================================================================== -->
-    <footer class="mt-5 text-white" style="font-family: 'Roboto', sans-serif;">
-        <!-- Tier 1: List Your Show Partner Bar (#333333, Height 88px) -->
-        <div class="border-bottom" style="background-color: #333333; min-height: 88px;">
-            <div class="bms-container h-100 py-3 d-flex flex-column flex-md-row align-items-center justify-content-between gap-3">
+    <footer class="bms-footer text-white">
+        <!-- Tier 1: List Your Show Partner Bar -->
+        <div class="bms-footer-tier1">
+            <div class="bms-container py-3 d-flex flex-column flex-md-row align-items-center justify-content-between gap-3">
                 <div class="d-flex align-items-center gap-3">
-                    <i class="bi bi-building fs-2 text-danger"></i>
+                    <div class="d-inline-flex align-items-center justify-content-center rounded-3 p-2" style="background-color: rgba(220, 53, 75, 0.15); border: 1px solid rgba(220, 53, 75, 0.3);">
+                        <i class="bi bi-shop fs-3 text-danger"></i>
+                    </div>
                     <div>
                         <span class="fw-bold d-block text-white" style="font-size: 16px;">List your Show</span>
-                        <span class="text-white-50" style="font-size: 14px;">Got a show, event, activity or a great experience? Partner with us &amp; get listed on ShowSphere</span>
+                        <span style="color: #CBD5E1; font-size: 13.5px;">Got a show, event, activity or a great experience? Partner with us &amp; get listed on ShowSphere</span>
                     </div>
                 </div>
-                <a asp-controller="Account" asp-action="Register" class="btn text-white fw-semibold px-4 py-2 text-nowrap rounded-2" style="background-color: #DC354B; border: none; font-size: 15px;">
+                <a asp-controller="Account" asp-action="Register" class="btn text-white fw-semibold px-4 py-2 text-nowrap rounded-2 shadow-sm" style="background-color: #DC354B; border: none; font-size: 14.5px;">
                     Contact today!
                 </a>
             </div>
         </div>
 
-        <!-- Tier 2: 24/7 Services & Customer Care Bar (#404040, Height 102px) -->
-        <div class="border-bottom" style="background-color: #404040; min-height: 102px;">
-            <div class="bms-container h-100 py-4">
-                <div class="row text-center g-4">
-                    <div class="col-md-4 d-flex flex-column align-items-center justify-content-center cursor-pointer">
-                        <i class="bi bi-headset fs-2 text-white-50 mb-1"></i>
-                        <span class="text-uppercase" style="font-size: 12px; color: #CCCCCC;">24/7 CUSTOMER CARE</span>
+        <!-- Tier 2: 24/7 Services & Customer Care Bar -->
+        <div class="bms-footer-tier2">
+            <div class="bms-container py-3">
+                <div class="row text-center g-3">
+                    <div class="col-md-4">
+                        <a href="mailto:support@showsphere.local" class="bms-service-card">
+                            <i class="bi bi-headset"></i>
+                            <span class="bms-service-title">24/7 CUSTOMER CARE</span>
+                        </a>
                     </div>
-                    <div class="col-md-4 d-flex flex-column align-items-center justify-content-center cursor-pointer">
-                        <i class="bi bi-ticket-perforated fs-2 text-white-50 mb-1"></i>
-                        <span class="text-uppercase" style="font-size: 12px; color: #CCCCCC;">RESEND BOOKING CONFIRMATION</span>
+                    <div class="col-md-4">
+                        <a asp-controller="Account" asp-action="MyBookings" class="bms-service-card">
+                            <i class="bi bi-ticket-perforated"></i>
+                            <span class="bms-service-title">RESEND BOOKING CONFIRMATION</span>
+                        </a>
                     </div>
-                    <div class="col-md-4 d-flex flex-column align-items-center justify-content-center cursor-pointer">
-                        <i class="bi bi-envelope fs-2 text-white-50 mb-1"></i>
-                        <span class="text-uppercase" style="font-size: 12px; color: #CCCCCC;">SUBSCRIBE TO THE NEWSLETTER</span>
+                    <div class="col-md-4">
+                        <a href="#newsletterSubscribe" class="bms-service-card" onclick="alert('Thank you for subscribing to ShowSphere newsletter!'); return false;">
+                            <i class="bi bi-envelope-open"></i>
+                            <span class="bms-service-title">SUBSCRIBE TO THE NEWSLETTER</span>
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Tier 3: SEO Links Directory Grid (#333333, Padding 40px 0) -->
-        <div class="border-bottom py-5" style="background-color: #333333; color: #808080; font-size: 11px; line-height: 22px;">
+        <!-- Tier 3: SEO Links Directory Grid -->
+        <div class="bms-footer-tier3 py-5">
             <div class="bms-container">
                 <!-- Group 1: Movies Showing in Rajkot -->
-                <div class="mb-4">
-                    <span class="text-uppercase fw-semibold d-block text-white-50 mb-2" style="font-size: 12px;">MOVIES NOW SHOWING IN RAJKOT</span>
-                    <span class="text-muted">
-                        Singham Again | Kasoombo | Stree 2 | Kalki 2898 AD | Bhool Bhulaiyaa 3 | Devara: Part 1 | Jigra
-                    </span>
+                <div class="bms-directory-group">
+                    <div class="bms-directory-title">MOVIES NOW SHOWING IN RAJKOT</div>
+                    <div class="bms-directory-links">
+                        <a asp-controller="Movies" asp-action="Index" class="bms-footer-link">Singham Again</a><span class="bms-footer-sep">|</span>
+                        <a asp-controller="Movies" asp-action="Index" class="bms-footer-link">Kasoombo</a><span class="bms-footer-sep">|</span>
+                        <a asp-controller="Movies" asp-action="Index" class="bms-footer-link">Stree 2: Sarkate Ka Aatank</a><span class="bms-footer-sep">|</span>
+                        <a asp-controller="Movies" asp-action="Index" class="bms-footer-link">Kalki 2898 AD</a><span class="bms-footer-sep">|</span>
+                        <a asp-controller="Movies" asp-action="Index" class="bms-footer-link">Bhool Bhulaiyaa 3</a><span class="bms-footer-sep">|</span>
+                        <a asp-controller="Movies" asp-action="Index" class="bms-footer-link">Devara: Part 1</a><span class="bms-footer-sep">|</span>
+                        <a asp-controller="Movies" asp-action="Index" class="bms-footer-link">Jigra</a><span class="bms-footer-sep">|</span>
+                        <a asp-controller="Movies" asp-action="Index" class="bms-footer-link">Vedaa</a><span class="bms-footer-sep">|</span>
+                        <a asp-controller="Movies" asp-action="Index" class="bms-footer-link">Bad Newz</a><span class="bms-footer-sep">|</span>
+                        <a asp-controller="Movies" asp-action="Index" class="bms-footer-link">Khel Khel Mein</a>
+                    </div>
                 </div>
 
                 <!-- Group 2: Upcoming Movies in Rajkot -->
-                <div class="mb-4">
-                    <span class="text-uppercase fw-semibold d-block text-white-50 mb-2" style="font-size: 12px;">UPCOMING MOVIES IN RAJKOT</span>
-                    <span class="text-muted">
-                        Pushpa 2: The Rule | Transformers One | Venom: The Last Dance | Alien: Romulus | A Quiet Place: Day One
-                    </span>
+                <div class="bms-directory-group">
+                    <div class="bms-directory-title">UPCOMING MOVIES IN RAJKOT</div>
+                    <div class="bms-directory-links">
+                        <a asp-controller="Movies" asp-action="Index" class="bms-footer-link">Pushpa 2: The Rule</a><span class="bms-footer-sep">|</span>
+                        <a asp-controller="Movies" asp-action="Index" class="bms-footer-link">Transformers One</a><span class="bms-footer-sep">|</span>
+                        <a asp-controller="Movies" asp-action="Index" class="bms-footer-link">Venom: The Last Dance</a><span class="bms-footer-sep">|</span>
+                        <a asp-controller="Movies" asp-action="Index" class="bms-footer-link">Alien: Romulus</a><span class="bms-footer-sep">|</span>
+                        <a asp-controller="Movies" asp-action="Index" class="bms-footer-link">A Quiet Place: Day One</a><span class="bms-footer-sep">|</span>
+                        <a asp-controller="Movies" asp-action="Index" class="bms-footer-link">Gladiator II</a><span class="bms-footer-sep">|</span>
+                        <a asp-controller="Movies" asp-action="Index" class="bms-footer-link">Kraven The Hunter</a><span class="bms-footer-sep">|</span>
+                        <a asp-controller="Movies" asp-action="Index" class="bms-footer-link">Baby John</a>
+                    </div>
                 </div>
 
-                <!-- Group 3: Popular Movie Theatres in Rajkot -->
-                <div class="mb-4">
-                    <span class="text-uppercase fw-semibold d-block text-white-50 mb-2" style="font-size: 12px;">POPULAR MOVIE THEATRES IN RAJKOT</span>
-                    <span class="text-muted">
-                        Cosmoplex Multiplex, Kalawad Road | INOX Multiplex, R-World | PVR Cinemas, Crystal Mall | Rajshree Cinema | Galaxy Cinema
-                    </span>
+                <!-- Group 3: Events & Live Concerts -->
+                <div class="bms-directory-group">
+                    <div class="bms-directory-title">EVENTS &amp; LIVE CONCERTS IN RAJKOT</div>
+                    <div class="bms-directory-links">
+                        <a asp-controller="Events" asp-action="Index" asp-route-category="Concert" class="bms-footer-link">Diljit Dosanjh - Dil-Luminati Tour</a><span class="bms-footer-sep">|</span>
+                        <a asp-controller="Events" asp-action="Index" asp-route-category="Concert" class="bms-footer-link">Shreya Ghoshal All Hearts Tour</a><span class="bms-footer-sep">|</span>
+                        <a asp-controller="Events" asp-action="Index" asp-route-category="Concert" class="bms-footer-link">Amit Trivedi Live in Rajkot</a><span class="bms-footer-sep">|</span>
+                        <a asp-controller="Events" asp-action="Index" asp-route-category="Concert" class="bms-footer-link">Arijit Singh Soulful Night</a><span class="bms-footer-sep">|</span>
+                        <a asp-controller="Events" asp-action="Index" asp-route-category="Concert" class="bms-footer-link">Sunidhi Chauhan - I Am Home</a><span class="bms-footer-sep">|</span>
+                        <a asp-controller="Events" asp-action="Index" asp-route-category="Concert" class="bms-footer-link">Coldplay: Music of the Spheres</a><span class="bms-footer-sep">|</span>
+                        <a asp-controller="Events" asp-action="Index" asp-route-category="Comedy" class="bms-footer-link">Zakir Khan - Live Standup</a><span class="bms-footer-sep">|</span>
+                        <a asp-controller="Events" asp-action="Index" asp-route-category="Comedy" class="bms-footer-link">Anubhav Singh Bassi - Kisi Ko Batana Mat</a><span class="bms-footer-sep">|</span>
+                        <a asp-controller="Events" asp-action="Index" asp-route-category="Comedy" class="bms-footer-link">Samay Raina Unfiltered</a><span class="bms-footer-sep">|</span>
+                        <a asp-controller="Events" asp-action="Index" asp-route-category="Comedy" class="bms-footer-link">Gaurav Kapoor Live</a><span class="bms-footer-sep">|</span>
+                        <a asp-controller="Events" asp-action="Index" asp-route-category="Comedy" class="bms-footer-link">Harsh Gujral Jo Bolta Hai Wohi Hota Hai</a><span class="bms-footer-sep">|</span>
+                        <a asp-controller="Events" asp-action="Index" asp-route-category="Comedy" class="bms-footer-link">Abhishek Upmanyu - Jealous of Sabjiwala</a><span class="bms-footer-sep">|</span>
+                        <a asp-controller="Events" asp-action="Index" asp-route-category="Theatre" class="bms-footer-link">Rangilo Gujarat Mega Folk Garba</a><span class="bms-footer-sep">|</span>
+                        <a asp-controller="Events" asp-action="Index" asp-route-category="Theatre" class="bms-footer-link">Hu Chandrakant Bakshi Monologue</a><span class="bms-footer-sep">|</span>
+                        <a asp-controller="Events" asp-action="Index" asp-route-category="Theatre" class="bms-footer-link">Welcome Zindagi - Gujarati Natak</a><span class="bms-footer-sep">|</span>
+                        <a asp-controller="Events" asp-action="Index" asp-route-category="Theatre" class="bms-footer-link">102 Not Out - Classic Gujarati Play</a><span class="bms-footer-sep">|</span>
+                        <a asp-controller="Events" asp-action="Index" class="bms-footer-link">Rajkot Half Marathon 2026</a><span class="bms-footer-sep">|</span>
+                        <a asp-controller="Events" asp-action="Index" class="bms-footer-link">Saurashtra Premier League T20 Finals</a>
+                    </div>
                 </div>
 
-                <!-- Group 4: Auditoriums & Live Venues -->
-                <div>
-                    <span class="text-uppercase fw-semibold d-block text-white-50 mb-2" style="font-size: 12px;">LIVE EVENT VENUES IN RAJKOT</span>
-                    <span class="text-muted">
-                        Hemu Gadhvi Natyagruh, Tagore Road | Saurashtra Cricket Association Stadium, Khandheri | Pramukh Swami Auditorium, University Road
-                    </span>
+                <!-- Group 4: Popular Movie Theatres in Rajkot -->
+                <div class="bms-directory-group">
+                    <div class="bms-directory-title">POPULAR MOVIE THEATRES IN RAJKOT</div>
+                    <div class="bms-directory-links">
+                        <a asp-controller="Movies" asp-action="Index" class="bms-footer-link">Cosmoplex Multiplex, Kalawad Road</a><span class="bms-footer-sep">|</span>
+                        <a asp-controller="Movies" asp-action="Index" class="bms-footer-link">INOX Multiplex, R-World, Race Course Ring Road</a><span class="bms-footer-sep">|</span>
+                        <a asp-controller="Movies" asp-action="Index" class="bms-footer-link">PVR Cinemas, Crystal Mall, Kalawad Road</a><span class="bms-footer-sep">|</span>
+                        <a asp-controller="Movies" asp-action="Index" class="bms-footer-link">Rajshree Cinema, Dhebar Road</a><span class="bms-footer-sep">|</span>
+                        <a asp-controller="Movies" asp-action="Index" class="bms-footer-link">Galaxy Cinema, Bhupendra Road</a><span class="bms-footer-sep">|</span>
+                        <a asp-controller="Movies" asp-action="Index" class="bms-footer-link">Reliance Mega Mall Cinemas, 150 Feet Ring Road</a>
+                    </div>
+                </div>
+
+                <!-- Group 5: Auditoriums & Live Venues -->
+                <div class="bms-directory-group">
+                    <div class="bms-directory-title">LIVE EVENT &amp; AUDITORIUM VENUES IN RAJKOT</div>
+                    <div class="bms-directory-links">
+                        <a asp-controller="Events" asp-action="Index" class="bms-footer-link">Hemu Gadhvi Natyagruh, Tagore Road</a><span class="bms-footer-sep">|</span>
+                        <a asp-controller="Events" asp-action="Index" class="bms-footer-link">Saurashtra Cricket Association Stadium, Khandheri</a><span class="bms-footer-sep">|</span>
+                        <a asp-controller="Events" asp-action="Index" class="bms-footer-link">Pramukh Swami Auditorium, University Road</a><span class="bms-footer-sep">|</span>
+                        <a asp-controller="Events" asp-action="Index" class="bms-footer-link">Race Course Ground Open Air Theatre</a><span class="bms-footer-sep">|</span>
+                        <a asp-controller="Events" asp-action="Index" class="bms-footer-link">Arvindbhai Maniar Community Hall</a>
+                    </div>
+                </div>
+
+                <!-- Group 6: Movies by Genre -->
+                <div class="bms-directory-group">
+                    <div class="bms-directory-title">MOVIES BY GENRE</div>
+                    <div class="bms-directory-links">
+                        <a asp-controller="Movies" asp-action="Index" class="bms-footer-link">Action Movies</a><span class="bms-footer-sep">|</span>
+                        <a asp-controller="Movies" asp-action="Index" class="bms-footer-link">Comedy Movies</a><span class="bms-footer-sep">|</span>
+                        <a asp-controller="Movies" asp-action="Index" class="bms-footer-link">Romantic Movies</a><span class="bms-footer-sep">|</span>
+                        <a asp-controller="Movies" asp-action="Index" class="bms-footer-link">Drama Movies</a><span class="bms-footer-sep">|</span>
+                        <a asp-controller="Movies" asp-action="Index" class="bms-footer-link">Sci-Fi &amp; Fantasy Movies</a><span class="bms-footer-sep">|</span>
+                        <a asp-controller="Movies" asp-action="Index" class="bms-footer-link">Thriller &amp; Suspense Movies</a><span class="bms-footer-sep">|</span>
+                        <a asp-controller="Movies" asp-action="Index" class="bms-footer-link">Historical &amp; Period Epics</a><span class="bms-footer-sep">|</span>
+                        <a asp-controller="Movies" asp-action="Index" class="bms-footer-link">Gujarati Folk &amp; Bhavai Plays</a>
+                    </div>
+                </div>
+
+                <!-- Group 7: Top Cities in India -->
+                <div class="bms-directory-group mb-0">
+                    <div class="bms-directory-title">TOP CITIES</div>
+                    <div class="bms-directory-links">
+                        <a href="javascript:void(0)" class="bms-footer-link city-option" data-city="Rajkot">Rajkot</a><span class="bms-footer-sep">|</span>
+                        <a href="javascript:void(0)" class="bms-footer-link city-option" data-city="Ahmedabad">Ahmedabad</a><span class="bms-footer-sep">|</span>
+                        <a href="javascript:void(0)" class="bms-footer-link city-option" data-city="Surat">Surat</a><span class="bms-footer-sep">|</span>
+                        <a href="javascript:void(0)" class="bms-footer-link city-option" data-city="Vadodara">Vadodara</a><span class="bms-footer-sep">|</span>
+                        <a href="javascript:void(0)" class="bms-footer-link city-option" data-city="Mumbai">Mumbai</a><span class="bms-footer-sep">|</span>
+                        <a href="javascript:void(0)" class="bms-footer-link city-option" data-city="Delhi-NCR">Delhi-NCR</a><span class="bms-footer-sep">|</span>
+                        <a href="javascript:void(0)" class="bms-footer-link city-option" data-city="Bengaluru">Bengaluru</a><span class="bms-footer-sep">|</span>
+                        <a href="javascript:void(0)" class="bms-footer-link city-option" data-city="Hyderabad">Hyderabad</a><span class="bms-footer-sep">|</span>
+                        <a href="javascript:void(0)" class="bms-footer-link city-option" data-city="Pune">Pune</a><span class="bms-footer-sep">|</span>
+                        <a href="javascript:void(0)" class="bms-footer-link city-option" data-city="Kolkata">Kolkata</a>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Tier 4: Logo, Social Circles & Copyright Notice (#333333) -->
-        <div class="py-4 text-center" style="background-color: #333333; color: #808080; font-size: 11px;">
+        <!-- Tier 4: Logo, Social Circles & Copyright Notice -->
+        <div class="bms-footer-tier4 py-4 text-center">
             <div class="bms-container">
-                <!-- Centered Logo with Dividers -->
+                <!-- Centered Logo with Clean Divider Lines -->
                 <div class="d-flex align-items-center justify-content-center mb-4">
-                    <div class="flex-grow-1" style="height: 1px; background-color: #4D4D4D;"></div>
-                    <span class="px-3 fw-bold fs-4" style="color: #EB4E62;">
-                        <i class="bi bi-ticket-perforated-fill me-1"></i>ShowSphere
-                    </span>
-                    <div class="flex-grow-1" style="height: 1px; background-color: #4D4D4D;"></div>
+                    <div class="flex-grow-1" style="height: 1px; background-color: #474D60;"></div>
+                    <a asp-controller="Home" asp-action="Index" class="px-4 text-decoration-none d-inline-flex align-items-center">
+                        <i class="bi bi-ticket-perforated-fill me-2 fs-3 text-danger"></i>
+                        <span class="fw-bold fs-4 text-white">Show<span style="color: #EB4E62;">Sphere</span></span>
+                    </a>
+                    <div class="flex-grow-1" style="height: 1px; background-color: #474D60;"></div>
                 </div>
 
-                <!-- Social Circles -->
+                <!-- Social Circles (BookMyShow standard: FB, X, Insta, YT, Pinterest, LinkedIn) -->
                 <div class="d-flex justify-content-center gap-3 mb-4">
-                    <a href="#" class="rounded-circle d-flex align-items-center justify-content-center text-white" style="width: 36px; height: 36px; background-color: #4D4D4D; text-decoration: none;"><i class="bi bi-facebook"></i></a>
-                    <a href="#" class="rounded-circle d-flex align-items-center justify-content-center text-white" style="width: 36px; height: 36px; background-color: #4D4D4D; text-decoration: none;"><i class="bi bi-twitter-x"></i></a>
-                    <a href="#" class="rounded-circle d-flex align-items-center justify-content-center text-white" style="width: 36px; height: 36px; background-color: #4D4D4D; text-decoration: none;"><i class="bi bi-instagram"></i></a>
-                    <a href="#" class="rounded-circle d-flex align-items-center justify-content-center text-white" style="width: 36px; height: 36px; background-color: #4D4D4D; text-decoration: none;"><i class="bi bi-youtube"></i></a>
-                    <a href="#" class="rounded-circle d-flex align-items-center justify-content-center text-white" style="width: 36px; height: 36px; background-color: #4D4D4D; text-decoration: none;"><i class="bi bi-linkedin"></i></a>
+                    <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" class="bms-social-btn" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+                    <a href="https://x.com" target="_blank" rel="noopener noreferrer" class="bms-social-btn" aria-label="Twitter X"><i class="bi bi-twitter-x"></i></a>
+                    <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="bms-social-btn" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+                    <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" class="bms-social-btn" aria-label="YouTube"><i class="bi bi-youtube"></i></a>
+                    <a href="https://pinterest.com" target="_blank" rel="noopener noreferrer" class="bms-social-btn" aria-label="Pinterest"><i class="bi bi-pinterest"></i></a>
+                    <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="bms-social-btn" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
                 </div>
 
                 <!-- Copyright & Academic Attribution -->
-                <p class="mb-1 text-muted" style="max-width: 900px; margin: 0 auto; line-height: 18px;">
-                    Copyright 2026 &copy; ShowSphere Academic Systems. All Rights Reserved. Engineered for college evaluation and live demonstration using C#, ASP.NET Core MVC, pure ADO.NET and Microsoft SQL Server 2022.
-                </p>
-                <p class="mb-0 text-muted">
-                    Rajkot, Gujarat, India. Simulated payment gateway &ndash; no real credit card or financial transactions occur.
-                </p>
+                <div class="bms-footer-legal">
+                    <p class="mb-2 fw-medium text-white-50">
+                        Copyright 2026 &copy; ShowSphere Entertainment Pvt. Ltd. All Rights Reserved.
+                    </p>
+                    <p class="mb-0" style="color: #64748B;">
+                        The content and images used on this site are copyright protected and copyright vests with the respective owners. Engineered for college evaluation and live demonstration using C#, ASP.NET Core MVC, pure ADO.NET and Microsoft SQL Server 2022. Simulated payment gateway: no real financial transactions occur.
+                    </p>
+                </div>
             </div>
         </div>
     </footer>

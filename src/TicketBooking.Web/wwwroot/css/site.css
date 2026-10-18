@@ -786,4 +786,137 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   width: 100%;
   height: 100%;
   object-fit: cover;
-}
+}
+
+/* ==========================================================================
+   BookMyShow 4-Tier Authentic Footer Styles
+   ========================================================================== */
+.bms-footer {
+  background-color: #313543;
+  color: #A0AEC0;
+  font-family: 'Roboto', sans-serif;
+  margin-top: 3.5rem;
+}
+
+.bms-footer-tier1 {
+  background-color: #2b2f3d;
+  border-bottom: 1px solid #3c4254;
+  min-height: 84px;
+}
+
+.bms-footer-tier2 {
+  background-color: #383d4e;
+  border-bottom: 1px solid #454b5f;
+  min-height: 96px;
+}
+
+.bms-footer-tier3 {
+  background-color: #313543;
+  border-bottom: 1px solid #3c4254;
+}
+
+.bms-footer-tier4 {
+  background-color: #2b2f3d;
+}
+
+.bms-service-card {
+  text-decoration: none;
+  color: #D1D5DB;
+  padding: 16px 12px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.25s ease;
+}
+
+.bms-service-card:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+  color: #FFFFFF;
+  transform: translateY(-2px);
+}
+
+.bms-service-card i {
+  color: #9CA3AF;
+  font-size: 2rem;
+  transition: color 0.25s ease;
+}
+
+.bms-service-card:hover i {
+  color: #EB4E62;
+}
+
+.bms-service-title {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.bms-directory-group {
+  margin-bottom: 1.5rem;
+}
+
+.bms-directory-title {
+  color: #F1F5F9;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.bms-directory-links {
+  font-size: 11.5px;
+  line-height: 22px;
+  color: #94A3B8;
+}
+
+.bms-footer-link {
+  color: #94A3B8;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.bms-footer-link:hover {
+  color: #FFFFFF !important;
+  text-decoration: underline;
+}
+
+.bms-footer-sep {
+  color: #475569;
+  margin: 0 6px;
+  font-size: 10px;
+}
+
+.bms-social-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #3f4557;
+  color: #E2E8F0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.bms-social-btn:hover {
+  background-color: #DC354B;
+  color: #FFFFFF;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(220, 53, 75, 0.35);
+}
+
+.bms-footer-legal {
+  color: #94A3B8;
+  font-size: 11px;
+  line-height: 19px;
+  max-width: 980px;
+  margin: 0 auto;
+}
+
