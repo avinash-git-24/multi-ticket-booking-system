@@ -96,10 +96,10 @@
                         else
                         {
                             <li class="nav-item ms-lg-2">
-                                <a class="btn btn-sm btn-outline-showsphere px-3" asp-controller="Account" asp-action="Login">Sign In</a>
+                                <a class="btn btn-sm btn-danger rounded-pill px-3 py-1 fw-semibold" style="background-color: #F84464; border-color: #F84464;" asp-controller="Account" asp-action="Login">Sign In</a>
                             </li>
                             <li class="nav-item">
-                                <a class="btn btn-sm btn-primary-showsphere px-3" asp-controller="Account" asp-action="Register">Register</a>
+                                <a class="btn btn-sm btn-outline-secondary rounded-pill px-3 py-1 fw-semibold" asp-controller="Account" asp-action="Register">Register</a>
                             </li>
                         }
                     </ul>
@@ -107,15 +107,23 @@
             </div>
         </nav>
 
-        <!-- Secondary Categories Subnav -->
-        <div class="subnav-categories d-none d-md-block">
-            <div class="container d-flex gap-4">
-                <a class="subnav-link" asp-controller="Movies" asp-action="Index">Now Showing</a>
-                <a class="subnav-link" asp-controller="Movies" asp-action="Index" asp-route-status="Upcoming">Coming Soon</a>
-                <a class="subnav-link" asp-controller="Events" asp-action="Index" asp-route-category="Concert">Concerts</a>
-                <a class="subnav-link" asp-controller="Events" asp-action="Index" asp-route-category="Comedy">Comedy Shows</a>
-                <a class="subnav-link" asp-controller="Events" asp-action="Index" asp-route-category="Workshop">Workshops</a>
-                <a class="subnav-link" asp-controller="Events" asp-action="Index" asp-route-category="Sports">Sports</a>
+        <!-- Secondary Categories Subnav (BookMyShow Dual-Side Strip) -->
+        <div class="subnav-categories d-none d-md-block border-bottom bg-white">
+            <div class="container d-flex justify-content-between align-items-center py-1">
+                <div class="d-flex gap-4">
+                    <a class="subnav-link text-decoration-none fw-semibold small" asp-controller="Movies" asp-action="Index">Movies</a>
+                    <a class="subnav-link text-decoration-none fw-semibold small" asp-controller="Movies" asp-action="Index" asp-route-status="Upcoming">Stream</a>
+                    <a class="subnav-link text-decoration-none fw-semibold small" asp-controller="Events" asp-action="Index">Events</a>
+                    <a class="subnav-link text-decoration-none fw-semibold small" asp-controller="Events" asp-action="Index" asp-route-category="Theatre">Plays</a>
+                    <a class="subnav-link text-decoration-none fw-semibold small" asp-controller="Events" asp-action="Index" asp-route-category="Sports">Sports</a>
+                    <a class="subnav-link text-decoration-none fw-semibold small" asp-controller="Events" asp-action="Index" asp-route-category="Workshop">Activities</a>
+                </div>
+                <div class="d-flex gap-3 small">
+                    <a class="text-decoration-none text-secondary" style="font-size: 0.8rem;" asp-controller="Account" asp-action="Register">ListYourShow</a>
+                    <a class="text-decoration-none text-secondary" style="font-size: 0.8rem;" asp-controller="Home" asp-action="Index">Corporates</a>
+                    <a class="text-decoration-none text-secondary" style="font-size: 0.8rem;" asp-controller="Home" asp-action="Index">Offers</a>
+                    <a class="text-decoration-none text-secondary" style="font-size: 0.8rem;" asp-controller="Home" asp-action="Index">Gift Cards</a>
+                </div>
             </div>
         </div>
     </header>

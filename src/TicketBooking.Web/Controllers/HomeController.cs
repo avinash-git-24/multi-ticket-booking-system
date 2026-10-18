@@ -1,16 +1,55 @@
+namespace TicketBooking.Web.Controllers;
+
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using TicketBooking.Web.Models;
-
-namespace TicketBooking.Web.Controllers;
+using TicketBooking.Web.Services;
+using TicketBooking.Web.ViewModels.Home;
 
 public class HomeController : Controller
 {
-    public IActionResult Index()
+    private readonly IMovieService _movieService;
+    private readonly IEventService _eventService;
+    private readonly ILogger<HomeController> _logger;
+
+    public HomeController(
+        IMovieService movieService,
+        IEventService eventService,
+        ILogger<HomeController> logger)
     {
-        return View();
+        _movieService = movieService;
+        _eventService = eventService;
+        _logger = logger;
     }
 
+    [HttpGet]
+    public async Task<IActionResult> Index()
+    {
+        var city = Request.Cookies["SelectedCity"] ?? "Rajkot";
+
+        // Fetch dynamic movies from database via MovieService
+        var showingResult = await _movieService.GetMovieListAsync(city: null, status: "CurrentlyShowing", genre: null, language: null, search: null);
+        var upcomingResult = await _movieService.GetMovieListAsync(city: null, status: "Upcoming", genre: null, language: null, search: null);
+
+        // Fetch dynamic events from database via EventService
+        var allEvents = await _eventService.GetEventsAsync();
+
+        var viewModel = new HomeIndexViewModel
+        {
+            RecommendedMovies = showingResult.Movies,
+            PremiereMovies = upcomingResult.Movies.Count > 0 ? upcomingResult.Movies : showingResult.Movies.Take(4).ToList(),
+            MusicEvents = allEvents.Where(e => e.Category.Equals("Concert", StringComparison.OrdinalIgnoreCase)).ToList(),
+            ComedyEvents = allEvents.Where(e => e.Category.Equals("Comedy", StringComparison.OrdinalIgnoreCase)).ToList(),
+            SportsEvents = allEvents.Where(e => e.Category.Equals("Sports", StringComparison.OrdinalIgnoreCase)).ToList(),
+            TheatreEvents = allEvents.Where(e => e.Category.Equals("Theatre", StringComparison.OrdinalIgnoreCase)).ToList(),
+            WorkshopEvents = allEvents.Where(e => e.Category.Equals("Workshop", StringComparison.OrdinalIgnoreCase)).ToList(),
+            SelectedCity = city
+        };
+
+        return View(viewModel);
+    }
+
+    [HttpGet]
     public IActionResult Privacy()
     {
         return View();
