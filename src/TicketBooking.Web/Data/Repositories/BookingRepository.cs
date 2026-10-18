@@ -293,11 +293,12 @@ public class BookingRepository : IBookingRepository
                 VALUES (@BookingId, NULL, @SeatLabel, @CategoryId, @CategoryName, @UnitPrice);";
 
             var unitPrice = basePrice / quantity;
+            var safeCategoryLabel = categoryName.Length > 80 ? categoryName[..80] : categoryName;
             for (int i = 1; i <= quantity; i++)
             {
                 using var itemCmd = new SqlCommand(insertItemSql, connection, transaction);
                 itemCmd.Parameters.AddWithValue("@BookingId", bookingId);
-                itemCmd.Parameters.AddWithValue("@SeatLabel", $"{categoryName} #{i}");
+                itemCmd.Parameters.AddWithValue("@SeatLabel", $"{safeCategoryLabel} #{i}");
                 itemCmd.Parameters.AddWithValue("@CategoryId", ticketCategoryId);
                 itemCmd.Parameters.AddWithValue("@CategoryName", categoryName);
                 itemCmd.Parameters.AddWithValue("@UnitPrice", unitPrice);
