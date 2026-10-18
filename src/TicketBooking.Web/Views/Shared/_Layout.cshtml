@@ -20,27 +20,25 @@
         <div class="border-bottom bg-white" style="height: 64px;">
             <div class="bms-container h-100 d-flex align-items-center justify-content-between">
                 <!-- Brand Logo & Search Bar -->
-                <div class="d-flex align-items-center gap-4 flex-grow-1">
-                    <a class="d-flex align-items-center text-decoration-none" asp-controller="Home" asp-action="Index">
-                        <span class="fw-bold fs-4" style="color: #EB4E62; letter-spacing: -0.5px;">
-                            <i class="bi bi-ticket-perforated-fill me-1"></i>ShowSphere
-                        </span>
+                <div class="d-flex align-items-center gap-3 gap-lg-4 flex-grow-1 me-3">
+                    <a class="d-flex align-items-center text-decoration-none flex-shrink-0" asp-controller="Home" asp-action="Index">
+                        <img src="~/images/bms/bms_logo.png" alt="BookMyShow" style="height: 38px; width: auto; object-fit: contain;" />
                     </a>
 
-                    <!-- BMS 549px x 36px Search Input -->
-                    <form class="d-none d-lg-flex align-items-center px-3 py-1 bg-white flex-grow-1" style="max-width: 550px; height: 36px; border: 1px solid #EEEEEE; border-radius: 4px;" method="get" asp-controller="Movies" asp-action="Index">
+                    <!-- BMS Search Input (Matches exact BookMyShow layout) -->
+                    <form class="d-none d-md-flex align-items-center px-3 bg-white flex-grow-1" style="max-width: 580px; height: 36px; border: 1px solid #EEEEEE; border-radius: 4px;" method="get" asp-controller="Movies" asp-action="Index">
                         <i class="bi bi-search text-secondary me-2" style="font-size: 13px;"></i>
                         <input type="search" name="search" class="border-0 w-100 bg-transparent text-dark" style="outline: none; font-size: 14px; font-family: 'Roboto', sans-serif;" placeholder="Search for Movies, Events, Plays, Sports and Activities" />
                     </form>
                 </div>
 
                 <!-- Right Side Actions: Location, Sign In, Hamburger -->
-                <div class="d-flex align-items-center gap-3 ms-3">
+                <div class="d-flex align-items-center gap-3 ms-auto flex-shrink-0">
                     <!-- City Selector Dropdown (Rajkot) -->
                     <div class="dropdown">
-                        <button class="btn btn-sm text-dark d-flex align-items-center gap-1 border-0 p-0 fw-normal" type="button" id="cityDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 15px; font-family: 'Roboto', sans-serif; color: #333333;">
+                        <button class="btn btn-sm text-dark d-flex align-items-center gap-1 border-0 p-0 fw-normal" type="button" id="cityDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 14px; font-family: 'Roboto', sans-serif; color: #333333;">
                             <span id="currentCityLabel">@(Context.Request.Cookies["SelectedCity"] ?? "Rajkot")</span>
-                            <i class="bi bi-chevron-down text-secondary" style="font-size: 11px;"></i>
+                            <i class="bi bi-chevron-down text-secondary ms-1" style="font-size: 10px;"></i>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="cityDropdown">
                             <li><a class="dropdown-item city-option" href="#" data-city="Rajkot">Rajkot (Current)</a></li>
@@ -78,14 +76,14 @@
                     }
                     else
                     {
-                        <a class="btn btn-sm text-white fw-normal d-flex align-items-center justify-content-center" style="width: 72px; height: 28px; background-color: #EB4E62; border-radius: 4px; font-size: 12px; font-family: 'Roboto', sans-serif;" asp-controller="Account" asp-action="Login">
+                        <a class="btn btn-sm text-white fw-medium d-flex align-items-center justify-content-center text-decoration-none" style="min-width: 68px; height: 28px; background-color: #F84464; border-radius: 4px; font-size: 12px; font-family: 'Roboto', sans-serif; padding: 0 14px;" asp-controller="Account" asp-action="Login">
                             Sign in
                         </a>
                     }
 
                     <!-- Hamburger Menu Icon -->
-                    <button class="btn btn-sm text-dark p-0 border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#bmsSideMenu" aria-controls="bmsSideMenu">
-                        <i class="bi bi-list fs-4 text-secondary"></i>
+                    <button class="btn btn-sm text-dark p-0 border-0 ms-1 d-flex align-items-center" type="button" data-bs-toggle="offcanvas" data-bs-target="#bmsSideMenu" aria-controls="bmsSideMenu" aria-label="Menu">
+                        <i class="bi bi-list" style="font-size: 24px; color: #333333; line-height: 1;"></i>
                     </button>
                 </div>
             </div>
