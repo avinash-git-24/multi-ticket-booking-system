@@ -11,6 +11,9 @@ public interface IBookingRepository
     Task<(bool Success, string? Error, string? BookingReference, DateTime? ExpiresAtUtc)> CreateMovieSeatHoldAsync(
         int userId, int showtimeId, IReadOnlyList<int> seatIds, decimal basePrice, decimal convenienceFee, decimal taxAmount, TimeSpan holdDuration, CancellationToken cancellationToken = default);
 
+    Task<(bool Success, string? Error, string? BookingReference, DateTime? ExpiresAtUtc)> CreateEventTicketHoldAsync(
+        int userId, int eventId, int ticketCategoryId, int quantity, decimal basePrice, decimal convenienceFee, decimal taxAmount, TimeSpan holdDuration, CancellationToken cancellationToken = default);
+
     Task<(bool Success, string? Error, string? TransactionRef)> ConfirmMovieBookingAsync(
         string bookingReference, int userId, string paymentMode, CancellationToken cancellationToken = default);
 
@@ -180,6 +183,139 @@ public class BookingRepository : IBookingRepository
             transaction.Rollback();
             _logger.LogError(ex, "Transaction failed creating seat hold for Showtime {ShowtimeId}: {Message}", showtimeId, ex.Message);
             return (false, "A temporary error occurred while reserving your seats. Please try again.", null, null);
+        }
+    }
+
+    public async Task<(bool Success, string? Error, string? BookingReference, DateTime? ExpiresAtUtc)> CreateEventTicketHoldAsync(
+        int userId, int eventId, int ticketCategoryId, int quantity, decimal basePrice, decimal convenienceFee, decimal taxAmount, TimeSpan holdDuration, CancellationToken cancellationToken = default)
+    {
+        if (quantity <= 0)
+            return (false, "Please select at least 1 ticket.", null, null);
+
+        using var connection = await _connectionFactory.CreateConnectionAsync(cancellationToken);
+        using var transaction = connection.BeginTransaction(IsolationLevel.Serializable);
+
+        try
+        {
+            // 1. Lock and inspect the ticket category
+            const string checkSql = @"
+                SELECT CategoryName, Price, RemainingCapacity, MaxPerBooking
+                FROM dbo.TicketCategories WITH (UPDLOCK, HOLDLOCK)
+                WHERE CategoryId = @CategoryId AND EventId = @EventId;";
+
+            string categoryName;
+            decimal price;
+            int remainingCapacity;
+            int maxPerBooking;
+
+            using (var checkCmd = new SqlCommand(checkSql, connection, transaction))
+            {
+                checkCmd.Parameters.AddWithValue("@CategoryId", ticketCategoryId);
+                checkCmd.Parameters.AddWithValue("@EventId", eventId);
+
+                using var reader = await checkCmd.ExecuteReaderAsync(cancellationToken);
+                if (!await reader.ReadAsync(cancellationToken))
+                {
+                    reader.Close();
+                    transaction.Rollback();
+                    return (false, "Selected ticket tier was not found for this event.", null, null);
+                }
+
+                categoryName = reader.GetString(0);
+                price = reader.GetDecimal(1);
+                remainingCapacity = reader.GetInt32(2);
+                maxPerBooking = reader.GetInt32(3);
+            }
+
+            if (quantity > maxPerBooking)
+            {
+                transaction.Rollback();
+                return (false, $"You can book a maximum of {maxPerBooking} tickets for this tier.", null, null);
+            }
+
+            if (remainingCapacity < quantity)
+            {
+                transaction.Rollback();
+                return (false, $"Only {remainingCapacity} tickets remain for {categoryName}. Please choose a smaller quantity.", null, null);
+            }
+
+            // 2. Atomic decrement of remaining capacity
+            const string updateCapacitySql = @"
+                UPDATE dbo.TicketCategories
+                SET RemainingCapacity = RemainingCapacity - @Quantity
+                WHERE CategoryId = @CategoryId AND RemainingCapacity >= @Quantity;";
+
+            using (var updateCmd = new SqlCommand(updateCapacitySql, connection, transaction))
+            {
+                updateCmd.Parameters.AddWithValue("@Quantity", quantity);
+                updateCmd.Parameters.AddWithValue("@CategoryId", ticketCategoryId);
+
+                var rows = await updateCmd.ExecuteNonQueryAsync(cancellationToken);
+                if (rows == 0)
+                {
+                    transaction.Rollback();
+                    return (false, "Selected tickets are no longer available. Please try a different tier.", null, null);
+                }
+            }
+
+            // 3. Generate unique booking reference and compute totals
+            var bookingRef = GenerateBookingReference();
+            var expiresAtUtc = DateTime.UtcNow.Add(holdDuration);
+            var totalAmount = basePrice + convenienceFee + taxAmount;
+
+            // 4. Create Booking record in Pending state
+            const string insertBookingSql = @"
+                INSERT INTO dbo.Bookings (BookingReference, UserId, BookingType, EventId, TicketCategoryId, TotalQuantity, 
+                                          BaseAmount, ConvenienceFee, TaxAmount, TotalAmount, Status, CreatedAtUtc, ExpiresAtUtc)
+                VALUES (@Ref, @UserId, 'Event', @EventId, @CategoryId, @Qty, @BaseAmount, @Fee, @Tax, @Total, 'Pending', SYSUTCDATETIME(), @ExpiresAtUtc);
+                SELECT CAST(SCOPE_IDENTITY() AS INT);";
+
+            int bookingId;
+            using (var insertCmd = new SqlCommand(insertBookingSql, connection, transaction))
+            {
+                insertCmd.Parameters.AddWithValue("@Ref", bookingRef);
+                insertCmd.Parameters.AddWithValue("@UserId", userId);
+                insertCmd.Parameters.AddWithValue("@EventId", eventId);
+                insertCmd.Parameters.AddWithValue("@CategoryId", ticketCategoryId);
+                insertCmd.Parameters.AddWithValue("@Qty", quantity);
+                insertCmd.Parameters.AddWithValue("@BaseAmount", basePrice);
+                insertCmd.Parameters.AddWithValue("@Fee", convenienceFee);
+                insertCmd.Parameters.AddWithValue("@Tax", taxAmount);
+                insertCmd.Parameters.AddWithValue("@Total", totalAmount);
+                insertCmd.Parameters.AddWithValue("@ExpiresAtUtc", expiresAtUtc);
+
+                bookingId = Convert.ToInt32(await insertCmd.ExecuteScalarAsync(cancellationToken));
+            }
+
+            // 5. Insert BookingItems
+            const string insertItemSql = @"
+                INSERT INTO dbo.BookingItems (BookingId, SeatId, SeatLabel, TicketCategoryId, CategoryName, UnitPrice)
+                VALUES (@BookingId, NULL, @SeatLabel, @CategoryId, @CategoryName, @UnitPrice);";
+
+            var unitPrice = basePrice / quantity;
+            var safeCategoryLabel = categoryName.Length > 80 ? categoryName[..80] : categoryName;
+            for (int i = 1; i <= quantity; i++)
+            {
+                using var itemCmd = new SqlCommand(insertItemSql, connection, transaction);
+                itemCmd.Parameters.AddWithValue("@BookingId", bookingId);
+                itemCmd.Parameters.AddWithValue("@SeatLabel", $"{safeCategoryLabel} #{i}");
+                itemCmd.Parameters.AddWithValue("@CategoryId", ticketCategoryId);
+                itemCmd.Parameters.AddWithValue("@CategoryName", categoryName);
+                itemCmd.Parameters.AddWithValue("@UnitPrice", unitPrice);
+                await itemCmd.ExecuteNonQueryAsync(cancellationToken);
+            }
+
+            transaction.Commit();
+            _logger.LogInformation("Held {Quantity} tickets for Event {EventId} Category {CategoryId} under BookingRef {Ref} for User {UserId}.",
+                quantity, eventId, ticketCategoryId, bookingRef, userId);
+
+            return (true, null, bookingRef, expiresAtUtc);
+        }
+        catch (Exception ex)
+        {
+            transaction.Rollback();
+            _logger.LogError(ex, "Transaction failed creating ticket hold for Event {EventId}: {Message}", eventId, ex.Message);
+            return (false, "A temporary error occurred while reserving your tickets. Please try again.", null, null);
         }
     }
 
