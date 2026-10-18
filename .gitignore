@@ -1,0 +1,30 @@
+# Visual Studio / .NET
+bin/
+obj/
+*.user
+*.userosscache
+*.sln.docstates
+.vs/
+_ReSharper*/
+*.suo
+
+# Environment & Secrets
+.env
+.env.*
+usersecrets/
+appsettings.*.local.json
+secrets.json
+
+# Local Database Files
+*.mdf
+*.ldf
+
+# Application Logs
+logs/
+*.log
+
+# OS & Editor Files
+.DS_Store
+Thumbs.db
+.vscode/
+*.swp

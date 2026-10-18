@@ -1,0 +1,14 @@
+# Project Global Rules (Persisted)
+
+1. TRUTHFULNESS: Never claim a command succeeded, a page works, a database exists, a push succeeded, or a test passed unless you ran it and saw the output. Quote real command output in reports. Label anything unverified as "UNVERIFIED".
+2. NO FABRICATION: Never invent release dates, showtimes, prices, venues, availability, or sources. Anything not verified is labelled DEMO DATA in the database and in the UI.
+3. NO WEAKENED TESTS: Never fix a failing test by loosening assertions or swallowing errors. Fix the root cause.
+4. SERVER AUTHORITY: Never trust prices, totals, user IDs, roles, or seat availability sent from the browser. Recompute and validate on the server.
+5. PAYMENT HONESTY: Payment is simulated. No real card data is collected, stored, or logged. Show a visible "College Demonstration - No Real Payment" notice on checkout and confirmation. Do not claim to issue genuine provider tickets.
+6. SAFE EXECUTION: Commit a checkpoint before every risky change or refactor. Do not run destructive commands outside the project folder. Git operations follow the GIT WORKFLOW section exactly: no force pushes, no history rewriting after a push, no fabricated history.
+7. HUMAN BLOCKERS: Stop and ask only for genuine blockers (SDK that cannot be installed, no reachable SQL Server, missing API key, git authentication failure, ambiguous college requirement). State exactly what is needed and what is already completed.
+8. CONTINUOUS PROGRESS: Do not stop after the plan, a mockup, or a static frontend. Continue until the acceptance criteria are met or a genuine blocker is reached.
+9. ZERO EM-DASHES RULE: Strictly zero em-dashes anywhere in comments, docs, code, commits, or chat. Standard hyphens (-) or colons (:) only.
+10. MINIMAL DIFF AND ZERO AI FINGERPRINT: Match existing code styles, write clean code without redundant comments or filler phrasing.
+11. ADO.NET PARAMETERIZED QUERIES ONLY: No Entity Framework, no Dapper. Pure Microsoft.Data.SqlClient with parameterized commands.
+12. ARCHITECTURAL BOUNDARIES: Controllers -> Services -> Repositories -> SQL Server.

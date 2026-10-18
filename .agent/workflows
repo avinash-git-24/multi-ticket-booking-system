@@ -1,0 +1,18 @@
+# Multi-Ticket Booking System: Development Workflows
+
+## Phase Gates and Branching Model
+1. Phase 0: Environment audit and git setup (Branch: feature/phase0-environment-git)
+2. Phase 1: Requirements, architecture, interfaces, acceptance checklist (Branch: docs/phase1-architecture)
+3. Phase 2: Database schema, project foundation, design system (Branch: feature/phase2-foundation-db) -> Tag: v0.1-foundation
+4. Phase 3: Authentication and DB integration (Branch: feature/phase3-auth-cookies) -> Tag: v0.2-auth
+5. Phase 4: Movie browsing and booking (Branch: feature/phase4-movie-booking) -> Tag: v0.3-movie-booking
+6. Phase 5: Event browsing and booking (Branch: feature/phase5-event-booking) -> Tag: v0.4-event-booking
+7. Phase 6: Admin dashboard and inventory management (Branch: feature/phase6-admin-crud) -> Tag: v0.5-admin
+8. Phase 7: Catalogue population and verification mechanism (Branch: feature/phase7-catalogue-verification)
+9. Phase 8: Security, integration, and regression testing (Branch: test/phase8-security-qa) -> Tag: v0.6-security-tested
+10. Phase 9: Documentation, demo scripts, and finalization (Branch: docs/phase9-delivery) -> Tag: v1.0-demo
+
+## Merge Rules
+- Feature branches merge into main with: git merge --no-ff
+- Milestone tags created immediately after passing each phase gate
+- Verification checks: build, test, secret scan before pushing
