@@ -685,7 +685,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   overflow: hidden;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 .bms-hero-track {

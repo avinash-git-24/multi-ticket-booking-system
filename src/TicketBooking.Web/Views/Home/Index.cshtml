@@ -14,19 +14,46 @@
                 <i class="bi bi-chevron-right"></i>
             </button>
             <div class="bms-hero-track" id="bmsHeroTrack">
-                <div class="bms-hero-slide">
-                    <a asp-controller="Events" asp-action="Index">
-                        <img src="/images/bms/hero_navratri.jpg" alt="Navratri Festival Rajkot" />
-                    </a>
-                </div>
-                <div class="bms-hero-slide">
+                <!-- Clone 1: Diljit (index 0) -->
+                <div class="bms-hero-slide" data-index="1">
                     <a asp-controller="Events" asp-action="Index" asp-route-category="Concert">
                         <img src="/images/bms/hero_diljit.jpg" alt="Diljit Dosanjh Tour" />
                     </a>
                 </div>
-                <div class="bms-hero-slide">
+                <!-- Clone 2: Garba (index 1) -->
+                <div class="bms-hero-slide" data-index="2">
                     <a asp-controller="Events" asp-action="Index">
                         <img src="/images/bms/hero_garba.jpg" alt="Aadhya Shakti Garba" />
+                    </a>
+                </div>
+                <!-- Real 0: Navratri (index 2) -->
+                <div class="bms-hero-slide" data-index="0">
+                    <a asp-controller="Events" asp-action="Index">
+                        <img src="/images/bms/hero_navratri.jpg" alt="Navratri Festival Rajkot" />
+                    </a>
+                </div>
+                <!-- Real 1: Diljit (index 3) -->
+                <div class="bms-hero-slide" data-index="1">
+                    <a asp-controller="Events" asp-action="Index" asp-route-category="Concert">
+                        <img src="/images/bms/hero_diljit.jpg" alt="Diljit Dosanjh Tour" />
+                    </a>
+                </div>
+                <!-- Real 2: Garba (index 4) -->
+                <div class="bms-hero-slide" data-index="2">
+                    <a asp-controller="Events" asp-action="Index">
+                        <img src="/images/bms/hero_garba.jpg" alt="Aadhya Shakti Garba" />
+                    </a>
+                </div>
+                <!-- Clone 0: Navratri (index 5) -->
+                <div class="bms-hero-slide" data-index="0">
+                    <a asp-controller="Events" asp-action="Index">
+                        <img src="/images/bms/hero_navratri.jpg" alt="Navratri Festival Rajkot" />
+                    </a>
+                </div>
+                <!-- Clone 1: Diljit (index 6) -->
+                <div class="bms-hero-slide" data-index="1">
+                    <a asp-controller="Events" asp-action="Index" asp-route-category="Concert">
+                        <img src="/images/bms/hero_diljit.jpg" alt="Diljit Dosanjh Tour" />
                     </a>
                 </div>
             </div>
@@ -468,69 +495,131 @@
 
 @section Scripts {
 <script>
-    let currentHeroIndex = 0;
-    const heroSlides = document.querySelectorAll('.bms-hero-slide');
-    const heroTrack = document.getElementById('bmsHeroTrack');
-    const heroDots = document.querySelectorAll('.bms-hero-dot');
-    let heroAutoTimer = null;
+    (function () {
+        const TOTAL_REAL_SLIDES = 3;
+        const REAL_START_INDEX = 2; // index 2 is real Slide 0 (Navratri)
+        const REAL_END_INDEX = 4;   // index 4 is real Slide 2 (Garba)
+        let currentTrackIndex = REAL_START_INDEX;
+        let isTransitioning = false;
+        let autoPlayTimer = null;
 
-    function updateHeroCarousel() {
-        if (!heroTrack || heroSlides.length === 0) return;
         const stage = document.getElementById('bmsHeroStage');
-        if (!stage) return;
+        const track = document.getElementById('bmsHeroTrack');
+        const slides = document.querySelectorAll('.bms-hero-slide');
+        const dots = document.querySelectorAll('.bms-hero-dot');
+        const wrapper = document.querySelector('.bms-hero-wrapper');
 
-        const activeSlide = heroSlides[currentHeroIndex];
-        const stageWidth = stage.offsetWidth;
-        const slideWidth = activeSlide.offsetWidth;
-        const slideLeft = activeSlide.offsetLeft;
-
-        const targetX = (stageWidth / 2) - (slideLeft + slideWidth / 2);
-        heroTrack.style.transform = `translateX(${targetX}px)`;
-
-        heroDots.forEach((dot, idx) => {
-            if (idx === currentHeroIndex) {
-                dot.classList.add('active');
-            } else {
-                dot.classList.remove('active');
-            }
-        });
-    }
-
-    function bmsSlideHero(direction) {
-        currentHeroIndex = (currentHeroIndex + direction + heroSlides.length) % heroSlides.length;
-        updateHeroCarousel();
-        resetHeroTimer();
-    }
-
-    function bmsGoToHero(index) {
-        currentHeroIndex = index;
-        updateHeroCarousel();
-        resetHeroTimer();
-    }
-
-    function resetHeroTimer() {
-        if (heroAutoTimer) clearInterval(heroAutoTimer);
-        heroAutoTimer = setInterval(() => {
-            bmsSlideHero(1);
-        }, 4500);
-    }
-
-    function bmsScrollRail(rowId, direction) {
-        const row = document.getElementById(rowId);
-        if (row) {
-            row.scrollBy({ left: direction * 400, behavior: 'smooth' });
+        function getTargetX(index) {
+            if (!stage || !slides[index]) return 0;
+            const stageWidth = stage.offsetWidth;
+            const slide = slides[index];
+            const slideWidth = slide.offsetWidth;
+            const slideLeft = slide.offsetLeft;
+            return (stageWidth / 2) - (slideLeft + slideWidth / 2);
         }
-    }
 
-    window.addEventListener('resize', updateHeroCarousel);
-    document.addEventListener('DOMContentLoaded', () => {
-        setTimeout(updateHeroCarousel, 50);
-        resetHeroTimer();
-    });
+        function updateCarousel(animate = true) {
+            if (!track || slides.length === 0) return;
+            const targetX = getTargetX(currentTrackIndex);
 
-    if (document.readyState === 'complete' || document.readyState === 'interactive') {
-        setTimeout(updateHeroCarousel, 50);
-        resetHeroTimer();
-    }
+            if (animate) {
+                track.style.transition = 'transform 0.45s cubic-bezier(0.25, 1, 0.5, 1)';
+            } else {
+                track.style.transition = 'none';
+            }
+
+            track.style.transform = `translateX(${targetX}px)`;
+
+            // Update dots
+            const realIdx = ((currentTrackIndex - REAL_START_INDEX) % TOTAL_REAL_SLIDES + TOTAL_REAL_SLIDES) % TOTAL_REAL_SLIDES;
+            dots.forEach((dot, idx) => {
+                if (idx === realIdx) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        }
+
+        function handleTransitionEnd() {
+            isTransitioning = false;
+            // Seamless infinite loop boundary snap
+            if (currentTrackIndex > REAL_END_INDEX) {
+                currentTrackIndex -= TOTAL_REAL_SLIDES;
+                updateCarousel(false);
+                track.offsetHeight; // force reflow
+            } else if (currentTrackIndex < REAL_START_INDEX) {
+                currentTrackIndex += TOTAL_REAL_SLIDES;
+                updateCarousel(false);
+                track.offsetHeight; // force reflow
+            }
+        }
+
+        if (track) {
+            track.addEventListener('transitionend', handleTransitionEnd);
+        }
+
+        window.bmsSlideHero = function (direction) {
+            if (isTransitioning) return;
+            isTransitioning = true;
+            currentTrackIndex += direction;
+            updateCarousel(true);
+            restartAutoPlay();
+        };
+
+        window.bmsGoToHero = function (dotIndex) {
+            if (isTransitioning) return;
+            isTransitioning = true;
+            currentTrackIndex = REAL_START_INDEX + dotIndex;
+            updateCarousel(true);
+            restartAutoPlay();
+        };
+
+        function startAutoPlay() {
+            if (autoPlayTimer) clearInterval(autoPlayTimer);
+            autoPlayTimer = setInterval(() => {
+                window.bmsSlideHero(1);
+            }, 4500);
+        }
+
+        function stopAutoPlay() {
+            if (autoPlayTimer) clearInterval(autoPlayTimer);
+            autoPlayTimer = null;
+        }
+
+        function restartAutoPlay() {
+            stopAutoPlay();
+            startAutoPlay();
+        }
+
+        if (wrapper) {
+            wrapper.addEventListener('mouseenter', stopAutoPlay);
+            wrapper.addEventListener('mouseleave', startAutoPlay);
+        }
+
+        window.bmsScrollRail = function (rowId, direction) {
+            const row = document.getElementById(rowId);
+            if (row) {
+                row.scrollBy({ left: direction * 400, behavior: 'smooth' });
+            }
+        };
+
+        window.addEventListener('resize', () => {
+            updateCarousel(false);
+        });
+
+        function init() {
+            currentTrackIndex = REAL_START_INDEX;
+            updateCarousel(false);
+            startAutoPlay();
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+        window.addEventListener('load', () => updateCarousel(false));
+    })();
 </script>
 }
