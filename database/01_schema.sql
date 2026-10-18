@@ -302,3 +302,112 @@ BEGIN
     );
 END
 GO
+
+-- 16. Bookings Table
+IF OBJECT_ID('dbo.Bookings', 'U') IS NULL
+BEGIN
+    CREATE TABLE dbo.Bookings (
+        BookingId INT IDENTITY(1,1) NOT NULL,
+        BookingReference NVARCHAR(50) NOT NULL,
+        UserId INT NOT NULL,
+        BookingType NVARCHAR(20) NOT NULL,
+        ShowtimeId INT NULL,
+        EventId INT NULL,
+        TicketCategoryId INT NULL,
+        TotalQuantity INT NOT NULL,
+        BaseAmount DECIMAL(10,2) NOT NULL,
+        ConvenienceFee DECIMAL(10,2) NOT NULL,
+        TaxAmount DECIMAL(10,2) NOT NULL,
+        TotalAmount DECIMAL(10,2) NOT NULL,
+        Status NVARCHAR(50) NOT NULL CONSTRAINT DF_Bookings_Status DEFAULT ('Pending'),
+        CreatedAtUtc DATETIME2(7) NOT NULL CONSTRAINT DF_Bookings_CreatedAtUtc DEFAULT (SYSUTCDATETIME()),
+        ExpiresAtUtc DATETIME2(7) NOT NULL,
+        ConfirmedAtUtc DATETIME2(7) NULL,
+        CancelledAtUtc DATETIME2(7) NULL,
+        CancellationReason NVARCHAR(500) NULL,
+        RowVersion ROWVERSION NOT NULL,
+        CONSTRAINT PK_Bookings PRIMARY KEY CLUSTERED (BookingId),
+        CONSTRAINT UQ_Bookings_BookingReference UNIQUE (BookingReference),
+        CONSTRAINT FK_Bookings_Users FOREIGN KEY (UserId) REFERENCES dbo.Users(UserId),
+        CONSTRAINT FK_Bookings_Showtimes FOREIGN KEY (ShowtimeId) REFERENCES dbo.Showtimes(ShowtimeId),
+        CONSTRAINT FK_Bookings_Events FOREIGN KEY (EventId) REFERENCES dbo.Events(EventId),
+        CONSTRAINT FK_Bookings_TicketCategories FOREIGN KEY (TicketCategoryId) REFERENCES dbo.TicketCategories(CategoryId),
+        CONSTRAINT CK_Bookings_BookingType CHECK (BookingType IN ('Movie', 'Event')),
+        CONSTRAINT CK_Bookings_Status CHECK (Status IN ('Pending', 'Confirmed', 'Failed', 'Cancelled', 'Expired')),
+        CONSTRAINT CK_Bookings_TotalQuantity CHECK (TotalQuantity > 0),
+        CONSTRAINT CK_Bookings_BaseAmount CHECK (BaseAmount >= 0),
+        CONSTRAINT CK_Bookings_ConvenienceFee CHECK (ConvenienceFee >= 0),
+        CONSTRAINT CK_Bookings_TaxAmount CHECK (TaxAmount >= 0),
+        CONSTRAINT CK_Bookings_TotalAmount CHECK (TotalAmount >= 0)
+    );
+END
+GO
+
+-- Add Foreign Key from ShowtimeSeats to Bookings now that Bookings exists
+IF OBJECT_ID('dbo.FK_ShowtimeSeats_Bookings', 'F') IS NULL
+BEGIN
+    ALTER TABLE dbo.ShowtimeSeats
+    ADD CONSTRAINT FK_ShowtimeSeats_Bookings FOREIGN KEY (BookingId) REFERENCES dbo.Bookings(BookingId);
+END
+GO
+
+-- 17. BookingItems Table (Detail Line Items)
+IF OBJECT_ID('dbo.BookingItems', 'U') IS NULL
+BEGIN
+    CREATE TABLE dbo.BookingItems (
+        BookingItemId BIGINT IDENTITY(1,1) NOT NULL,
+        BookingId INT NOT NULL,
+        SeatId INT NULL,
+        SeatLabel NVARCHAR(20) NOT NULL,
+        TicketCategoryId INT NULL,
+        CategoryName NVARCHAR(100) NOT NULL,
+        UnitPrice DECIMAL(10,2) NOT NULL,
+        CONSTRAINT PK_BookingItems PRIMARY KEY CLUSTERED (BookingItemId),
+        CONSTRAINT FK_BookingItems_Bookings FOREIGN KEY (BookingId) REFERENCES dbo.Bookings(BookingId) ON DELETE CASCADE,
+        CONSTRAINT FK_BookingItems_Seats FOREIGN KEY (SeatId) REFERENCES dbo.Seats(SeatId),
+        CONSTRAINT FK_BookingItems_TicketCategories FOREIGN KEY (TicketCategoryId) REFERENCES dbo.TicketCategories(CategoryId),
+        CONSTRAINT CK_BookingItems_UnitPrice CHECK (UnitPrice >= 0)
+    );
+END
+GO
+
+-- 18. Payments Table (Simulated Payment Transaction Ledger)
+IF OBJECT_ID('dbo.Payments', 'U') IS NULL
+BEGIN
+    CREATE TABLE dbo.Payments (
+        PaymentId INT IDENTITY(1,1) NOT NULL,
+        BookingId INT NOT NULL,
+        TransactionReference NVARCHAR(100) NOT NULL,
+        PaymentGateway NVARCHAR(50) NOT NULL CONSTRAINT DF_Payments_Gateway DEFAULT ('SimulatedGateway'),
+        PaymentMode NVARCHAR(50) NOT NULL,
+        Amount DECIMAL(10,2) NOT NULL,
+        Status NVARCHAR(50) NOT NULL,
+        FailureReason NVARCHAR(500) NULL,
+        ProcessedAtUtc DATETIME2(7) NOT NULL CONSTRAINT DF_Payments_ProcessedAtUtc DEFAULT (SYSUTCDATETIME()),
+        CONSTRAINT PK_Payments PRIMARY KEY CLUSTERED (PaymentId),
+        CONSTRAINT UQ_Payments_TransactionReference UNIQUE (TransactionReference),
+        CONSTRAINT FK_Payments_Bookings FOREIGN KEY (BookingId) REFERENCES dbo.Bookings(BookingId),
+        CONSTRAINT CK_Payments_Amount CHECK (Amount >= 0),
+        CONSTRAINT CK_Payments_Status CHECK (Status IN ('Success', 'Failed', 'Timeout'))
+    );
+END
+GO
+
+-- 19. DataSources Table (Catalogue Provenance & Verification Metadata)
+IF OBJECT_ID('dbo.DataSources', 'U') IS NULL
+BEGIN
+    CREATE TABLE dbo.DataSources (
+        DataSourceId INT IDENTITY(1,1) NOT NULL,
+        EntityType NVARCHAR(50) NOT NULL,
+        EntityId INT NOT NULL,
+        SourceName NVARCHAR(200) NOT NULL,
+        SourceUrl NVARCHAR(1000) NOT NULL,
+        VerifiedAtUtc DATETIME2(7) NOT NULL CONSTRAINT DF_DataSources_VerifiedAtUtc DEFAULT (SYSUTCDATETIME()),
+        VerificationStatus NVARCHAR(50) NOT NULL CONSTRAINT DF_DataSources_VerificationStatus DEFAULT ('Demo'),
+        Notes NVARCHAR(MAX) NULL,
+        CONSTRAINT PK_DataSources PRIMARY KEY CLUSTERED (DataSourceId),
+        CONSTRAINT CK_DataSources_EntityType CHECK (EntityType IN ('Movie', 'Event', 'Venue')),
+        CONSTRAINT CK_DataSources_VerificationStatus CHECK (VerificationStatus IN ('Verified', 'Partially Verified', 'Demo'))
+    );
+END
+GO
