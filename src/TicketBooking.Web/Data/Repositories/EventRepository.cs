@@ -97,7 +97,15 @@ public class EventRepository : IEventRepository
                 e.EventId, e.Title, e.Description, e.Category, e.CityId, e.VenueId, e.BannerUrl, 
                 e.StartDate, e.EndDate, e.Status, e.CreatedAtUtc, e.UpdatedAtUtc,
                 c.CityName, v.VenueName, v.Address
-            ORDER BY e.StartDate ASC;";
+            ORDER BY 
+                CASE e.EventId 
+                    WHEN 23 THEN 1
+                    WHEN 24 THEN 2
+                    WHEN 25 THEN 3
+                    WHEN 26 THEN 4
+                    ELSE 100 
+                END,
+                e.StartDate ASC;";
 
         using var cmd = new SqlCommand(sql, connection);
         cmd.Parameters.AddRange(parameters.ToArray());

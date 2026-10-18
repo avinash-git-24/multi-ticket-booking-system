@@ -1070,4 +1070,370 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   max-width: 980px;
   margin: 0 auto;
 }
+
+/* ==========================================================================
+   BookMyShow Events Discovery Page Styles (1240px Split & 4-Col Grid)
+   ========================================================================== */
+.bms-events-wrapper {
+  background-color: #F5F5F7;
+  min-height: calc(100vh - 120px);
+  width: 100%;
+}
+
+.bms-events-container {
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 32px 15px 60px 15px;
+}
+
+.bms-events-layout {
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+}
+
+/* Left Sidebar (Width 300px) */
+.bms-filter-col {
+  width: 300px;
+  min-width: 300px;
+  flex-shrink: 0;
+}
+
+.bms-filter-heading {
+  font-family: 'Roboto', sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 30px;
+  color: #333333;
+  margin-bottom: 24px;
+}
+
+.bms-filter-card {
+  width: 300px;
+  background-color: #FFFFFF;
+  border-radius: 4px;
+  padding: 16px;
+  margin-bottom: 12px;
+  border: 1px solid #ECECEC;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+.bms-filter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  cursor: pointer;
+  user-select: none;
+}
+
+.bms-filter-title {
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #333333;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bms-filter-title.expanded {
+  color: #DC354B;
+  font-weight: 500;
+}
+
+.bms-filter-clear {
+  font-family: 'Roboto', sans-serif;
+  font-size: 12px;
+  color: #666666;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.bms-filter-clear:hover {
+  color: #DC354B;
+}
+
+.bms-filter-clear.active {
+  color: #DC354B;
+}
+
+.bms-filter-body {
+  padding-top: 14px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.bms-filter-chip {
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 12px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  color: #DC354B;
+  background-color: #FFFFFF;
+  border: 1px solid #E5E5E5;
+  border-radius: 2px;
+  text-decoration: none;
+  margin: 0 8px 8px 0;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.bms-filter-chip:hover {
+  background-color: #FFF0F2;
+  color: #DC354B;
+  border-color: #DC354B;
+}
+
+.bms-filter-chip.active {
+  background-color: #EB4E62;
+  border-color: #EB4E62;
+  color: #FFFFFF;
+  font-weight: 500;
+}
+
+.bms-browse-venues-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 300px;
+  height: 32px;
+  background-color: transparent;
+  border: 1px solid #DC3558;
+  border-radius: 4px;
+  color: #DC3558;
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  margin-bottom: 12px;
+}
+
+.bms-browse-venues-btn:hover {
+  background-color: #DC3558;
+  color: #FFFFFF;
+}
+
+/* Right Main Column (Width 910px) */
+.bms-events-content {
+  width: 910px;
+  max-width: 910px;
+  flex-grow: 1;
+  min-width: 0;
+}
+
+.bms-events-heading {
+  font-family: 'Roboto', sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 30px;
+  color: #333333;
+  margin: 0 0 20px 0;
+}
+
+/* Quick Filter Pills Row */
+.bms-pill-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  margin-bottom: 24px;
+}
+
+.bms-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 14px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 400;
+  color: #DC354B;
+  background-color: #FFFFFF;
+  border: 1px solid #CCCCCC;
+  border-radius: 16px;
+  text-decoration: none;
+  margin: 0 8px 8px 0;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.bms-pill-btn:hover {
+  background-color: #FFF0F2;
+  border-color: #DC354B;
+  color: #DC354B;
+}
+
+.bms-pill-btn.active {
+  background-color: #EB4E62;
+  border-color: #EB4E62;
+  color: #FFFFFF;
+  font-weight: 500;
+}
+
+/* 4-Column Grid */
+.bms-event-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 203.5px);
+  gap: 48px 32px;
+}
+
+@media (max-width: 1240px) {
+  .bms-events-layout {
+    flex-direction: column;
+  }
+  .bms-filter-col {
+    width: 100%;
+    min-width: auto;
+  }
+  .bms-filter-card {
+    width: 100%;
+  }
+  .bms-browse-venues-btn {
+    width: 100%;
+  }
+  .bms-events-content {
+    width: 100%;
+    max-width: 100%;
+  }
+  .bms-event-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 32px 20px;
+  }
+}
+
+/* Event Card Item */
+.bms-event-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  cursor: pointer;
+}
+
+.bms-event-card-link:hover {
+  text-decoration: none;
+  color: inherit;
+}
+
+.bms-event-card-poster {
+  position: relative;
+  width: 100%;
+  height: 346px;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #E0E0E0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.bms-event-card-poster img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.bms-event-card-link:hover .bms-event-card-poster img {
+  transform: scale(1.025);
+}
+
+.bms-promoted-tag {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: #EB4E62;
+  color: #FFFFFF;
+  font-family: 'Roboto', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 3px 8px;
+  border-bottom-left-radius: 6px;
+  z-index: 2;
+}
+
+.bms-event-date-strip {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 36px;
+  background-color: #000000;
+  color: #FFFFFF;
+  font-family: 'Roboto', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  z-index: 2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bms-event-details {
+  padding-top: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.bms-event-title {
+  font-family: 'Roboto', sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 24px;
+  color: #000000;
+  margin: 0 0 4px 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  min-height: 48px;
+}
+
+.bms-event-venue {
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  color: #333333;
+  margin: 0 0 4px 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bms-event-category {
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  color: #666666;
+  margin: 0 0 4px 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bms-event-price {
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  color: #666666;
+  margin: 0;
+}
+
 

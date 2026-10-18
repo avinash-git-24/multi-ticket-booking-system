@@ -26,7 +26,16 @@ public class EventsController : Controller
     [HttpGet]
     public async Task<IActionResult> Index(string? category, string? city, string? search)
     {
-        var events = await _eventService.GetEventsAsync(category, city, search);
+        var dbCategory = category switch
+        {
+            "Music Shows" => "Concert",
+            "Performances" => "Theatre",
+            "Comedy Shows" => "Comedy",
+            "Workshops" => "Workshop",
+            _ => category
+        };
+
+        var events = await _eventService.GetEventsAsync(dbCategory, city, search);
         var categories = await _eventService.GetCategoriesAsync();
         var cities = await _eventService.GetCitiesAsync();
 

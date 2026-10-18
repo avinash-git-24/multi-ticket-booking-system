@@ -1,180 +1,271 @@
 @model TicketBooking.Web.ViewModels.Events.EventListViewModel
 @{
-    ViewData["Title"] = "Discover Live Events";
-    var currentCategory = Model.SelectedCategory ?? "All";
-    var currentCity = Model.SelectedCity ?? "All";
+    ViewData["Title"] = "Events in Rajkot - Discover Music, Comedy, Theatre & Workshop Shows";
+    var currentCat = Model.SelectedCategory ?? "All";
+    var activeCategoryNormal = currentCat switch
+    {
+        "Concert" => "Music Shows",
+        "Theatre" => "Performances",
+        "Comedy" => "Comedy Shows",
+        "Workshop" => "Workshops",
+        _ => currentCat
+    };
 }
 
-<div class="container py-4">
-    <!-- Hero / Header -->
-    <div class="p-4 p-md-5 mb-4 rounded-4 text-white shadow-sm" style="background: linear-gradient(135deg, #1A1A24 0%, #2A2A38 100%); border-left: 6px solid #F84464;">
-        <div class="row align-items-center">
-            <div class="col-lg-8">
-                <span class="badge bg-danger mb-2 px-3 py-2 text-uppercase fw-semibold" style="letter-spacing: 1px;">Live in Gujarat</span>
-                <h1 class="display-5 fw-bold mb-2">Experiences That Inspire</h1>
-                <p class="lead text-light mb-0" style="opacity: 0.9;">Concerts, Standup Comedy, Technical Workshops, and Sporting Spectacles.</p>
-            </div>
-            <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
-                <span class="text-white-50 small d-block">College Live Demonstration</span>
-                <span class="badge bg-dark border border-secondary px-3 py-2 mt-1">Verified Real-Time Inventory</span>
-            </div>
-        </div>
-    </div>
+<div class="bms-events-wrapper">
+    <div class="bms-events-container">
+        <div class="bms-events-layout">
+            <!-- ==========================================================
+                 LEFT SIDEBAR: BookMyShow Authentic Filters
+                 ========================================================== -->
+            <aside class="bms-filter-col" aria-label="Event Filters">
+                <h1 class="bms-filter-heading">Filters</h1>
 
-    <!-- Filter & Search Toolbar -->
-    <div class="card border-0 shadow-sm rounded-4 p-3 mb-4 bg-white">
-        <form method="get" asp-action="Index" class="row g-3 align-items-center">
-            <!-- Search Input -->
-            <div class="col-md-5">
-                <div class="input-group">
-                    <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-search"></i> Search</span>
-                    <input type="text" name="search" value="@Model.SearchQuery" class="form-control bg-light border-start-0" placeholder="Artist, event title, or venue..." />
-                </div>
-            </div>
-
-            <!-- City Filter -->
-            <div class="col-md-3">
-                <select name="city" class="form-select bg-light" onchange="this.form.submit()">
-                    <option value="All" selected="@(currentCity == "All")">All Cities</option>
-                    @foreach (var city in Model.Cities)
-                    {
-                        <option value="@city" selected="@(currentCity == city)">@city</option>
-                    }
-                </select>
-            </div>
-
-            <!-- Submit & Reset Buttons -->
-            <div class="col-md-4 d-flex gap-2 justify-content-md-end">
-                <button type="submit" class="btn btn-primary px-4 fw-semibold" style="background-color: #F84464; border-color: #F84464;">Filter</button>
-                @if (!string.IsNullOrEmpty(Model.SearchQuery) || currentCategory != "All" || currentCity != "All")
-                {
-                    <a asp-action="Index" class="btn btn-outline-secondary px-3">Clear</a>
-                }
-            </div>
-
-            <input type="hidden" name="category" value="@Model.SelectedCategory" />
-        </form>
-
-        <!-- Category Discovery Pills (District.in Inspiration) -->
-        <div class="d-flex gap-2 overflow-auto pt-3 border-top mt-3" style="white-space: nowrap;">
-            <a asp-action="Index" asp-route-category="All" asp-route-city="@Model.SelectedCity" asp-route-search="@Model.SearchQuery" 
-               class="btn btn-sm rounded-pill px-3 py-2 @(currentCategory == "All" ? "btn-dark fw-bold" : "btn-light text-secondary")">
-               All Categories
-            </a>
-            <a asp-action="Index" asp-route-category="Concert" asp-route-city="@Model.SelectedCity" asp-route-search="@Model.SearchQuery" 
-               class="btn btn-sm rounded-pill px-3 py-2 @(currentCategory == "Concert" ? "btn-danger text-white fw-bold" : "btn-light text-secondary")">
-               <i class="bi bi-music-note-beamed me-1"></i> Concerts
-            </a>
-            <a asp-action="Index" asp-route-category="Comedy" asp-route-city="@Model.SelectedCity" asp-route-search="@Model.SearchQuery" 
-               class="btn btn-sm rounded-pill px-3 py-2 @(currentCategory == "Comedy" ? "btn-danger text-white fw-bold" : "btn-light text-secondary")">
-               <i class="bi bi-emoji-laughing me-1"></i> Standup Comedy
-            </a>
-            <a asp-action="Index" asp-route-category="Workshop" asp-route-city="@Model.SelectedCity" asp-route-search="@Model.SearchQuery" 
-               class="btn btn-sm rounded-pill px-3 py-2 @(currentCategory == "Workshop" ? "btn-danger text-white fw-bold" : "btn-light text-secondary")">
-               <i class="bi bi-laptop me-1"></i> Workshops
-            </a>
-            <a asp-action="Index" asp-route-category="Sports" asp-route-city="@Model.SelectedCity" asp-route-search="@Model.SearchQuery" 
-               class="btn btn-sm rounded-pill px-3 py-2 @(currentCategory == "Sports" ? "btn-danger text-white fw-bold" : "btn-light text-secondary")">
-               <i class="bi bi-trophy me-1"></i> Sports
-            </a>
-            <a asp-action="Index" asp-route-category="Theatre" asp-route-city="@Model.SelectedCity" asp-route-search="@Model.SearchQuery" 
-               class="btn btn-sm rounded-pill px-3 py-2 @(currentCategory == "Theatre" ? "btn-danger text-white fw-bold" : "btn-light text-secondary")">
-               <i class="bi bi-mask me-1"></i> Theatre & Natak
-            </a>
-        </div>
-    </div>
-
-    <!-- Events Grid -->
-    @if (Model.Events.Count == 0)
-    {
-        <div class="text-center py-5 bg-white rounded-4 shadow-sm my-4">
-            <div class="display-6 text-muted mb-3"><i class="bi bi-calendar-x"></i></div>
-            <h4 class="fw-bold">No Events Found</h4>
-            <p class="text-muted">No scheduled events match your current filter selection in this city.</p>
-            <a asp-action="Index" class="btn btn-outline-danger mt-2">Reset Filters</a>
-        </div>
-    }
-    else
-    {
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-            @foreach (var ev in Model.Events)
-            {
-                <div class="col">
-                    <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden position-relative hover-lift transition-all">
-                        <!-- Banner Image Container -->
-                        <div class="position-relative" style="height: 220px; background-color: #1A1A24;">
-                            @if (!string.IsNullOrEmpty(ev.BannerUrl))
-                            {
-                                <img src="@ev.BannerUrl" class="card-img-top w-100 h-100 object-fit-cover" alt="@ev.Title" />
-                            }
-                            else
-                            {
-                                <div class="d-flex align-items-center justify-content-center h-100 text-white-50">
-                                    <i class="bi bi-calendar-event fs-1"></i>
-                                </div>
-                            }
-                            
-                            <!-- Category Badge -->
-                            <span class="badge bg-dark bg-opacity-75 text-white position-absolute top-0 start-0 m-3 px-3 py-2 rounded-pill fw-semibold shadow-sm">
-                                @ev.Category
-                            </span>
-
-                            <!-- City Badge -->
-                            <span class="badge bg-danger position-absolute top-0 end-0 m-3 px-3 py-2 rounded-pill fw-semibold shadow-sm">
-                                @ev.CityName
-                            </span>
-
-                            <!-- Date Overlay Banner -->
-                            <div class="position-absolute bottom-0 start-0 w-100 p-2 text-white bg-dark bg-opacity-75 small fw-semibold">
-                                <i class="bi bi-calendar3 me-1 text-warning"></i> @ev.StartDate.ToString("ddd, dd MMM yyyy • hh:mm tt")
-                            </div>
+                <!-- 1. Categories Filter Card (Expanded by Default) -->
+                <div class="bms-filter-card">
+                    <div class="bms-filter-header" onclick="toggleAccordion('cat-body', 'cat-icon', 'cat-title')">
+                        <div id="cat-title" class="bms-filter-title expanded">
+                            <i id="cat-icon" class="bi bi-chevron-up text-danger"></i>
+                            <span>Categories</span>
                         </div>
-
-                        <!-- Card Content -->
-                        <div class="card-body p-4 d-flex flex-column">
-                            <h5 class="card-title fw-bold text-dark mb-2 text-truncate" title="@ev.Title">@ev.Title</h5>
-                            <p class="card-text text-muted small mb-3">
-                                <i class="bi bi-geo-alt-fill text-danger me-1"></i> @ev.VenueName, @ev.CityName
-                            </p>
-
-                            <!-- Inventory & Pricing Footer -->
-                            <div class="mt-auto pt-3 border-top d-flex justify-content-between align-items-center">
-                                <div>
-                                    <span class="text-muted d-block small" style="font-size: 0.75rem;">STARTING FROM</span>
-                                    <span class="fs-5 fw-bold text-dark">₹@ev.StartingPrice.ToString("N0")</span>
-                                </div>
-                                <div class="text-end">
-                                    @if (ev.TotalRemainingTickets > 0)
-                                    {
-                                        <span class="badge bg-success-subtle text-success border border-success-subtle d-block mb-2 px-2 py-1 small">
-                                            @ev.TotalRemainingTickets Available
-                                        </span>
-                                    }
-                                    else
-                                    {
-                                        <span class="badge bg-danger-subtle text-danger border border-danger-subtle d-block mb-2 px-2 py-1 small">
-                                            Sold Out
-                                        </span>
-                                    }
-                                    <a asp-action="Details" asp-route-id="@ev.EventId" class="btn btn-sm btn-primary px-3 fw-semibold rounded-pill" style="background-color: #F84464; border-color: #F84464;">
-                                        Book Tickets
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
+                        <a asp-action="Index" class="bms-filter-clear active">Clear</a>
+                    </div>
+                    <div id="cat-body" class="bms-filter-body">
+                        <a asp-action="Index" asp-route-category="Music Shows" 
+                           class="bms-filter-chip @(activeCategoryNormal == "Music Shows" ? "active" : "")">
+                            Music Shows
+                        </a>
+                        <a asp-action="Index" asp-route-category="Performances" 
+                           class="bms-filter-chip @(activeCategoryNormal == "Performances" ? "active" : "")">
+                            Performances
+                        </a>
+                        <a asp-action="Index" asp-route-category="Comedy Shows" 
+                           class="bms-filter-chip @(activeCategoryNormal == "Comedy Shows" ? "active" : "")">
+                            Comedy Shows
+                        </a>
+                        <a asp-action="Index" asp-route-category="Workshops" 
+                           class="bms-filter-chip @(activeCategoryNormal == "Workshops" ? "active" : "")">
+                            Workshops
+                        </a>
+                        <a asp-action="Index" asp-route-category="Kids" 
+                           class="bms-filter-chip @(activeCategoryNormal == "Kids" ? "active" : "")">
+                            Kids
+                        </a>
+                        <a asp-action="Index" asp-route-category="Exhibitions" 
+                           class="bms-filter-chip @(activeCategoryNormal == "Exhibitions" ? "active" : "")">
+                            Exhibitions
+                        </a>
+                        <a asp-action="Index" asp-route-category="Meetups" 
+                           class="bms-filter-chip @(activeCategoryNormal == "Meetups" ? "active" : "")">
+                            Meetups
+                        </a>
                     </div>
                 </div>
-            }
+
+                <!-- 2. Date Filter Card -->
+                <div class="bms-filter-card">
+                    <div class="bms-filter-header" onclick="toggleAccordion('date-body', 'date-icon', 'date-title')">
+                        <div id="date-title" class="bms-filter-title">
+                            <i id="date-icon" class="bi bi-chevron-down text-muted"></i>
+                            <span>Date</span>
+                        </div>
+                        <span class="bms-filter-clear">Clear</span>
+                    </div>
+                    <div id="date-body" class="bms-filter-body" style="display: none;">
+                        <a asp-action="Index" class="bms-filter-chip">Today</a>
+                        <a asp-action="Index" class="bms-filter-chip">Tomorrow</a>
+                        <a asp-action="Index" class="bms-filter-chip">This Weekend</a>
+                    </div>
+                </div>
+
+                <!-- 3. Languages Filter Card -->
+                <div class="bms-filter-card">
+                    <div class="bms-filter-header" onclick="toggleAccordion('lang-body', 'lang-icon', 'lang-title')">
+                        <div id="lang-title" class="bms-filter-title">
+                            <i id="lang-icon" class="bi bi-chevron-down text-muted"></i>
+                            <span>Languages</span>
+                        </div>
+                        <span class="bms-filter-clear">Clear</span>
+                    </div>
+                    <div id="lang-body" class="bms-filter-body" style="display: none;">
+                        <a asp-action="Index" class="bms-filter-chip">Hindi</a>
+                        <a asp-action="Index" class="bms-filter-chip">Gujarati</a>
+                        <a asp-action="Index" class="bms-filter-chip">English</a>
+                        <a asp-action="Index" class="bms-filter-chip">Punjabi</a>
+                    </div>
+                </div>
+
+                <!-- 4. More Filters Card -->
+                <div class="bms-filter-card">
+                    <div class="bms-filter-header" onclick="toggleAccordion('more-body', 'more-icon', 'more-title')">
+                        <div id="more-title" class="bms-filter-title">
+                            <i id="more-icon" class="bi bi-chevron-down text-muted"></i>
+                            <span>More Filters</span>
+                        </div>
+                        <span class="bms-filter-clear">Clear</span>
+                    </div>
+                    <div id="more-body" class="bms-filter-body" style="display: none;">
+                        <a asp-action="Index" class="bms-filter-chip">Outdoor Events</a>
+                        <a asp-action="Index" class="bms-filter-chip">Fast Filling</a>
+                        <a asp-action="Index" class="bms-filter-chip">Kids Allowed</a>
+                    </div>
+                </div>
+
+                <!-- 5. Price Filter Card -->
+                <div class="bms-filter-card">
+                    <div class="bms-filter-header" onclick="toggleAccordion('price-body', 'price-icon', 'price-title')">
+                        <div id="price-title" class="bms-filter-title">
+                            <i id="price-icon" class="bi bi-chevron-down text-muted"></i>
+                            <span>Price</span>
+                        </div>
+                        <span class="bms-filter-clear">Clear</span>
+                    </div>
+                    <div id="price-body" class="bms-filter-body" style="display: none;">
+                        <a asp-action="Index" class="bms-filter-chip">Free</a>
+                        <a asp-action="Index" class="bms-filter-chip">0 - 500</a>
+                        <a asp-action="Index" class="bms-filter-chip">501 - 2000</a>
+                        <a asp-action="Index" class="bms-filter-chip">Above 2000</a>
+                    </div>
+                </div>
+
+                <!-- Browse by Venues Button -->
+                <a asp-action="Index" class="bms-browse-venues-btn">Browse by Venues</a>
+            </aside>
+
+            <!-- ==========================================================
+                 RIGHT MAIN COLUMN: Events In Rajkot + 4-Col Grid
+                 ========================================================== -->
+            <main class="bms-events-content">
+                <!-- Page Title -->
+                <h2 class="bms-events-heading">Events In Rajkot</h2>
+
+                <!-- Category Pill Quick-Filter Buttons -->
+                <div class="bms-pill-bar" role="navigation" aria-label="Quick Category Filter">
+                    <a asp-action="Index" 
+                       class="bms-pill-btn @(activeCategoryNormal == "All" || string.IsNullOrEmpty(Model.SelectedCategory) ? "active" : "")">
+                        All
+                    </a>
+                    <a asp-action="Index" asp-route-category="Music Shows" 
+                       class="bms-pill-btn @(activeCategoryNormal == "Music Shows" ? "active" : "")">
+                        Music Shows
+                    </a>
+                    <a asp-action="Index" asp-route-category="Performances" 
+                       class="bms-pill-btn @(activeCategoryNormal == "Performances" ? "active" : "")">
+                        Performances
+                    </a>
+                    <a asp-action="Index" asp-route-category="Comedy Shows" 
+                       class="bms-pill-btn @(activeCategoryNormal == "Comedy Shows" ? "active" : "")">
+                        Comedy Shows
+                    </a>
+                    <a asp-action="Index" asp-route-category="Workshops" 
+                       class="bms-pill-btn @(activeCategoryNormal == "Workshops" ? "active" : "")">
+                        Workshops
+                    </a>
+                    <a asp-action="Index" asp-route-category="Kids" 
+                       class="bms-pill-btn @(activeCategoryNormal == "Kids" ? "active" : "")">
+                        Kids
+                    </a>
+                    <a asp-action="Index" asp-route-category="Exhibitions" 
+                       class="bms-pill-btn @(activeCategoryNormal == "Exhibitions" ? "active" : "")">
+                        Exhibitions
+                    </a>
+                    <a asp-action="Index" asp-route-category="Meetups" 
+                       class="bms-pill-btn @(activeCategoryNormal == "Meetups" ? "active" : "")">
+                        Meetups
+                    </a>
+                    <a asp-action="Index" asp-route-category="Sports" 
+                       class="bms-pill-btn @(activeCategoryNormal == "Sports" ? "active" : "")">
+                        Sports
+                    </a>
+                </div>
+
+                <!-- Events 4-Column Grid -->
+                @if (Model.Events.Count == 0)
+                {
+                    <div class="bg-white rounded-3 p-5 text-center my-4 border">
+                        <i class="bi bi-calendar-x fs-1 text-danger mb-3 d-block"></i>
+                        <h4 class="fw-bold text-dark">No Events Found</h4>
+                        <p class="text-muted mb-4">No scheduled live events match your current filter selection in Rajkot.</p>
+                        <a asp-action="Index" class="btn btn-danger px-4 py-2 rounded-2" style="background-color: #EB4E62; border-color: #EB4E62;">
+                            Clear All Filters
+                        </a>
+                    </div>
+                }
+                else
+                {
+                    <div class="bms-event-grid">
+                        @foreach (var ev in Model.Events)
+                        {
+                            var isPromoted = ev.EventId == 23 || ev.EventId == 11;
+                            var categoryLabel = ev.Category switch
+                            {
+                                "Concert" => "Concerts",
+                                "Comedy" => "Stand up Comedy",
+                                "Theatre" => "Theatre",
+                                "Workshop" => "Workshops",
+                                "Sports" => "Sports",
+                                _ => ev.Category
+                            };
+
+                            <a asp-action="Details" asp-route-id="@ev.EventId" class="bms-event-card-link">
+                                <!-- Card Poster Container -->
+                                <div class="bms-event-card-poster">
+                                    <img src="@ev.BannerUrl" alt="@ev.Title" loading="lazy" />
+
+                                    <!-- Promoted Tag Top-Right -->
+                                    @if (isPromoted)
+                                    {
+                                        <span class="bms-promoted-tag">PROMOTED</span>
+                                    }
+
+                                    <!-- Solid Black Date Strip Overlay at Bottom -->
+                                    <div class="bms-event-date-strip">
+                                        @ev.StartDate.ToString("ddd, d MMM")
+                                    </div>
+                                </div>
+
+                                <!-- Card Details Section Below Poster -->
+                                <div class="bms-event-details">
+                                    <h3 class="bms-event-title" title="@ev.Title">@ev.Title</h3>
+                                    <div class="bms-event-venue" title="@ev.VenueName, @ev.CityName">@ev.VenueName</div>
+                                    <div class="bms-event-category">@categoryLabel</div>
+                                    <div class="bms-event-price">
+                                        ₹ @ev.StartingPrice.ToString("N0") onwards
+                                    </div>
+                                </div>
+                            </a>
+                        }
+                    </div>
+                }
+            </main>
         </div>
-    }
+    </div>
 </div>
 
-<style>
-    .hover-lift {
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
+<script>
+    function toggleAccordion(bodyId, iconId, titleId) {
+        var body = document.getElementById(bodyId);
+        var icon = document.getElementById(iconId);
+        var title = document.getElementById(titleId);
+
+        if (!body) return;
+
+        if (body.style.display === 'none' || body.style.display === '') {
+            body.style.display = 'flex';
+            if (icon) {
+                icon.className = 'bi bi-chevron-up text-danger';
+            }
+            if (title) {
+                title.classList.add('expanded');
+            }
+        } else {
+            body.style.display = 'none';
+            if (icon) {
+                icon.className = 'bi bi-chevron-down text-muted';
+            }
+            if (title) {
+                title.classList.remove('expanded');
+            }
+        }
     }
-    .hover-lift:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.1) !important;
-    }
-</style>
+</script>
