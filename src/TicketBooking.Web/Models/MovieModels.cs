@@ -15,6 +15,11 @@ public class Movie
     public string? TrailerUrl { get; set; }
     public string Status { get; set; } = "CurrentlyShowing";
     public DateTime CreatedAtUtc { get; set; } = DateTime.UtcNow;
+
+    // Presentation helpers for BookMyShow UI
+    public string? RatingDisplay { get; set; }
+    public string? VotesDisplay { get; set; }
+    public string? LikesDisplay { get; set; }
 }
 
 public class Theatre

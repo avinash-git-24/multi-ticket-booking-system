@@ -32,6 +32,84 @@ public class HomeController : Controller
         var upcomingResult = await _movieService.GetMovieListAsync(city: null, status: "Upcoming", genre: null, language: null, search: null);
         var allMovies = showingResult.Movies.Concat(upcomingResult.Movies).DistinctBy(m => m.MovieId).ToList();
 
+        // Pin 10 BookMyShow Rajkot movies (MovieId 13 to 22) first, followed by previous movies
+        allMovies = allMovies
+            .OrderBy(m => m.MovieId >= 13 && m.MovieId <= 22 ? m.MovieId - 12 : 100 + m.MovieId)
+            .ToList();
+
+        foreach (var movie in allMovies)
+        {
+            switch (movie.MovieId)
+            {
+                case 13:
+                    movie.LikesDisplay = "189K+ Likes";
+                    break;
+                case 14:
+                    movie.RatingDisplay = "8.8/10";
+                    movie.VotesDisplay = "133K+ Votes";
+                    break;
+                case 15:
+                    movie.RatingDisplay = "7.3/10";
+                    movie.VotesDisplay = "3.4K+ Votes";
+                    break;
+                case 16:
+                    movie.RatingDisplay = "9.2/10";
+                    movie.VotesDisplay = "4.3K+ Votes";
+                    break;
+                case 17:
+                    movie.RatingDisplay = "7.3/10";
+                    movie.VotesDisplay = "2K+ Votes";
+                    break;
+                case 18:
+                    movie.RatingDisplay = "9.6/10";
+                    movie.VotesDisplay = "295K+ Votes";
+                    break;
+                case 19:
+                    movie.RatingDisplay = "9/10";
+                    movie.VotesDisplay = "18.5K+ Votes";
+                    break;
+                case 20:
+                    movie.RatingDisplay = "8.5/10";
+                    movie.VotesDisplay = "45.4K+ Votes";
+                    break;
+                case 21:
+                    movie.RatingDisplay = "9.5/10";
+                    movie.VotesDisplay = "2.2K+ Votes";
+                    break;
+                case 22:
+                    movie.RatingDisplay = "8.2/10";
+                    movie.VotesDisplay = "390+ Votes";
+                    break;
+                case 1:
+                    movie.RatingDisplay = "8.4/10";
+                    movie.VotesDisplay = "142K+ Votes";
+                    break;
+                case 2:
+                    movie.RatingDisplay = "9.4/10";
+                    movie.VotesDisplay = "38K+ Votes";
+                    break;
+                case 3:
+                    movie.RatingDisplay = "8.7/10";
+                    movie.VotesDisplay = "210K+ Votes";
+                    break;
+                case 4:
+                    movie.RatingDisplay = "8.6/10";
+                    movie.VotesDisplay = "315K+ Votes";
+                    break;
+                case 5:
+                    movie.RatingDisplay = "8.1/10";
+                    movie.VotesDisplay = "120K+ Votes";
+                    break;
+                case 6:
+                    movie.LikesDisplay = "450K+ Likes";
+                    break;
+                default:
+                    movie.RatingDisplay = "8.5/10";
+                    movie.VotesDisplay = "10K+ Votes";
+                    break;
+            }
+        }
+
         // Fetch dynamic events from database via EventService
         var allEvents = await _eventService.GetEventsAsync();
 

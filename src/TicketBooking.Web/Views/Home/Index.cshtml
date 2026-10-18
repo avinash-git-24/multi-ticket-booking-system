@@ -84,26 +84,11 @@
                 </button>
 
                 <div class="bms-rail-track" id="recommendedRow" onscroll="bmsUpdateRailButtons('recommendedRow')">
-                    @{
-                        int movieIdx = 0;
-                        string[] sampleRatings = new[] { "7.3/10", "9.2/10", "8.8/10", "8.5/10", "7.9/10", "9.0/10", "8.6/10", "8.1/10" };
-                        string[] sampleVotes = new[] { "3.2K+ Votes", "4.1K+ Votes", "188K+ Likes", "132K+ Votes", "1.9K+ Votes", "45K+ Votes", "12K+ Votes", "8.5K+ Votes" };
-                    }
                     @foreach (var movie in Model.RecommendedMovies)
                     {
-                        var rating = movieIdx < sampleRatings.Length ? sampleRatings[movieIdx] : "8.5/10";
-                        var votes = movieIdx < sampleVotes.Length ? sampleVotes[movieIdx] : "10K+ Votes";
-                        var isPromoted = movieIdx < 2;
-                        movieIdx++;
-
                         <div class="bms-rail-col">
                             <a asp-controller="Movies" asp-action="Details" asp-route-id="@movie.MovieId" class="bms-card">
                                 <div class="bms-poster-wrap mb-2">
-                                    @if (isPromoted)
-                                    {
-                                        <span class="bms-promoted-tag">PROMOTED</span>
-                                    }
-
                                     @if (!string.IsNullOrEmpty(movie.PosterUrl))
                                     {
                                         <img src="@movie.PosterUrl" alt="@movie.Title" loading="lazy" />
@@ -117,24 +102,21 @@
 
                                     <!-- BookMyShow Bottom Rating Strip -->
                                     <div class="bms-rating-strip">
-                                        @if (votes.Contains("Likes"))
+                                        @if (!string.IsNullOrEmpty(movie.LikesDisplay))
                                         {
-                                            <span><i class="bi bi-hand-thumbs-up-fill text-success me-1"></i>@votes</span>
+                                            <span><i class="bi bi-hand-thumbs-up-fill text-success me-1"></i>@movie.LikesDisplay</span>
                                         }
                                         else
                                         {
-                                            <span><span class="text-danger fw-bold me-1">★</span>@rating</span>
-                                            <span class="opacity-75" style="font-size: 11px;">@votes</span>
+                                            <span><span class="text-danger fw-bold me-1">★</span>@(movie.RatingDisplay ?? "8.5/10")</span>
+                                            <span class="opacity-75" style="font-size: 11px;">@(movie.VotesDisplay ?? "10K+ Votes")</span>
                                         }
                                     </div>
                                 </div>
                                 
                                 <h6 class="bms-card-title" title="@movie.Title">@movie.Title</h6>
-                                <div class="bms-card-subtitle">
-                                    @movie.Certificate &bull; @movie.Genre
-                                </div>
-                                <div class="bms-card-subtext">
-                                    @movie.Language
+                                <div class="bms-card-subtitle" title="@movie.Genre">
+                                    @movie.Genre
                                 </div>
                             </a>
                         </div>
