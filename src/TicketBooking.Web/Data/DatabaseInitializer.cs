@@ -58,6 +58,8 @@ public class DatabaseInitializer : IDatabaseInitializer
                 await ExecuteSqlFileAsync(connection, Path.Combine(databaseDir, "01_schema.sql"), cancellationToken);
                 await ExecuteSqlFileAsync(connection, Path.Combine(databaseDir, "02_indexes.sql"), cancellationToken);
                 await ExecuteSqlFileAsync(connection, Path.Combine(databaseDir, "03_seed_reference.sql"), cancellationToken);
+                await ExecuteSqlFileAsync(connection, Path.Combine(databaseDir, "04_seed_demo.sql"), cancellationToken);
+                await ExecuteSqlFileAsync(connection, Path.Combine(databaseDir, "05_seed_events.sql"), cancellationToken);
             }
 
             // 2. Ensure Admin User exists from configuration
