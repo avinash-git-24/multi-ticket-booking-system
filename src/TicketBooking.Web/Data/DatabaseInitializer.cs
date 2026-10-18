@@ -62,9 +62,10 @@ public class DatabaseInitializer : IDatabaseInitializer
                 await ExecuteSqlFileAsync(connection, Path.Combine(databaseDir, "05_seed_events.sql"), cancellationToken);
             }
 
-            // 2. Ensure Admin and Customer demo users exist
+            // 2. Ensure Admin, Customer, and Abhay demo users exist
             await EnsureAdminUserAsync(connection, cancellationToken);
             await EnsureDemoCustomerUserAsync(connection, cancellationToken);
+            await EnsureAbhayUserAsync(connection, cancellationToken);
 
             _logger.LogInformation("Database initialization check completed successfully.");
         }
@@ -209,6 +210,75 @@ public class DatabaseInitializer : IDatabaseInitializer
                 _logger.LogInformation("Assigned Customer role to user ID {UserId}.", customerUserId.Value);
             }
         }
+    }
+
+    private async Task EnsureAbhayUserAsync(SqlConnection connection, CancellationToken cancellationToken)
+    {
+        const string abhayEmail = "abhay@gmail.com";
+        const string abhayPassword = "abhay@123";
+        const string abhayFullName = "Abhay";
+
+        var hasher = new PasswordHasher<User>();
+        var dummyUser = new User { Email = abhayEmail, FullName = abhayFullName };
+        var hashedPassword = hasher.HashPassword(dummyUser, abhayPassword);
+
+        const string checkSql = "SELECT UserId FROM dbo.Users WHERE Email = @Email;";
+        int? abhayUserId = null;
+
+        using (var cmd = new SqlCommand(checkSql, connection))
+        {
+            cmd.Parameters.AddWithValue("@Email", abhayEmail);
+            var result = await cmd.ExecuteScalarAsync(cancellationToken);
+            if (result != null && result != DBNull.Value)
+            {
+                abhayUserId = Convert.ToInt32(result);
+            }
+        }
+
+        if (!abhayUserId.HasValue)
+        {
+            _logger.LogInformation("Seeding Abhay account for {Email}...", abhayEmail);
+
+            const string insertUserSql = @"
+                INSERT INTO dbo.Users (FullName, Email, PasswordHash, PhoneNumber, PreferredCityId, IsActive, CreatedAtUtc)
+                VALUES (@FullName, @Email, @PasswordHash, @Phone, 1, 1, SYSUTCDATETIME());
+                SELECT SCOPE_IDENTITY();";
+
+            using (var cmd = new SqlCommand(insertUserSql, connection))
+            {
+                cmd.Parameters.AddWithValue("@FullName", abhayFullName);
+                cmd.Parameters.AddWithValue("@Email", abhayEmail);
+                cmd.Parameters.AddWithValue("@PasswordHash", hashedPassword);
+                cmd.Parameters.AddWithValue("@Phone", "+919876543210");
+
+                abhayUserId = Convert.ToInt32(await cmd.ExecuteScalarAsync(cancellationToken));
+            }
+        }
+        else
+        {
+            // Update password hash to guarantee abhay@123 works
+            const string updateSql = "UPDATE dbo.Users SET PasswordHash = @PasswordHash, IsActive = 1 WHERE UserId = @UserId;";
+            using var updateCmd = new SqlCommand(updateSql, connection);
+            updateCmd.Parameters.AddWithValue("@PasswordHash", hashedPassword);
+            updateCmd.Parameters.AddWithValue("@UserId", abhayUserId.Value);
+            await updateCmd.ExecuteNonQueryAsync(cancellationToken);
+        }
+
+        // Ensure both Customer and Admin roles are mapped for full access
+        const string assignRolesSql = @"
+            IF NOT EXISTS (SELECT 1 FROM dbo.UserRoles ur JOIN dbo.Roles r ON ur.RoleId = r.RoleId WHERE ur.UserId = @UserId AND r.RoleName = 'Customer')
+            BEGIN
+                INSERT INTO dbo.UserRoles (UserId, RoleId) SELECT @UserId, RoleId FROM dbo.Roles WHERE RoleName = 'Customer';
+            END
+            IF NOT EXISTS (SELECT 1 FROM dbo.UserRoles ur JOIN dbo.Roles r ON ur.RoleId = r.RoleId WHERE ur.UserId = @UserId AND r.RoleName = 'Admin')
+            BEGIN
+                INSERT INTO dbo.UserRoles (UserId, RoleId) SELECT @UserId, RoleId FROM dbo.Roles WHERE RoleName = 'Admin';
+            END";
+
+        using var roleCmd = new SqlCommand(assignRolesSql, connection);
+        roleCmd.Parameters.AddWithValue("@UserId", abhayUserId.Value);
+        await roleCmd.ExecuteNonQueryAsync(cancellationToken);
+        _logger.LogInformation("Ensured roles for user {Email}.", abhayEmail);
     }
 
     private static async Task ExecuteSqlFileAsync(SqlConnection connection, string filePath, CancellationToken cancellationToken)
