@@ -35,12 +35,14 @@
                 </div>
 
                 <!-- Right Side Actions: Location, Sign In, Hamburger -->
-                <div class="d-flex align-items-center gap-3 ms-auto flex-shrink-0">
+                <div class="d-flex align-items-center ms-auto flex-shrink-0" style="gap: 24px;">
                     <!-- City Selector Dropdown (Rajkot) -->
                     <div class="dropdown">
-                        <button class="btn btn-sm text-dark d-flex align-items-center gap-1 border-0 p-0 fw-normal" type="button" id="cityDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 14px; font-family: 'Roboto', sans-serif; color: #333333;">
+                        <button class="bms-city-btn" type="button" id="cityDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                             <span id="currentCityLabel">@(Context.Request.Cookies["SelectedCity"] ?? "Rajkot")</span>
-                            <i class="bi bi-chevron-down text-secondary ms-1" style="font-size: 10px;"></i>
+                            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 8px;">
+                                <path d="M1 1L5 5L9 1" stroke="#333333" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="cityDropdown">
                             <li><a class="dropdown-item city-option" href="#" data-city="Rajkot">Rajkot (Current)</a></li>
@@ -78,14 +80,16 @@
                     }
                     else
                     {
-                        <a class="btn btn-sm text-white fw-medium d-flex align-items-center justify-content-center text-decoration-none" style="min-width: 68px; height: 28px; background-color: #F84464; border-radius: 4px; font-size: 12px; font-family: 'Roboto', sans-serif; padding: 0 14px;" asp-controller="Account" asp-action="Login">
+                        <a class="bms-nav-signin-btn" asp-controller="Account" asp-action="Login">
                             Sign in
                         </a>
                     }
 
-                    <!-- Hamburger Menu Icon -->
-                    <button class="btn btn-sm text-dark p-0 border-0 ms-1 d-flex align-items-center" type="button" data-bs-toggle="offcanvas" data-bs-target="#bmsSideMenu" aria-controls="bmsSideMenu" aria-label="Menu">
-                        <i class="bi bi-list" style="font-size: 24px; color: #333333; line-height: 1;"></i>
+                    <!-- Hamburger Menu Icon (3 crisp horizontal lines) -->
+                    <button class="bms-nav-hamburger" type="button" data-bs-toggle="offcanvas" data-bs-target="#bmsSideMenu" aria-controls="bmsSideMenu" aria-label="Menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
                     </button>
                 </div>
             </div>

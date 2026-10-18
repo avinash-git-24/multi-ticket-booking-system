@@ -1469,4 +1469,67 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   margin: 0;
 }
 
+/* BookMyShow Exact Right Nav Items (City, Sign in, Hamburger) */
+.bms-city-btn {
+  font-family: 'Roboto', sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  color: #222222 !important;
+  background: transparent;
+  border: none;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.bms-city-btn:hover {
+  color: #111111 !important;
+}
+
+.bms-nav-signin-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 86px;
+  height: 34px;
+  background-color: #D25C65;
+  color: #FFFFFF !important;
+  border-radius: 8px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  border: none;
+  transition: background-color 0.18s ease;
+  line-height: 1;
+}
+
+.bms-nav-signin-btn:hover {
+  background-color: #C04A53;
+  color: #FFFFFF !important;
+}
+
+.bms-nav-hamburger {
+  width: 22px;
+  height: 16px;
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.bms-nav-hamburger span {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background-color: #222222;
+  border-radius: 1px;
+}
+
+
 
