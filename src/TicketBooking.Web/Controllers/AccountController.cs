@@ -26,13 +26,7 @@ public class AccountController : Controller
     public IActionResult Login(string? returnUrl = null)
     {
         ViewData["ReturnUrl"] = returnUrl;
-        return View(new LoginViewModel
-        {
-            Email = "abhay@gmail.com",
-            Password = "abhay@123",
-            RememberMe = true,
-            ReturnUrl = returnUrl
-        });
+        return View(new LoginViewModel { ReturnUrl = returnUrl });
     }
 
     [HttpPost]
