@@ -91,3 +91,82 @@ BEGIN
     );
 END
 GO
+
+-- 6. Theatres Table
+IF OBJECT_ID('dbo.Theatres', 'U') IS NULL
+BEGIN
+    CREATE TABLE dbo.Theatres (
+        TheatreId INT IDENTITY(1,1) NOT NULL,
+        TheatreName NVARCHAR(200) NOT NULL,
+        CityId INT NOT NULL,
+        Address NVARCHAR(500) NOT NULL,
+        Latitude DECIMAL(9,6) NULL,
+        Longitude DECIMAL(9,6) NULL,
+        IsActive BIT NOT NULL CONSTRAINT DF_Theatres_IsActive DEFAULT (1),
+        CreatedAtUtc DATETIME2(7) NOT NULL CONSTRAINT DF_Theatres_CreatedAtUtc DEFAULT (SYSUTCDATETIME()),
+        CONSTRAINT PK_Theatres PRIMARY KEY CLUSTERED (TheatreId),
+        CONSTRAINT FK_Theatres_Cities FOREIGN KEY (CityId) REFERENCES dbo.Cities(CityId)
+    );
+END
+GO
+
+-- 7. Screens Table
+IF OBJECT_ID('dbo.Screens', 'U') IS NULL
+BEGIN
+    CREATE TABLE dbo.Screens (
+        ScreenId INT IDENTITY(1,1) NOT NULL,
+        TheatreId INT NOT NULL,
+        ScreenName NVARCHAR(100) NOT NULL,
+        ScreenType NVARCHAR(50) NOT NULL CONSTRAINT DF_Screens_ScreenType DEFAULT ('2D'),
+        TotalSeats INT NOT NULL CONSTRAINT CK_Screens_TotalSeats CHECK (TotalSeats > 0),
+        IsActive BIT NOT NULL CONSTRAINT DF_Screens_IsActive DEFAULT (1),
+        CreatedAtUtc DATETIME2(7) NOT NULL CONSTRAINT DF_Screens_CreatedAtUtc DEFAULT (SYSUTCDATETIME()),
+        CONSTRAINT PK_Screens PRIMARY KEY CLUSTERED (ScreenId),
+        CONSTRAINT FK_Screens_Theatres FOREIGN KEY (TheatreId) REFERENCES dbo.Theatres(TheatreId) ON DELETE CASCADE
+    );
+END
+GO
+
+-- 8. Seats Table
+IF OBJECT_ID('dbo.Seats', 'U') IS NULL
+BEGIN
+    CREATE TABLE dbo.Seats (
+        SeatId INT IDENTITY(1,1) NOT NULL,
+        ScreenId INT NOT NULL,
+        RowLabel VARCHAR(5) NOT NULL,
+        SeatNumber INT NOT NULL CONSTRAINT CK_Seats_SeatNumber CHECK (SeatNumber > 0),
+        SeatTier NVARCHAR(50) NOT NULL CONSTRAINT DF_Seats_SeatTier DEFAULT ('Gold'),
+        IsActive BIT NOT NULL CONSTRAINT DF_Seats_IsActive DEFAULT (1),
+        CONSTRAINT PK_Seats PRIMARY KEY CLUSTERED (SeatId),
+        CONSTRAINT UQ_Seats_Screen_Row_Number UNIQUE (ScreenId, RowLabel, SeatNumber),
+        CONSTRAINT CK_Seats_SeatTier CHECK (SeatTier IN ('Silver', 'Gold', 'Platinum')),
+        CONSTRAINT FK_Seats_Screens FOREIGN KEY (ScreenId) REFERENCES dbo.Screens(ScreenId) ON DELETE CASCADE
+    );
+END
+GO
+
+-- 9. Movies Table
+IF OBJECT_ID('dbo.Movies', 'U') IS NULL
+BEGIN
+    CREATE TABLE dbo.Movies (
+        MovieId INT IDENTITY(1,1) NOT NULL,
+        Title NVARCHAR(250) NOT NULL,
+        Description NVARCHAR(MAX) NOT NULL,
+        DurationMinutes INT NOT NULL CONSTRAINT CK_Movies_Duration CHECK (DurationMinutes > 0),
+        Language NVARCHAR(50) NOT NULL,
+        Genre NVARCHAR(100) NOT NULL,
+        ReleaseDate DATE NOT NULL,
+        Certificate NVARCHAR(10) NOT NULL CONSTRAINT DF_Movies_Certificate DEFAULT ('UA'),
+        PosterUrl NVARCHAR(1000) NULL,
+        BannerUrl NVARCHAR(1000) NULL,
+        TrailerUrl NVARCHAR(1000) NULL,
+        Status NVARCHAR(50) NOT NULL CONSTRAINT DF_Movies_Status DEFAULT ('CurrentlyShowing'),
+        CreatedAtUtc DATETIME2(7) NOT NULL CONSTRAINT DF_Movies_CreatedAtUtc DEFAULT (SYSUTCDATETIME()),
+        UpdatedAtUtc DATETIME2(7) NULL,
+        RowVersion ROWVERSION NOT NULL,
+        CONSTRAINT PK_Movies PRIMARY KEY CLUSTERED (MovieId),
+        CONSTRAINT CK_Movies_Certificate CHECK (Certificate IN ('U', 'UA', 'A', 'S')),
+        CONSTRAINT CK_Movies_Status CHECK (Status IN ('CurrentlyShowing', 'Upcoming', 'Archived'))
+    );
+END
+GO
