@@ -362,4 +362,88 @@
             </div>
         </section>
     }
+
+    <!-- 10. Outdoor & Cultural Experiences -->
+    @if (Model.OutdoorEvents.Count > 0)
+    {
+        <section class="py-4">
+            <div class="bms-container">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <h3 class="bms-section-title mb-0">Outdoor Events &amp; Festivals</h3>
+                        <p class="text-muted small mb-0">Garba celebrations, stadium concerts &amp; city experiences</p>
+                    </div>
+                    <a asp-controller="Events" asp-action="Index" class="bms-see-all">
+                        See All <i class="bi bi-chevron-right small"></i>
+                    </a>
+                </div>
+
+                <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-4">
+                    @foreach (var ev in Model.OutdoorEvents.Take(5))
+                    {
+                        <div class="col">
+                            <a asp-controller="Events" asp-action="Details" asp-route-id="@ev.EventId" class="bms-card">
+                                <div class="bms-poster-wrap mb-2">
+                                    @if (!string.IsNullOrEmpty(ev.BannerUrl))
+                                    {
+                                        <img src="@ev.BannerUrl" alt="@ev.Title" loading="lazy" />
+                                    }
+                                    <div class="bms-rating-strip" style="background: rgba(0, 0, 0, 0.85); justify-content: flex-start;">
+                                        <i class="bi bi-calendar3 me-2 text-warning"></i>
+                                        <span>@ev.StartDate.ToString("ddd, dd MMM")</span>
+                                    </div>
+                                    <span class="badge bg-danger position-absolute top-0 end-0 m-2 px-2 py-1" style="font-size: 10px;">@ev.CityName</span>
+                                </div>
+                                <h6 class="bms-card-title" title="@ev.Title">@ev.Title</h6>
+                                <div class="bms-card-subtitle">@ev.VenueName</div>
+                                <div class="bms-card-subtext fw-semibold text-dark mt-1">₹@ev.StartingPrice.ToString("N0") onwards</div>
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </section>
+    }
+
+    <!-- 11. Popular Trending Events -->
+    @if (Model.PopularEvents.Count > 0)
+    {
+        <section class="py-4">
+            <div class="bms-container">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <h3 class="bms-section-title mb-0">Popular Events in Rajkot</h3>
+                        <p class="text-muted small mb-0">Trending live entertainment and high-demand shows</p>
+                    </div>
+                    <a asp-controller="Events" asp-action="Index" class="bms-see-all">
+                        See All <i class="bi bi-chevron-right small"></i>
+                    </a>
+                </div>
+
+                <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-4">
+                    @foreach (var ev in Model.PopularEvents.Take(5))
+                    {
+                        <div class="col">
+                            <a asp-controller="Events" asp-action="Details" asp-route-id="@ev.EventId" class="bms-card">
+                                <div class="bms-poster-wrap mb-2">
+                                    @if (!string.IsNullOrEmpty(ev.BannerUrl))
+                                    {
+                                        <img src="@ev.BannerUrl" alt="@ev.Title" loading="lazy" />
+                                    }
+                                    <div class="bms-rating-strip" style="background: rgba(0, 0, 0, 0.85); justify-content: flex-start;">
+                                        <i class="bi bi-fire me-2 text-warning"></i>
+                                        <span>Trending</span>
+                                    </div>
+                                    <span class="badge bg-dark bg-opacity-75 position-absolute top-0 start-0 m-2" style="font-size: 10px;">@ev.Category</span>
+                                </div>
+                                <h6 class="bms-card-title" title="@ev.Title">@ev.Title</h6>
+                                <div class="bms-card-subtitle">@ev.VenueName</div>
+                                <div class="bms-card-subtext fw-semibold text-dark mt-1">₹@ev.StartingPrice.ToString("N0") onwards</div>
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </section>
+    }
 </div>

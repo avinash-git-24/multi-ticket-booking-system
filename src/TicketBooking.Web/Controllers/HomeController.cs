@@ -43,6 +43,8 @@ public class HomeController : Controller
             SportsEvents = allEvents.Where(e => e.Category.Equals("Sports", StringComparison.OrdinalIgnoreCase)).ToList(),
             TheatreEvents = allEvents.Where(e => e.Category.Equals("Theatre", StringComparison.OrdinalIgnoreCase)).ToList(),
             WorkshopEvents = allEvents.Where(e => e.Category.Equals("Workshop", StringComparison.OrdinalIgnoreCase)).ToList(),
+            PopularEvents = allEvents.OrderByDescending(e => e.StartingPrice).Take(6).ToList(),
+            OutdoorEvents = allEvents.Where(e => e.Category.Equals("Concert", StringComparison.OrdinalIgnoreCase) || e.Category.Equals("Sports", StringComparison.OrdinalIgnoreCase)).Take(6).ToList(),
             SelectedCity = city
         };
 

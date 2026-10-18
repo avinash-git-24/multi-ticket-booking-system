@@ -658,9 +658,10 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
    BookMyShow Authentic Design Token Overrides & Layout Classes
    ========================================================================== */
 .bms-container {
-  max-width: 1240px;
+  width: 100%;
+  max-width: 1480px;
   margin: 0 auto;
-  padding: 0 15px;
+  padding: 0 24px;
 }
 
 .bms-bg-page {

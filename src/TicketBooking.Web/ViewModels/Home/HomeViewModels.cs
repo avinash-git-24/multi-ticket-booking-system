@@ -11,5 +11,7 @@ public class HomeIndexViewModel
     public IReadOnlyList<EventCardDto> SportsEvents { get; set; } = [];
     public IReadOnlyList<EventCardDto> TheatreEvents { get; set; } = [];
     public IReadOnlyList<EventCardDto> WorkshopEvents { get; set; } = [];
+    public IReadOnlyList<EventCardDto> PopularEvents { get; set; } = [];
+    public IReadOnlyList<EventCardDto> OutdoorEvents { get; set; } = [];
     public string SelectedCity { get; set; } = "Rajkot";
 }
