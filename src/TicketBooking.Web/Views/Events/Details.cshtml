@@ -1,0 +1,259 @@
+@model TicketBooking.Web.ViewModels.Events.EventDetailsViewModel
+@{
+    ViewData["Title"] = Model.Event.Title;
+}
+
+<div class="container py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index" class="text-decoration-none text-muted">Home</a></li>
+            <li class="breadcrumb-item"><a asp-controller="Events" asp-action="Index" class="text-decoration-none text-muted">Events</a></li>
+            <li class="breadcrumb-item active text-dark fw-semibold" aria-current="page">@Model.Event.Title</li>
+        </ol>
+    </nav>
+
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <div class="alert alert-danger alert-dismissible fade show rounded-3 mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i> @Model.ErrorMessage
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <!-- Event Hero Header -->
+    <div class="card border-0 rounded-4 shadow-sm overflow-hidden mb-4">
+        <div class="row g-0">
+            <div class="col-lg-5 position-relative" style="min-height: 320px; background-color: #1A1A24;">
+                @if (!string.IsNullOrEmpty(Model.Event.BannerUrl))
+                {
+                    <img src="@Model.Event.BannerUrl" class="w-100 h-100 object-fit-cover position-absolute top-0 start-0" alt="@Model.Event.Title" />
+                }
+                <div class="position-absolute top-0 start-0 m-3">
+                    <span class="badge bg-danger px-3 py-2 rounded-pill fs-6 fw-semibold shadow-sm">
+                        @Model.Event.Category
+                    </span>
+                </div>
+            </div>
+            <div class="col-lg-7 p-4 p-md-5 d-flex flex-column justify-content-between bg-white">
+                <div>
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <span class="badge bg-light text-dark border px-2 py-1"><i class="bi bi-geo-alt-fill text-danger me-1"></i> @Model.Event.CityName</span>
+                        <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1">Booking Open</span>
+                    </div>
+                    <h1 class="display-6 fw-bold text-dark mb-3">@Model.Event.Title</h1>
+                    <p class="text-muted leading-relaxed">@Model.Event.Description</p>
+                </div>
+
+                <div class="pt-3 border-top mt-3 row g-3">
+                    <div class="col-sm-6">
+                        <span class="text-muted small d-block">DATE & TIME</span>
+                        <strong class="text-dark"><i class="bi bi-calendar-check text-primary me-1"></i> @Model.Event.StartDate.ToString("ddd, dd MMM yyyy • hh:mm tt")</strong>
+                    </div>
+                    <div class="col-sm-6">
+                        <span class="text-muted small d-block">VENUE</span>
+                        <strong class="text-dark"><i class="bi bi-building text-danger me-1"></i> @Model.Event.VenueName</strong>
+                        <div class="text-muted small">@Model.Event.VenueAddress</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking Selection Section -->
+    <div class="row g-4">
+        <!-- Ticket Tier Selector Column -->
+        <div class="col-lg-8">
+            <div class="card border-0 rounded-4 shadow-sm p-4 bg-white mb-4">
+                <h4 class="fw-bold mb-3"><i class="bi bi-ticket-perforated text-danger me-2"></i>Select Ticket Tier</h4>
+                <p class="text-muted small mb-4">Choose your preferred entry tier. Inventory capacity is guarded in real-time by the server.</p>
+
+                <form id="eventBookingForm" method="post" asp-action="HoldTickets">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="EventId" value="@Model.Event.EventId" />
+                    <input type="hidden" name="SessionId" value="@Model.SelectedSessionId" />
+
+                    <!-- Radio Cards for Tiers -->
+                    <div class="d-flex flex-column gap-3 mb-4">
+                        @for (int i = 0; i < Model.Event.Categories.Count; i++)
+                        {
+                            var cat = Model.Event.Categories[i];
+                            var isSoldOut = cat.RemainingCapacity <= 0;
+                            var isChecked = !isSoldOut && (Model.SelectedCategoryId == cat.CategoryId || (Model.SelectedCategoryId == 0 && i == 0));
+
+                            <div class="tier-card p-3 rounded-4 border @(isChecked ? "border-danger bg-light" : "border-light-subtle") @(isSoldOut ? "opacity-50" : "cursor-pointer")" 
+                                 onclick="selectTier(@cat.CategoryId, @cat.Price, @cat.MaxPerBooking, @cat.RemainingCapacity, @(isSoldOut ? "true" : "false"))"
+                                 id="tier-card-@cat.CategoryId">
+                                <div class="form-check d-flex align-items-center justify-content-between p-0 m-0">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <input class="form-check-input ms-0 me-2" type="radio" name="CategoryId" id="tier-radio-@cat.CategoryId" 
+                                               value="@cat.CategoryId" @(isChecked ? "checked" : "") @(isSoldOut ? "disabled" : "") />
+                                        <div>
+                                            <h6 class="fw-bold mb-1 text-dark">@cat.CategoryName</h6>
+                                            @if (!string.IsNullOrEmpty(cat.Perks))
+                                            {
+                                                <div class="text-muted small"><i class="bi bi-star-fill text-warning me-1"></i>@cat.Perks</div>
+                                            }
+                                            <div class="small mt-1">
+                                                @if (isSoldOut)
+                                                {
+                                                    <span class="badge bg-danger">Sold Out</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-secondary-subtle text-dark">@cat.RemainingCapacity tickets remaining</span>
+                                                    <span class="text-muted ms-2">(Max @cat.MaxPerBooking per order)</span>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-end">
+                                        <span class="fs-4 fw-bold text-dark">₹@cat.Price.ToString("N0")</span>
+                                        <span class="text-muted d-block small">per person</span>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                    <!-- Quantity Stepper -->
+                    <div class="card bg-light border-0 rounded-4 p-3 mb-4">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <h6 class="fw-bold mb-1">Select Number of Tickets</h6>
+                                <span class="text-muted small" id="quantityLimitText">Up to 10 tickets per order</span>
+                            </div>
+                            <div class="d-flex align-items-center gap-2">
+                                <button type="button" class="btn btn-outline-dark rounded-circle px-3 py-2 fw-bold" onclick="changeQuantity(-1)">-</button>
+                                <input type="number" id="ticketQuantity" name="Quantity" value="@Model.SelectedQuantity" min="1" max="10" 
+                                       class="form-control text-center fw-bold fs-5 bg-white border-0 shadow-sm" style="width: 70px;" readonly />
+                                <button type="button" class="btn btn-outline-dark rounded-circle px-3 py-2 fw-bold" onclick="changeQuantity(1)">+</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-grid d-lg-none">
+                        <button type="submit" class="btn btn-danger btn-lg rounded-pill fw-semibold py-3" style="background-color: #F84464; border-color: #F84464;">
+                            Proceed to Reserve Tickets
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Price Summary & Checkout Column -->
+        <div class="col-lg-4">
+            <div class="card border-0 rounded-4 shadow-sm p-4 bg-white sticky-top" style="top: 2rem;">
+                <h5 class="fw-bold mb-3">Order Summary</h5>
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted" id="summaryTierLabel">Ticket Base</span>
+                    <span class="fw-semibold text-dark" id="summaryBasePrice">₹0.00</span>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted">Convenience Fee (10%)</span>
+                    <span class="fw-semibold text-dark" id="summaryFee">₹0.00</span>
+                </div>
+                <div class="d-flex justify-content-between mb-3 pb-3 border-bottom">
+                    <span class="text-muted">Integrated GST (18% on fee)</span>
+                    <span class="fw-semibold text-dark" id="summaryTax">₹0.00</span>
+                </div>
+                <div class="d-flex justify-content-between mb-4">
+                    <span class="fs-5 fw-bold text-dark">Total Payable</span>
+                    <span class="fs-4 fw-bold" style="color: #F84464;" id="summaryTotal">₹0.00</span>
+                </div>
+
+                <div class="alert alert-warning border-0 small rounded-3 mb-4">
+                    <i class="bi bi-shield-check text-warning me-1"></i>
+                    <strong>College Demonstration:</strong> Seats and tickets are reserved for 8 minutes. Payment is simulated with zero real charge.
+                </div>
+
+                <div class="d-grid">
+                    <button type="button" onclick="document.getElementById('eventBookingForm').submit()" class="btn btn-primary btn-lg rounded-pill fw-semibold py-3 shadow-sm" style="background-color: #F84464; border-color: #F84464;">
+                        Proceed to Reserve Tickets
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let selectedTierId = @Model.SelectedCategoryId;
+    let selectedPrice = 0;
+    let maxQuantity = 10;
+    let currentQuantity = @Model.SelectedQuantity;
+
+    const tiers = {
+        @foreach (var cat in Model.Event.Categories)
+        {
+            <text>@cat.CategoryId: { price: @cat.Price, max: Math.min(@cat.MaxPerBooking, @cat.RemainingCapacity, 10), name: "@cat.CategoryName", soldOut: @(cat.RemainingCapacity <= 0 ? "true" : "false") },</text>
+        }
+    };
+
+    function selectTier(categoryId, price, maxPerBooking, remainingCapacity, isSoldOut) {
+        if (isSoldOut) return;
+
+        selectedTierId = categoryId;
+        selectedPrice = price;
+        maxQuantity = Math.min(maxPerBooking, remainingCapacity, 10);
+        if (maxQuantity < 1) maxQuantity = 1;
+
+        // Update radios
+        const radio = document.getElementById('tier-radio-' + categoryId);
+        if (radio) radio.checked = true;
+
+        // Update styling
+        document.querySelectorAll('.tier-card').forEach(el => {
+            el.classList.remove('border-danger', 'bg-light');
+            el.classList.add('border-light-subtle');
+        });
+        const activeCard = document.getElementById('tier-card-' + categoryId);
+        if (activeCard) {
+            activeCard.classList.remove('border-light-subtle');
+            activeCard.classList.add('border-danger', 'bg-light');
+        }
+
+        // Clamp quantity if exceeds max for tier
+        if (currentQuantity > maxQuantity) {
+            currentQuantity = maxQuantity;
+            document.getElementById('ticketQuantity').value = currentQuantity;
+        }
+
+        document.getElementById('quantityLimitText').innerText = 'Up to ' + maxQuantity + ' tickets for this tier';
+        updatePriceSummary();
+    }
+
+    function changeQuantity(delta) {
+        let newQty = currentQuantity + delta;
+        if (newQty >= 1 && newQty <= maxQuantity) {
+            currentQuantity = newQty;
+            document.getElementById('ticketQuantity').value = currentQuantity;
+            updatePriceSummary();
+        }
+    }
+
+    function updatePriceSummary() {
+        const tier = tiers[selectedTierId];
+        if (!tier) return;
+
+        const base = tier.price * currentQuantity;
+        const fee = Math.round(base * 0.10 * 100) / 100;
+        const tax = Math.round(fee * 0.18 * 100) / 100;
+        const total = base + fee + tax;
+
+        document.getElementById('summaryTierLabel').innerText = tier.name + ' (' + currentQuantity + 'x)';
+        document.getElementById('summaryBasePrice').innerText = '₹' + base.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        document.getElementById('summaryFee').innerText = '₹' + fee.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        document.getElementById('summaryTax').innerText = '₹' + tax.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        document.getElementById('summaryTotal').innerText = '₹' + total.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    // Initialize on load
+    document.addEventListener('DOMContentLoaded', function () {
+        const firstAvailableId = Object.keys(tiers).find(id => !tiers[id].soldOut);
+        if (firstAvailableId) {
+            const t = tiers[firstAvailableId];
+            selectTier(parseInt(firstAvailableId), t.price, t.max, t.max, t.soldOut);
+        }
+    });
+</script>
