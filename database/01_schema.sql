@@ -358,7 +358,7 @@ BEGIN
         BookingItemId BIGINT IDENTITY(1,1) NOT NULL,
         BookingId INT NOT NULL,
         SeatId INT NULL,
-        SeatLabel NVARCHAR(20) NOT NULL,
+        SeatLabel NVARCHAR(100) NOT NULL,
         TicketCategoryId INT NULL,
         CategoryName NVARCHAR(100) NOT NULL,
         UnitPrice DECIMAL(10,2) NOT NULL,
