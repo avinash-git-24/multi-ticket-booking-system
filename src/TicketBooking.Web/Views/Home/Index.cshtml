@@ -4,49 +4,39 @@
 }
 
 <div class="bms-bg-page pb-5">
-    <!-- 1. Top Wide Hero Carousel (Official BookMyShow 1240px Banners) -->
-    <section class="py-3">
-        <div class="bms-container">
-            <div id="bmsHeroCarousel" class="carousel slide rounded-3 overflow-hidden shadow-sm" data-bs-ride="carousel">
-                <div class="carousel-indicators mb-2">
-                    <button type="button" data-bs-target="#bmsHeroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                    <button type="button" data-bs-target="#bmsHeroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                    <button type="button" data-bs-target="#bmsHeroCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    <!-- 1. Top Wide Hero Carousel (Official BookMyShow 1240px Banners with Edge Peeks) -->
+    <div class="bms-hero-wrapper mb-3">
+        <div class="bms-hero-stage" id="bmsHeroStage">
+            <button class="bms-hero-control bms-hero-prev" type="button" aria-label="Previous Slide" onclick="bmsSlideHero(-1)">
+                <i class="bi bi-chevron-left"></i>
+            </button>
+            <button class="bms-hero-control bms-hero-next" type="button" aria-label="Next Slide" onclick="bmsSlideHero(1)">
+                <i class="bi bi-chevron-right"></i>
+            </button>
+            <div class="bms-hero-track" id="bmsHeroTrack">
+                <div class="bms-hero-slide">
+                    <a asp-controller="Events" asp-action="Index">
+                        <img src="/images/bms/hero_navratri.jpg" alt="Navratri Festival Rajkot" />
+                    </a>
                 </div>
-                <div class="carousel-inner" style="max-height: 300px;">
-                    <!-- Slide 1: Navratri Central Campaign (Rajkot) -->
-                    <div class="carousel-item active">
-                        <a asp-controller="Events" asp-action="Index">
-                            <img src="/images/bms/hero_navratri.jpg" class="d-block w-100 object-fit-cover" style="height: 300px;" alt="Navratri Festival Rajkot" />
-                        </a>
-                    </div>
-
-                    <!-- Slide 2: Diljit Dosanjh RuPay Aura India Tour -->
-                    <div class="carousel-item">
-                        <a asp-controller="Events" asp-action="Index" asp-route-category="Concert">
-                            <img src="/images/bms/hero_diljit.jpg" class="d-block w-100 object-fit-cover" style="height: 300px;" alt="Diljit Dosanjh Tour" />
-                        </a>
-                    </div>
-
-                    <!-- Slide 3: Aadhya Shakti Garba 2026 -->
-                    <div class="carousel-item">
-                        <a asp-controller="Events" asp-action="Index">
-                            <img src="/images/bms/hero_garba.jpg" class="d-block w-100 object-fit-cover" style="height: 300px;" alt="Aadhya Shakti Garba" />
-                        </a>
-                    </div>
+                <div class="bms-hero-slide">
+                    <a asp-controller="Events" asp-action="Index" asp-route-category="Concert">
+                        <img src="/images/bms/hero_diljit.jpg" alt="Diljit Dosanjh Tour" />
+                    </a>
                 </div>
-
-                <button class="carousel-control-prev" type="button" data-bs-target="#bmsHeroCarousel" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon rounded-circle bg-dark bg-opacity-75 p-3" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#bmsHeroCarousel" data-bs-slide="next">
-                    <span class="carousel-control-next-icon rounded-circle bg-dark bg-opacity-75 p-3" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                </button>
+                <div class="bms-hero-slide">
+                    <a asp-controller="Events" asp-action="Index">
+                        <img src="/images/bms/hero_garba.jpg" alt="Aadhya Shakti Garba" />
+                    </a>
+                </div>
             </div>
         </div>
-    </section>
+        <div class="bms-hero-dots" id="bmsHeroDots">
+            <span class="bms-hero-dot active" onclick="bmsGoToHero(0)"></span>
+            <span class="bms-hero-dot" onclick="bmsGoToHero(1)"></span>
+            <span class="bms-hero-dot" onclick="bmsGoToHero(2)"></span>
+        </div>
+    </div>
 
     <!-- 2. Recommended Movies Section (Exact 5-Column 1240px Grid) -->
     <section class="py-4">
@@ -58,40 +48,68 @@
                 </a>
             </div>
 
-            <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-4">
-                @foreach (var movie in Model.RecommendedMovies.Take(5))
-                {
-                    <div class="col">
-                        <a asp-controller="Movies" asp-action="Details" asp-route-id="@movie.MovieId" class="bms-card">
-                            <div class="bms-poster-wrap mb-2">
-                                @if (!string.IsNullOrEmpty(movie.PosterUrl))
-                                {
-                                    <img src="@movie.PosterUrl" alt="@movie.Title" loading="lazy" />
-                                }
-                                else
-                                {
-                                    <div class="d-flex align-items-center justify-content-center h-100 text-secondary">
-                                        <i class="bi bi-film fs-1"></i>
-                                    </div>
-                                }
+            <div class="bms-rail-container">
+                <button class="bms-rail-scroll-btn d-none d-lg-flex" type="button" aria-label="Next movies" onclick="bmsScrollRail('recommendedRow', 1)">
+                    <i class="bi bi-chevron-right"></i>
+                </button>
 
-                                <!-- BookMyShow Bottom Rating Strip -->
-                                <div class="bms-rating-strip">
-                                    <span><span class="text-danger fw-bold me-1">★</span>8.8/10</span>
-                                    <span class="opacity-75" style="font-size: 11px;">14.2K Votes</span>
+                <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-4" id="recommendedRow">
+                    @{
+                        int movieIdx = 0;
+                        string[] sampleRatings = new[] { "7.3/10", "9.2/10", "8.8/10", "8.5/10", "7.9/10" };
+                        string[] sampleVotes = new[] { "3.2K+ Votes", "4.1K+ Votes", "188K+ Likes", "132K+ Votes", "1.9K+ Votes" };
+                    }
+                    @foreach (var movie in Model.RecommendedMovies.Take(5))
+                    {
+                        var rating = movieIdx < sampleRatings.Length ? sampleRatings[movieIdx] : "8.5/10";
+                        var votes = movieIdx < sampleVotes.Length ? sampleVotes[movieIdx] : "10K+ Votes";
+                        var isPromoted = movieIdx < 2;
+                        movieIdx++;
+
+                        <div class="col">
+                            <a asp-controller="Movies" asp-action="Details" asp-route-id="@movie.MovieId" class="bms-card">
+                                <div class="bms-poster-wrap mb-2">
+                                    @if (isPromoted)
+                                    {
+                                        <span class="bms-promoted-tag">PROMOTED</span>
+                                    }
+
+                                    @if (!string.IsNullOrEmpty(movie.PosterUrl))
+                                    {
+                                        <img src="@movie.PosterUrl" alt="@movie.Title" loading="lazy" />
+                                    }
+                                    else
+                                    {
+                                        <div class="d-flex align-items-center justify-content-center h-100 text-secondary">
+                                            <i class="bi bi-film fs-1"></i>
+                                        </div>
+                                    }
+
+                                    <!-- BookMyShow Bottom Rating Strip -->
+                                    <div class="bms-rating-strip">
+                                        @if (votes.Contains("Likes"))
+                                        {
+                                            <span><i class="bi bi-hand-thumbs-up-fill text-success me-1"></i>@votes</span>
+                                        }
+                                        else
+                                        {
+                                            <span><span class="text-danger fw-bold me-1">★</span>@rating</span>
+                                            <span class="opacity-75" style="font-size: 11px;">@votes</span>
+                                        }
+                                    </div>
                                 </div>
-                            </div>
-                            
-                            <h6 class="bms-card-title" title="@movie.Title">@movie.Title</h6>
-                            <div class="bms-card-subtitle">
-                                @movie.Certificate &bull; @movie.Genre
-                            </div>
-                            <div class="bms-card-subtext">
-                                @movie.Language
-                            </div>
-                        </a>
-                    </div>
-                }
+                                
+                                <h6 class="bms-card-title" title="@movie.Title">@movie.Title</h6>
+                                <div class="bms-card-subtitle">
+                                    @movie.Certificate &bull; @movie.Genre
+                                </div>
+                                <div class="bms-card-subtext">
+                                    @movie.Language
+                                </div>
+                            </a>
+                        </div>
+                    }
+                </div>
             </div>
         </div>
     </section>
@@ -447,3 +465,72 @@
         </section>
     }
 </div>
+
+@section Scripts {
+<script>
+    let currentHeroIndex = 0;
+    const heroSlides = document.querySelectorAll('.bms-hero-slide');
+    const heroTrack = document.getElementById('bmsHeroTrack');
+    const heroDots = document.querySelectorAll('.bms-hero-dot');
+    let heroAutoTimer = null;
+
+    function updateHeroCarousel() {
+        if (!heroTrack || heroSlides.length === 0) return;
+        const stage = document.getElementById('bmsHeroStage');
+        if (!stage) return;
+
+        const activeSlide = heroSlides[currentHeroIndex];
+        const stageWidth = stage.offsetWidth;
+        const slideWidth = activeSlide.offsetWidth;
+        const slideLeft = activeSlide.offsetLeft;
+
+        const targetX = (stageWidth / 2) - (slideLeft + slideWidth / 2);
+        heroTrack.style.transform = `translateX(${targetX}px)`;
+
+        heroDots.forEach((dot, idx) => {
+            if (idx === currentHeroIndex) {
+                dot.classList.add('active');
+            } else {
+                dot.classList.remove('active');
+            }
+        });
+    }
+
+    function bmsSlideHero(direction) {
+        currentHeroIndex = (currentHeroIndex + direction + heroSlides.length) % heroSlides.length;
+        updateHeroCarousel();
+        resetHeroTimer();
+    }
+
+    function bmsGoToHero(index) {
+        currentHeroIndex = index;
+        updateHeroCarousel();
+        resetHeroTimer();
+    }
+
+    function resetHeroTimer() {
+        if (heroAutoTimer) clearInterval(heroAutoTimer);
+        heroAutoTimer = setInterval(() => {
+            bmsSlideHero(1);
+        }, 4500);
+    }
+
+    function bmsScrollRail(rowId, direction) {
+        const row = document.getElementById(rowId);
+        if (row) {
+            row.scrollBy({ left: direction * 400, behavior: 'smooth' });
+        }
+    }
+
+    window.addEventListener('resize', updateHeroCarousel);
+    document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(updateHeroCarousel, 50);
+        resetHeroTimer();
+    });
+
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        setTimeout(updateHeroCarousel, 50);
+        resetHeroTimer();
+    }
+</script>
+}
