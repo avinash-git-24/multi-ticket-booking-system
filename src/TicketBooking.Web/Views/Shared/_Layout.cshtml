@@ -167,12 +167,20 @@
                 </div>
             }
             <div class="list-group list-group-flush small">
-                @if (User.IsInRole("Admin"))
-                {
-                    <a asp-controller="Admin" asp-action="Index" class="list-group-item list-group-item-action py-3 d-flex align-items-center gap-3 text-danger fw-bold">
-                        <i class="bi bi-speedometer2 fs-5 text-danger"></i> Admin Portal
-                    </a>
-                }
+                <a asp-controller="Admin" asp-action="Index" class="list-group-item list-group-item-action py-3 d-flex align-items-center justify-content-between @(User.IsInRole("Admin") ? "text-danger fw-bold" : "text-dark")">
+                    <div class="d-flex align-items-center gap-3">
+                        <i class="bi bi-speedometer2 fs-5 @(User.IsInRole("Admin") ? "text-danger" : "text-secondary")"></i>
+                        <span>Admin Portal</span>
+                    </div>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <span class="badge bg-danger rounded-pill">Active</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-light text-muted border" style="font-size: 11px;">Admin</span>
+                    }
+                </a>
                 <a asp-controller="Account" asp-action="MyBookings" class="list-group-item list-group-item-action py-3 d-flex align-items-center gap-3">
                     <i class="bi bi-bell fs-5 text-secondary"></i> Notifications &amp; Bookings
                 </a>

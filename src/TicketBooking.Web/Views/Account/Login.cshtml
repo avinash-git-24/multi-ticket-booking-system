@@ -18,6 +18,17 @@
                 </div>
 
                 <div class="card-body p-4 pt-2">
+                    @if (ViewData["ReturnUrl"]?.ToString()?.Contains("Admin", StringComparison.OrdinalIgnoreCase) == true)
+                    {
+                        <div class="alert alert-warning py-2 px-3 small mb-3 rounded-3 border-0 bg-warning-subtle text-warning-emphasis d-flex align-items-center gap-2">
+                            <i class="bi bi-shield-lock-fill fs-5"></i>
+                            <div>
+                                <div class="fw-bold">Admin Portal Login Required</div>
+                                <div style="font-size: 11.5px;">Please sign in with Admin credentials to continue.</div>
+                            </div>
+                        </div>
+                    }
+
                     <form method="post" asp-controller="Account" asp-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]">
                         @Html.AntiForgeryToken()
 
@@ -42,7 +53,12 @@
                             </div>
                         </div>
 
-                        <button type="submit" class="btn btn-primary-showsphere w-100 py-2 mb-3">Sign In</button>
+                        <button type="submit" class="btn btn-primary-showsphere w-100 py-2 mb-2">Sign In</button>
+
+                        <button type="button" class="btn btn-outline-secondary btn-sm w-100 py-2 mb-3 d-flex align-items-center justify-content-center gap-2 text-dark" onclick="document.getElementById('inputEmail').value='abhay@gmail.com';document.getElementById('inputPassword').value='Abhay@2026';">
+                            <i class="bi bi-shield-lock text-danger"></i>
+                            <span>Admin Login Quick Fill (Abhay)</span>
+                        </button>
 
                         <div class="text-center small text-muted">
                             Don't have an account? <a asp-controller="Account" asp-action="Register" class="text-danger fw-semibold text-decoration-none">Create Account</a>

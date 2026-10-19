@@ -56,7 +56,7 @@ public class AccountController : Controller
             return Redirect(model.ReturnUrl);
         }
 
-        if (user.Roles.Contains("Admin") && user.Email.Equals("admin@showsphere.local", StringComparison.OrdinalIgnoreCase))
+        if (user.Roles.Contains("Admin"))
         {
             return RedirectToAction("Index", "Admin");
         }
